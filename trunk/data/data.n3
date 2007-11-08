@@ -1,0 +1,1315 @@
+#   Base was: file:///home/oshani/Desktop/db_project/mods_rdf_xml/9/9/9/9/0/0/999900.mods.rdf.xml
+
+    @prefix : <http://simile.mit.edu/2006/01/ontologies/mods3#> .
+    @prefix ent: <http://simile.mit.edu/2006/01/entity#> .
+    
+    <http://libraries.mit.edu/barton//>     a :Record;
+         :changed  [
+             a :Date;
+             :encoding "iso8601";
+             :value "20030918090344.0" ],
+                 [
+             a :Date;
+             :encoding "iso8601";
+             :value "20030618091530.0" ],
+                 [
+             a :Date;
+             :encoding "iso8601";
+             :value "20030618091532.0" ];
+         :created  [
+             a :Date;
+             :encoding "marc";
+             :value "030701" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "930312" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "800401" ];
+         :origin <info:marcorg/ERE>,
+                <info:marcorg/OSU>,
+                <info:marcorg/ZCU>;
+         :records <info:marc:/> .
+    
+    <http://libraries.mit.edu/barton/isbn/0120449838>     a :Record;
+         :changed  [
+             a :Date;
+             :encoding "iso8601";
+             :value "20030918090343.0" ];
+         :created  [
+             a :Date;
+             :encoding "marc";
+             :value "030620" ];
+         :origin <info:marcorg/TEF>;
+         :records <info:isbn/0120449838> .
+    
+    <http://libraries.mit.edu/barton/isbn/0126289824>     a :Record;
+         :changed  [
+             a :Date;
+             :encoding "iso8601";
+             :value "20030917092453.0" ];
+         :created  [
+             a :Date;
+             :encoding "marc";
+             :value "030310" ];
+         :origin <info:marcorg/UKM>;
+         :records <info:isbn/0126289824> .
+    
+    <http://libraries.mit.edu/barton/isbn/0198182937_acidfree_paper>     a :Record;
+         :changed  [
+             a :Date;
+             :encoding "iso8601";
+             :value "20030912091132.0" ];
+         :created  [
+             a :Date;
+             :encoding "marc";
+             :value "021004" ];
+         :origin <info:marcorg/DLC>;
+         :records <info:isbn/0198182937_(acid-free_paper)> .
+    
+
+    ent:ACM_Great_Lakes_Symposium_on_VLSI     a :Conference;
+         :fullName "ACM Great Lakes Symposium on VLSI." .
+    
+    ent:ACM_Special_Interest_Group_on_Design_Automation     a :Corporation;
+         :fullName "ACM Special Interest Group on Design Automation" .
+    
+    ent:Agawu_V_Kofi_Victor_Kofi     a :Person;
+         :fullName "Agawu, V. Kofi (Victor Kofi)" .
+    
+    ent:American_Concrete_InstituteConvention2002__Phoenix_Ariz     a :Corporation;
+         :fullName "(2002 : Phoenix, Ariz.)",
+                "American Concrete Institute",
+                "Convention" .
+    
+    ent:American_Concrete_InstituteSubcommittee_4451_Strut_and_Tie_Models     a :Corporation;
+         :fullName "American Concrete Institute",
+                "Subcommittee 445-1, Strut and Tie Models." .
+    
+    ent:Andy_Warhol_Museum     a :Corporation;
+         :fullName "Andy Warhol Museum" .
+    
+    ent:Arveson_William     a :Person;
+         :fullName "Arveson, William." .
+    
+    ent:BenerÃ­a_Lourdes     a :Person;
+         :fullName "BenerÃ­a, Lourdes." .
+    
+    ent:Benito_G_Gerardo     a :Person;
+         :fullName "Benito, G. (Gerardo)" .
+    
+    ent:Berthold_M_Michael     a :Person;
+         :fullName "Berthold, M. (Michael)" .
+    
+    ent:Bonython_Elizabeth     a :Person;
+         :fullName "Bonython, Elizabeth." .
+    
+    ent:Bourell_David_Lee     a :Person;
+         :fullName "Bourell, David Lee." .
+    
+    ent:Brooks_David     a :Person;
+         :fullName "Brooks, David." .
+    
+    ent:Burack_Cynthia_1958     a :Person;
+         :dates "1958-";
+         :fullName "Burack, Cynthia" .
+    
+    ent:Burton_Anthony_1942     a :Person;
+         :dates "1942-";
+         :fullName "Burton, Anthony" .
+    
+    ent:Congressional_Information_Service     a :Corporation;
+         :fullName "Congressional Information Service" .
+    
+    ent:Contemporary_Arts_Museum     a :Corporation;
+         :fullName "Contemporary Arts Museum" .
+    
+    ent:Czestochowski_Joseph_S     a :Person;
+         :fullName "Czestochowski, Joseph S." .
+    
+    ent:CÄlugÄreanu_Grigore     a :Person;
+         :fullName "CÄlugÄreanu, Grigore." .
+    
+    ent:Davide_F_Fabrizio     a :Person;
+         :fullName "Davide, F. (Fabrizio)" .
+    
+    ent:De_Jonghe_L_C     a :Person;
+         :fullName "De Jonghe, L. C." .
+    
+    ent:Degas_Edgar_18341917     a :Person;
+         :dates "1834-1917";
+         :fullName "Degas, Edgar" .
+    
+    ent:Desiraju_G_R_Gautam_R     a :Person;
+         :fullName "Desiraju, G. R. (Gautam R.)" .
+    
+    ent:Deutsche_Forschungsgemeinschaft     a :Corporation;
+         :fullName "Deutsche Forschungsgemeinschaft" .
+    
+    ent:DonÃ©a_J_Jean     a :Person;
+         :fullName "DonÃ©a, J. (Jean)" .
+    
+    ent:Dove_Martin_T     a :Person;
+         :fullName "Dove, Martin T." .
+    
+    ent:Escassut_Alain     a :Person;
+         :fullName "Escassut, Alain." .
+    
+    ent:European_Federation_of_Corrosion     a :Corporation;
+         :fullName "European Federation of Corrosion" .
+    
+    ent:European_Women_in_MathematicsMeeting10th__2001__Malta     a :Corporation;
+         :fullName "(10th : 2001 : Malta)",
+                "European Women in Mathematics",
+                "Meeting" .
+    
+    ent:Evans_James_W_1943     a :Person;
+         :dates "1943-";
+         :fullName "Evans, James W." .
+    
+    ent:Flanagan_Dawn_P     a :Person;
+         :fullName "Flanagan, Dawn P." .
+
+    ent:YsaÃ¿e_Jacques     a :Person;
+         :fullName "YsaÃ¿e, Jacques." .
+    
+    ent:Yun_Isang     a :Person;
+         :fullName "Yun, Isang." .
+    
+    <http://simile.mit.edu/2006/01/era/1970->     a :Era;
+         :value "1970-" .
+    
+    <http://simile.mit.edu/2006/01/era/1980->     a :Era;
+         :value "1980-" .
+    
+    <http://simile.mit.edu/2006/01/era/20th_century>     a :Era;
+         :value "20th century" .
+    
+    <http://simile.mit.edu/2006/01/era/George_VI,_1936-1952>     a :Era;
+         :value "George VI, 1936-1952" .
+    
+    <http://simile.mit.edu/2006/01/era/Revolution,_1789-1799>     a :Era;
+         :value "Revolution, 1789-1799" .
+    
+    <http://simile.mit.edu/2006/01/era/d18860510>     a :Era;
+         :value "d18860510" .
+    
+    <http://simile.mit.edu/2006/01/era/d1888>     a :Era;
+         :value "d1888" .
+    
+    <http://simile.mit.edu/2006/01/era/d1889>     a :Era;
+         :value "d1889" .
+    
+    <http://simile.mit.edu/2006/01/era/d1890>     a :Era;
+         :value "d1890" .
+    
+    <http://simile.mit.edu/2006/01/era/d1899>     a :Era;
+         :value "d1899" .
+    
+    <http://simile.mit.edu/2006/01/era/d1902>     a :Era;
+         :value "d1902" .
+    
+    <http://simile.mit.edu/2006/01/era/d1904>     a :Era;
+         :value "d1904" .
+    
+    <http://simile.mit.edu/2006/01/era/d1905>     a :Era;
+         :value "d1905" .
+    
+    <http://simile.mit.edu/2006/01/era/d1906>     a :Era;
+         :value "d1906" .
+    
+    <http://simile.mit.edu/2006/01/era/d1907>     a :Era;
+         :value "d1907" .
+    
+    <http://simile.mit.edu/2006/01/era/d1947>     a :Era;
+         :value "d1947" .
+    
+    <http://simile.mit.edu/2006/01/era/d1948>     a :Era;
+         :value "d1948" .
+    
+    <http://simile.mit.edu/2006/01/era/d1949>     a :Era;
+         :value "d1949" .
+    
+    <http://simile.mit.edu/2006/01/era/d1950>     a :Era;
+         :value "d1950" .
+    
+    <http://simile.mit.edu/2006/01/era/d1958>     a :Era;
+         :value "d1958" .
+    
+    <http://simile.mit.edu/2006/01/era/d1967>     a :Era;
+         :value "d1967" .
+    
+    <http://simile.mit.edu/2006/01/era/d1984>     a :Era;
+         :value "d1984" .
+    
+    <http://simile.mit.edu/2006/01/era/d1985>     a :Era;
+         :value "d1985" .
+    
+    <http://simile.mit.edu/2006/01/era/d1988>     a :Era;
+         :value "d1988" .
+    
+    <http://simile.mit.edu/2006/01/form/gmd/electronic_resource>     a :Form;
+         :authority "gmd";
+         :value "electronic resource" .
+    
+    <http://simile.mit.edu/2006/01/form/marcform/electronic>     a :Form;
+         :authority "marcform";
+         :value "electronic" .
+    
+    <http://simile.mit.edu/2006/01/form/marcform/print>     a :Form;
+         :authority "marcform";
+         :value "print" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/abstract_or_summary>     a :Genre;
+         :authority "marc";
+         :value "abstract or summary" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/atlas>     a :Genre;
+         :authority "marc";
+         :value "atlas" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/bibliography>     a :Genre;
+         :authority "marc";
+         :value "bibliography" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/biography>     a :Genre;
+         :authority "marc";
+         :value "biography" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/catalog>     a :Genre;
+         :authority "marc";
+         :value "catalog" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/conference_publication>     a :Genre;
+         :authority "marc";
+         :value "conference publication" .
+    
+    <http://simile.mit.edu/2006/01/genre/marc/periodical>     a :Genre;
+         :authority "marc";
+         :value "periodical" .
+    
+    <http://simile.mit.edu/2006/01/issn/0007-0599>     a :Item;
+         :title  [
+             a :Title;
+             :value "British corrosion journal" ] .
+    
+    <http://simile.mit.edu/2006/01/issn/0147-0809>     a :Item;
+         :title  [
+             a :Title;
+             :value "Light metals (New York, N.Y.)" ] .
+    
+    <http://simile.mit.edu/2006/01/issn/1066-1395>     a :Item;
+         :name <http://simile.mit.edu/2006/01/entity#Great_Lakes_Symposium_on_VLSI.>;
+         :title  [
+             a :Title;
+             :value "Proceedings" ] .
+    
+    <http://simile.mit.edu/2006/01/issn/1541-583X>     a :Item;
+         :name <http://simile.mit.edu/2006/01/entity#Workshop_on_Computers_in_Power_Electronics.>;
+         :title  [
+             a :Title;
+             :value "Record" ] .
+    
+    <http://simile.mit.edu/2006/01/issn/1541-5848>     a :Item;
+         :name <http://simile.mit.edu/2006/01/entity#Workshop_on_Computers_in_Power_Electronics.>;
+         :title  [
+             a :Title;
+             :value "Proceedings" ] .
+    
+    <http://simile.mit.edu/2006/01/language/iso639-2b/eng>     a :Language;
+         :authority "iso639-2b";
+         :value "eng" .
+    
+    <http://simile.mit.edu/2006/01/language/iso639-2b/und>     a :Language;
+         :authority "iso639-2b";
+         :value "und" .
+    
+    <http://simile.mit.edu/2006/01/local/(DLC)_2002227212>     a :Item;
+         :title  [
+             a :Title;
+             :value "Antennas and wireless propagation letters" ] .
+    
+    <http://simile.mit.edu/2006/01/local/(DLC)_2003242091>     a :Item;
+         :name <http://simile.mit.edu/2006/01/entity#IEEE_Workshop_on_Computers_in_Power_Electronics.>;
+         :title  [
+             a :Title;
+             :value "Proceedings" ] .
+    
+    <http://simile.mit.edu/2006/01/local/(DLC)__87641975>     a :Item;
+         :title  [
+             a :Title;
+             :value "Statistical reference index ... cumulative index" ] .
+    
+    <http://simile.mit.edu/2006/01/local/(DLC)sc_84000173>     a :Item;
+         :title  [
+             a :Title;
+             :value "Statistical reference index" ] .
+    
+    <http://simile.mit.edu/2006/01/place/Africa>     a :Place;
+         :name "Africa" .
+    
+    <http://simile.mit.edu/2006/01/place/California>     a :Place;
+         :name "California" .
+    
+    <http://simile.mit.edu/2006/01/place/Canada>     a :Place;
+         :name "Canada" .
+    
+    <http://simile.mit.edu/2006/01/place/Colorado>     a :Place;
+         :name "Colorado" .
+    
+    <http://simile.mit.edu/2006/01/place/Developing_countries>     a :Place;
+         :name "Developing countries" .
+    
+    <http://simile.mit.edu/2006/01/place/Florissant_Fossil_Beds_National_Monument_(Colo.)>     a :Place;
+         :name "Florissant Fossil Beds National Monument (Colo.)" .
+
+    
+    <http://simile.mit.edu/2006/01/place/n-us-co>     a :Place;
+         :code "n-us-co" .
+    
+    <http://simile.mit.edu/2006/01/publisher/A._Lengnick>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/enk>;
+         :value "A. Lengnick" .
+    
+    <http://simile.mit.edu/2006/01/publisher/ACM_Press>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/nyu>;
+         :value "ACM Press" .
+    
+    <http://simile.mit.edu/2006/01/publisher/Academic_Press>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/cau>,
+                <http://simile.mit.edu/2006/01/place/marccountry/ne>;
+         :value "Academic Press" .
+    
+    <http://simile.mit.edu/2006/01/publisher/Rowman_&_Littlefield>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/mdu>;
+         :value "Rowman & Littlefield" .
+    
+    <http://simile.mit.edu/2006/01/publisher/SPIE--The_International_Society_of_Optical_Engineering>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/wau>;
+         :value "SPIE--The International Society of Optical Engineering" .
+    
+    <http://simile.mit.edu/2006/01/publisher/Scarecrow>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/mdu>;
+         :value "Scarecrow" .
+    
+    <http://simile.mit.edu/2006/01/publisher/Schott_Fr%C3%A8res>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/be>;
+         :value "Schott FrÃ¨res" .
+    
+    <http://simile.mit.edu/2006/01/publisher/Smithsonian_Institution_Press>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/dcu>;
+         :value "Smithsonian Institution Press" .
+    
+    <http://simile.mit.edu/2006/01/publisher/Springer>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/enk>,
+                <http://simile.mit.edu/2006/01/place/marccountry/gw>,
+                <http://simile.mit.edu/2006/01/place/marccountry/nyu>;
+         :value "Springer" .
+    
+    <http://simile.mit.edu/2006/01/publisher/World_Scientific>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/nju>;
+         :value "World Scientific" .
+    
+    <http://simile.mit.edu/2006/01/publisher/distributed_by_D.A.P.>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/enk>;
+         :value "distributed by D.A.P." .
+    
+    <http://simile.mit.edu/2006/01/publisher/sole_agent,_U.S._A.,_Mills_Music>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/enk>;
+         :value "sole agent, U.S. A., Mills Music" .
+    
+    <http://simile.mit.edu/2006/01/publisher/sole_selling_agent:_Frank_Distributing_Corp.>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/nyu>;
+         :value "sole selling agent: Frank Distributing Corp." .
+    
+    <http://simile.mit.edu/2006/01/publisher/%C3%89ditions_Salabert>     a :Publisher;
+         :location <http://simile.mit.edu/2006/01/place/marccountry/fr>;
+         :value "Ãditions Salabert" .
+    
+    <http://simile.mit.edu/2006/01/topic/Abelian_groups>     a :Topic;
+         :name "Abelian groups" .
+    
+    <http://simile.mit.edu/2006/01/topic/Abstracts>     a :Topic;
+         :name "Abstracts" .
+    
+    <http://simile.mit.edu/2006/01/topic/Algebra>     a :Topic;
+         :name "Algebra" .
+    
+    <http://simile.mit.edu/2006/01/topic/Analysis>     a :Topic;
+         :name "Analysis" .
+    
+    
+    <http://simile.mit.edu/2006/01/topic/Virtual_reality>     a :Topic;
+         :name "Virtual reality" .
+    
+    <http://simile.mit.edu/2006/01/topic/Water-supply>     a :Topic;
+         :name "Water-supply" .
+    
+    <http://simile.mit.edu/2006/01/topic/Water_resources_development>     a :Topic;
+         :name "Water resources development" .
+    
+    <http://simile.mit.edu/2006/01/topic/Wireless_communication_systems>     a :Topic;
+         :name "Wireless communication systems" .
+    
+    <http://simile.mit.edu/2006/01/topic/Women_in_development>     a :Topic;
+         :name "Women in development" .
+    
+    <http://simile.mit.edu/2006/01/topic/Women_in_mathematics>     a :Topic;
+         :name "Women in mathematics" .
+    
+    <http://simile.mit.edu/2006/01/topic/Women_in_science>     a :Topic;
+         :name "Women in science" .
+    
+    <http://simile.mit.edu/2006/01/topic/Wood>     a :Topic;
+         :name "Wood" .
+    
+    <http://simile.mit.edu/2006/01/topic/Woodcock-Johnson_Tests_of_Cognitive_Ability>     a :Topic;
+         :name "Woodcock-Johnson Tests of Cognitive Ability" .
+    
+    <http://simile.mit.edu/2006/01/topic/World_War,_1939-1945>     a :Topic;
+         :name "World War, 1939-1945" .
+    
+    <info:isbn/0120449838>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "QD79.C4.G85 2003" ];
+         :contents "Ch. I. Introduction -- Ch. II. Physico-Chemical Basis of Chromatography -- Ch. III. Mathematical Basis of Chromatography -- Ch. IV. The Profiles of Single Component Bands in Linear Nonideal Chromatography -- Ch. V. Single Component, Ideal, Nonlinear Chromatography -- Ch. VI. Ideal Nonlinear Reaction Chromatography -- Ch. VII. The Profiles of Single-Component Bands in Nonlinear Nonideal Chromatography -- Ch. VIII. Two-Component Ideal Nonlinear Chromatography -- Ch. IX. Numerical Analysis of Chromatography Problems.";
+         :dateIssued  [
+             a :Date;
+             :value "2003" ];
+         :edition "1st ed.";
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Georges Guiochon, Bingchang Lin.",
+                "Includes bibliographical references and index.";
+         :physicalDescription  [
+             a :Description;
+             :extent "x, 342 p. : ill. ; 25 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Academic_Press>;
+         :subject <http://simile.mit.edu/2006/01/topic/Chromatographic_analysis>,
+                <http://simile.mit.edu/2006/01/topic/Mathematical_models>,
+                <http://simile.mit.edu/2006/01/topic/Separation_(Technology)>;
+         :title  [
+             a :Title;
+             :value "Modeling for preparative chromatography" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Guiochon,_Georges_1931->,
+                <http://simile.mit.edu/2006/01/entity#Lin,_Bingchang.> .
+    
+    <info:isbn/0126289824>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "BF432.5.W66.W58 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "155.41393" ];
+         :contents "1. Interpretation of the Woodcock-Johnson III Tests of Cognitive Abilities: Acting on Evidence / Randy Granville Floyd, Renee B. Shaver and Kevin S. McGrew -- 2. Qualitative Analysis of Woodcock-Johnson III Test Performance / Barbara G. Read and Fredrick A. Schrank -- 3. Instructional Implications from the Woodcock-Johnson III / Nancy Mather and Barbara J. Wendling -- 4. Use of the Woodcock-Johnson III in the Diagnosis of Learning Disabilities / Noel Gregg, Chris Coleman and Deborah Knight -- 5. Using the Woodcock-Johnson III Discrepancy Procedures for Diagnosing Learning Disabilities / Nancy Mather and Fredrick A. Schrank -- 6. Use of the Woodcock-Johnson III within the Context of a Modern Operational Definition of Learning Disability / Dawn P. Flanagan -- 7. Using the Woodcock-Johnson III Tests of Achievement with the WISC-III and WAIS-III to Determine a Specific Learning Disability / LeAdelle Phelps and Kevin S. McGrew -- 8. Assessment with the Woodcock-Johnson III and Young Children / Mary E. Tusing, Denise E. Maricle and Laurie Ford -- 9. Assessment of Gifted Children with the Woodcock-Johnson III / Betty E. Gridley, Kimberly A. Norman, Mary G. Rizza and Scott L. Decker -- 10. Using the Woodcock-Johnson III Tests of Cognitive Abilities with Students with Attention Deficit/Hyperactivity Disorder / Laurie Ford, Timothy Z. Keith, Randy Granville Floyd, Cheryl Fields and Frederick A. Schrank -- 11. A Cognitive Neuropsychology Assessment System / Raymond S. Dean, Richard W. Woodcock, Scott L. Decker and Fredrick A. Schrank -- 12. The Woodcock-Johnson III Tests of Cognitive Abilities in Cognitive Assessment Courses / Jeffery P. Braden and Vincent C. Alfonso -- App. A. Sources Contributing to Validity Evidence -- App. B. Expected Achievement on the WJ III Given WISC-III Full-Scale IQ and Correction for Regression to the Mean -- App. C. Ability/Achievement Discrepancy Worksheet --",
+                "App. D. WJ III COG Teaching Resources.";
+         :dateIssued  [
+             a :Date;
+             :value "c2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Includes bibliographical references and index.",
+                "edited by Fredrick A. Schrank, Dawn P. Flanagan.";
+         :physicalDescription  [
+             a :Description;
+             :extent "xvi, 441 p. : ill. ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Academic_Press>;
+         :series  [
+             a :Item;
+             :title  [
+                 a :Title;
+                 :value "Practical resources for the mental health professional" ] ];
+         :subject <http://simile.mit.edu/2006/01/topic/Woodcock-Johnson_Tests_of_Cognitive_Ability>;
+         :title  [
+             a :Title;
+             :sub "scientist-practitioner perspectives";
+             :value "WJ III clinical use and interpretation" ],
+                 [
+             a :AlternativeTitle;
+             :value "Woodcock-Johnson III clinical use and interpretation" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Flanagan,_Dawn_P.>,
+                <http://simile.mit.edu/2006/01/entity#Schrank,_Fredrick_A._(Fredrick_Allen)> .
+    
+    <info:isbn/0198182937%20(acid-free%20paper)>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "PN1995.9.H5.H54 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "791.43/58" ];
+         :contents "1. The English Heritage Film in the 1980s and 1990s: Mapping the Field -- 2. Critical Reception: Heritage, Ambivalence, and Interpretation -- 3. The Commercial Context of the Heritage Film: Home Affairs -- 4. American Commercial Interests in the Heritage Film -- 5. Case Study I: Howards End (1992) -- 6. Case Study II: Elizabeth (1998) -- Select Filmography: 'British' Costume Dramas of the 1980s and 1990s -- Table: The Contribution of Women to the Writing, Producing, or Directing of 'British' Costume Dramas of the 1980s and 1990s.";
+         :dateIssued  [
+             a :Date;
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Andrew Higson.",
+                "Filmography: p. [262]-267.",
+                "Includes bibliographical references (p. [271]-276) and index.";
+         :physicalDescription  [
+             a :Description;
+             :extent "xi, 282 p. : ill. ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Oxford_University_Press>;
+         :subject <http://simile.mit.edu/2006/01/place/Great_Britain>,
+                <http://simile.mit.edu/2006/01/place/e-uk--->,
+                <http://simile.mit.edu/2006/01/topic/Historical_films>,
+                <http://simile.mit.edu/2006/01/topic/History_and_criticism>;
+         :title  [
+             a :Title;
+             :sub "costume drama since 1980";
+             :value "English heritage, English cinema" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Higson,_Andrew.> .
+    
+    <info:isbn/0198506775%20(hbk)>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "QC176.D69 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "530.4/1" ];
+         :contents "1. Introduction -- 2. Structure of materials -- 3. Formal description of crystal structures -- 4. The reciprocal lattice -- 5. Atomic bonding in crystals -- 6. Diffraction -- 7. Physical properties -- 8. Lattice dynamics -- 9. Thermodynamics and lattice dynamics -- 10. Experimental methods for measurements of vibrational frequencies -- 11. Anharmonic interactions -- 12. Displacive phase transitions -- A. Real crystals! -- B. Fourier analysis -- C. Schoenflies representation of the point groups -- D. Rhombohedral, trigonal, and hexagonal unit cells -- E. Space groups -- F. Lattice energy minimization -- G. Some notes on the variational theorem -- H. Ewald sphere -- I. The Wilson plot -- J. Diffraction from isotropic materials -- K. Calculation of physical properties -- L. Partition function: some key results -- M. Lattice sums -- N. Mean-square atomic displacement and temperature factors.";
+         :dateIssued  [
+             a :Date;
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Includes bibliographical references (p. [326]-329) and index.",
+                "Martin T. Dove.";
+         :physicalDescription  [
+             a :Description;
+             :extent "xxii, 334 p. : ill. ; 25 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Oxford_University_Press>;
+         :series  [
+             a :Item;
+             :title  [
+                 a :Title;
+                 :value "Oxford master series in condensed matter physics" ] ];
+         :subject <http://simile.mit.edu/2006/01/topic/Constitution>,
+                <http://simile.mit.edu/2006/01/topic/Matter>,
+                <http://simile.mit.edu/2006/01/topic/Properties>,
+                <http://simile.mit.edu/2006/01/topic/Solid_state_physics>;
+         :title  [
+             a :Title;
+             :sub "an atomic view of materials";
+             :value "Structure and dynamics" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Dove,_Martin_T.> .
+    
+    <info:isbn/0198506783%20(pbk.)>     a :Text;
+         = <info:isbn/0198506775%20(hbk)> .
+    
+    <info:isbn/0199255725>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "DA118.R67 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "941.084" ];
+         :contents "1. Introduction: National Identity and Citizenship -- 2. 'With Axe Large and Gory': The Wartime Nation and Class -- 3. 'Good-Time' Girls and Quintessential Aliens -- 4. 'Be Truly Feminine': Contradictory Obligations and Ambivalent Representations -- 5. Temperate Heroes: Masculinity on the Home Front -- 6. Geographies of the Nation -- 7. 'The End is Bound to Come': Race, Empire, and Nation -- 8. Conclusions and Afterthoughts.";
+         :dateIssued  [
+             a :Date;
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Includes bibliographical references (p. 295-317) and index.",
+                "Sonya O. Rose.";
+         :physicalDescription  [
+             a :Description;
+             :extent "xiii, 328 p. : ill. ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Oxford_University_Press>;
+         :subject <http://simile.mit.edu/2006/01/era/20th_century>,
+                <http://simile.mit.edu/2006/01/era/George_VI,_1936-1952>,
+                <http://simile.mit.edu/2006/01/place/Great_Britain>,
+                <http://simile.mit.edu/2006/01/place/e-uk--->,
+                <http://simile.mit.edu/2006/01/topic/Citizenship>,
+                <http://simile.mit.edu/2006/01/topic/History>,
+                <http://simile.mit.edu/2006/01/topic/National_characteristics,_British>,
+                <http://simile.mit.edu/2006/01/topic/Social_aspects>,
+                <http://simile.mit.edu/2006/01/topic/World_War,_1939-1945>;
+         :title  [
+             a :Title;
+             :sub "national identity and citizenship in Britain, 1939-1945";
+             :value "Which people's war?" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Rose,_Sonya_O.> .
+    
+    <info:isbn/019925902X%20(pbk.%20:%20acid-free%20paper)>     a :Text;
+         = <info:isbn/0198182937%20(acid-free%20paper)> .
+    
+    <info:isbn/0271022817%20(cloth%20:%20alk.%20paper)>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "DC179.H36 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "944.04/2" ];
+         :contents "1. Girondins on Trial -- 2. Girondins versus Montagnards -- 3. Revolt in the Provinces -- 4. The Federalist Program -- 5. The Local Context of Federalism -- 6. Contemporary Perspectives on the Revolt -- 7. Prelude to the Terror -- App. Demands of the Central Committee of Resistance to Oppression.";
+         :dateIssued  [
+             a :Date;
+             :value "c2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Includes bibliographical references (p. 249-256) and index.",
+                "Paul R. Hanson.";
+         :physicalDescription  [
+             a :Description;
+             :extent "x, 262 p. : maps ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Pennsylvania_State_University_Press>;
+         :subject <http://simile.mit.edu/2006/01/era/Revolution,_1789-1799>,
+                <http://simile.mit.edu/2006/01/place/France>,
+                <http://simile.mit.edu/2006/01/place/e-fr--->,
+                <http://simile.mit.edu/2006/01/topic/Girondists>,
+                <http://simile.mit.edu/2006/01/topic/History>,
+                <http://simile.mit.edu/2006/01/topic/Montagnards>;
+         :title  [
+             a :Title;
+             :nonSort "The ";
+             :sub "the Federalist Revolt in the French Revolution";
+             :value "Jacobin Republic under fire" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Hanson,_Paul_R._1952-> .
+    
+    <info:isbn/0810844931>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "Z1243 .V45 2003" ],
+                 [
+             a :Classification;
+             :authority "lcc";
+             :value "E715" ];
+         :contents "General Works -- Foreign Relations -- Biographies, Memoirs, Letters and Diaries -- U.S. Army -- U.S. Navy -- Press and Public Opinion -- Cuba -- Philippines -- Puerto Rico -- Guam -- Medical and Sanitary Conditions -- Relief Efforts -- Black Americans -- Expansion -- Anti-Imperialism -- Literature -- Music.";
+         :dateIssued  [
+             a :Date;
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Anne Cipriano Venzon.",
+                "Includes indexes.";
+         :physicalDescription  [
+             a :Description;
+             :extent "ix, 215 p. ; 23 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Scarecrow>;
+         :subject <http://simile.mit.edu/2006/01/topic/Bibliography>,
+                <http://simile.mit.edu/2006/01/topic/Discography>,
+                <http://simile.mit.edu/2006/01/topic/Songs_and_music>,
+                <http://simile.mit.edu/2006/01/topic/Spanish-American_War,_1898>;
+         :title  [
+             a :Title;
+             :sub "a selected bibliography";
+             :value "America's war with Spain" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Venzon,_Anne_Cipriano_1951-> .
+    
+    <info:isbn/0814209238%20(hardcover%20:%20alk.%20paper)>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "HT168.S197.H64 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "307.1/216/0979498" ];
+         :contents "The Argument -- The Implications -- What Can Be Done -- Personal and Professional: The Format of What Follows -- Cast of Characters -- Overview: The Promise of Planning in Twentieth-Century U.S. Cities -- Why San Diego Suburbs? -- 1. The Prospects for Big-Picture Planning -- 2. Locating the Development Site: Sociohistorical Context -- 3. Affordable Housing and Growth Control: Contradictory Interests in Permitting Development -- 4. Development and Habit Conservation -- 5. Planning the Postmodern Community -- App. A. On Method and Moral Judgment.";
+         :dateIssued  [
+             a :Date;
+             :value "c2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Includes bibliographical references (p. 187-194) and index.",
+                "Richard Hogan.";
+         :physicalDescription  [
+             a :Description;
+             :extent "xxviii, 200 p. : maps ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Ohio_State_University_Press>;
+         :series  [
+             a :Item;
+             :title  [
+                 a :Title;
+                 :value "Urban life and urban landscape series" ] ];
+         :subject <http://simile.mit.edu/2006/01/place/California>,
+                <http://simile.mit.edu/2006/01/place/San_Diego>,
+                <http://simile.mit.edu/2006/01/place/San_Diego_(Calif.)>,
+                <http://simile.mit.edu/2006/01/place/n-us-ca>,
+                <http://simile.mit.edu/2006/01/topic/City_planning>,
+                <http://simile.mit.edu/2006/01/topic/Economic_policy>,
+                <http://simile.mit.edu/2006/01/topic/Social_policy>,
+                <http://simile.mit.edu/2006/01/topic/Suburbs>;
+         :title  [
+             a :Title;
+             :nonSort "The ";
+             :sub "permitting sprawl in San Diego suburbs, 1970-1999";
+             :value "failure of planning" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Hogan,_Richard.> .
+    
+    <info:isbn/0814251048%20(pbk.%20:%20alk.%20paper)>     a :Text;
+         = <info:isbn/0814209238%20(hardcover%20:%20alk.%20paper)> .
+    
+    <info:isbn/0814290051%20(CD-ROM)>     a :Text;
+         = <info:isbn/0814251048%20(pbk.%20:%20alk.%20paper)> .
+    
+   
+    <info:isbn/1852334266%20(acid-free%20paper)>     a :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "QC173.65.W66 2003" ],
+                 [
+             a :Classification;
+             :authority "ddc";
+             :edition "21";
+             :value "530.11" ];
+         :contents "1. Relativity in Classical Mechanics -- 2. Maxwell's Theory -- 3. The Propagation of Light -- 4. Einstein's Special Theory of Relativity -- 5. Lorentz Transformations in Four Dimensions -- 6. Relative Motion -- 7. Relativistic Collisions -- 8. Relativistic Electrodynamics -- 9. Tensors and Isometries -- Vector Calculus.";
+         :dateIssued  [
+             a :Date;
+             :value "c2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2003" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Includes bibliographical references (p. 187-188) and index.",
+                "N.M.J. Woodhouse.";
+         :physicalDescription  [
+             a :Description;
+             :extent "ix, 191 p. : ill. ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Springer>;
+         :series  [
+             a :Item;
+             :title  [
+                 a :Title;
+                 :value "Springer undergraduate mathematics series" ] ];
+         :subject <http://simile.mit.edu/2006/01/topic/Special_relativity_(Physics)>;
+         :title  [
+             a :Title;
+             :value "Special relativity" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Woodhouse,_N._M._J._(Nicholas_Michael_John)_1949-> .
+    
+    <info:isbn/1870699645>     a :Text;
+         :dateIssued  [
+             a :Date;
+             :value "c2002" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2002" ];
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "Maria Lindberg.",
+                "Title from colophon.";
+         :physicalDescription  [
+             a :Description;
+             :extent "1 v. (unpaged) : all ill. (some col.) ; 23 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Book_Works>,
+                <http://simile.mit.edu/2006/01/publisher/distributed_by_D.A.P.>;
+         :series  [
+             a :Item;
+             :title  [
+                 a :Title;
+                 :value "Opus Projects ; Opus 1" ] ];
+         :subject <http://simile.mit.edu/2006/01/topic/Photography,_Artistic>,
+                <http://simile.mit.edu/2006/01/topic/Staged_photography>;
+         :title  [
+             a :Title;
+             :value "[Trying to get in between]" ],
+                 [
+             a :AlternativeTitle;
+             :sub "trying to get in between";
+             :value "Maria Lindberg" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Lindberg,_Maria_1958-> .
+    
+     <info:isbn/9812381902%20(alk.%20paper)>     a :Text;
+         :contents "1. About the Organization European Women in Mathematics: Presentation of EWM -- A brief history of the EWM office in Helsinki, 1991-2001 / Marjatta Naatanen -- A brief account of the meetings since the 5th meeting in Luminy / Emilia Mezzetti and Sylvie Paycha -- A report on activities since the 9th meeting in Loccum / Laura Fainsilber -- The mathematical part of EWM meetings / Capi Corrales Rodriganez and Laura Tedeschini Lalli -- 2. Photo Gallery -- 3. Contributions -- 3.1. Mathematics applied to finance -- Introduction / Francine Diener -- Derivatives: a scientific revolution of the seventies / Francine Diener -- Why heavy tails in financial series? Estimations and tests / Monique Pontier -- Portfolio optimization in finance / Nadine Bellamy -- Report on discussion on The ethics of using mathematics in finance / Francine Diener -- 3.2. Geometry -- 3.2.1. Cohomology theories: a useful tool in geometry --  Introduction / Emilia Mezzetti and Sylvie Paycha -- Analytical and geometrical features of de Rham and Dolbeault's cohomologies / Chiara de Fabritiis -- The McKay correspondence - A bridge from algebra to geometry / Yukari Ito -- Total positivity, flag varieties and quantum cohomology / Konstanze Rietsch -- 3.2.2. The uses of geometry -- Introduction / Tsou Sheung Tsun -- Calabi-Yau manifolds and mirror symmetry / Xenia de la Ossa -- Why is there hyperbolic geometry in dynamics? / Caroline Series -- Tessellations and related modular groups / Asia Ivic Weiss -- 3.3. EMS lectures on convex polytopes -- Introduction to the EMS lectures by Michele Vergne / Bodil Branner -- Residue formulae for Verlinde sums, and for number of integral points in convex rational polytopes / Michele Vergne -- Lecture 1. Residue formulae for Bernoulli polynomials and Verlinde sums -- Lecture 2. Residue formulae for volumes and number of integral points in convex rational polytopes --",
+                "3.4. Poster session -- Report / Tatiana Ivanova -- Abstracts of the posters -- 3.5. Mathematics outside the classroom: cultural differences -- Introduction / Laura Fainsilber, Marie-Francoise Roy and Rosa Maria Spitaleri -- Raising public awareness in mathematics: the WMY2000 experience / Mireille Chaleyat-Maurel -- Popularization of mathematics: local and global perspectives / Franka Miriam Bruckler -- 3.6. Socio-political dimension of gender inequality -- Introduction / Laura Fainsilber, Marie-Francoise Roy and Rosa Maria Spitaleri -- Women and science in Europe and in France / Claudine Hermann -- Focus on Italian activities in women and science / Rosa Maria Spitaleri -- Mathematicians' careers - analysis of a questionnaire / Ina Kersten and Emilia Mezzetti -- Short communications -- Hankel operators on generalized Bergman-Hardy spaces / Bettina Rehberg -- Math-kit: a multimedia project for learning and teaching mathematics / Sabine Schiller and Luise Unger -- App. A. Minutes of the general assembly / Riitta Ulmanen -- App. B. Committee members -- Coordinators -- List of participants.";
+         :dateIssued  [
+             a :Date;
+             :value "c2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2001" ];
+         :genre <http://simile.mit.edu/2006/01/genre/marc/bibliography>,
+                <http://simile.mit.edu/2006/01/genre/marc/conference_publication>;
+         :issuance "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note """"10th International Meeting of the EWM"--Pref.""",
+                "Includes bibliographical references.",
+                "editors, Emilia Mezzetti, Sylvie Paycha.";
+         :physicalDescription  [
+             a :Description;
+             :extent "x, 409 p. : ill. (some col.) ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/World_Scientific>;
+         :subject <http://simile.mit.edu/2006/01/topic/Congresses>,
+                <http://simile.mit.edu/2006/01/topic/Mathematics>,
+                <http://simile.mit.edu/2006/01/topic/Women_in_mathematics>,
+                <http://simile.mit.edu/2006/01/topic/Women_in_science>;
+         :title  [
+             a :Title;
+             :sub "proceedings of the tenth general meeting, Malta, 24-30 August 2001";
+             :value "European Women in Mathematics" ],
+                 [
+             a :AlternativeTitle;
+             :value "Proceedings of the tenth general meeting, European Women in Mathematics" ],
+                 [
+             a :AlternativeTitle;
+             :value "10th International Meeting of the EWM" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#European_Women_in_Mathematics-Meeting-(10th_:_2001_:_Malta)>,
+                <http://simile.mit.edu/2006/01/entity#Mezzetti,_Emilia.>,
+                <http://simile.mit.edu/2006/01/entity#Paycha,_Sylvie.> .
+    
+    <info:lccn/m%2057001774>     a :NotatedMusic;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "M221 .R" ];
+         :dateIssued  [
+             a :Date;
+             :value "[c1957]" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "1957" ];
+         :issuance "monographic";
+         :physicalDescription  [
+             a :Description;
+             :extent "score (18 p.) and part. 31 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/A._Lengnick>,
+                <http://simile.mit.edu/2006/01/publisher/sole_agent,_U.S._A.,_Mills_Music>;
+         :subject <http://simile.mit.edu/2006/01/topic/Scores_and_parts>,
+                <http://simile.mit.edu/2006/01/topic/Violin_and_piano_music>;
+         :title  [
+             a :Title;
+             :sub "(1956) for violin and piano";
+             :value "Fantasia concertante" ],
+                 [
+             a :UniformTitle;
+             :value "Fantasia concertante" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Reizenstein,_Franz_1911-1968> .
+    
+    <info:lccn/m%2061000429>     a :NotatedMusic;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "M1013 .R527 op. 71" ];
+         :dateIssued  [
+             a :Date;
+             :value "[c1961]" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "1961" ];
+         :issuance "monographic";
+         :note "For violin and piano.",
+                "[Piano reduction by the composer]";
+         :physicalDescription  [
+             a :Description;
+             :extent "score (18 p.) and part. 31 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Associated_Music_Publishers>;
+         :subject <http://simile.mit.edu/2006/01/era/d1958>,
+                <http://simile.mit.edu/2006/01/topic/Solo_with_piano>,
+                <http://simile.mit.edu/2006/01/topic/Variations_(Violin_with_orchestra)>;
+         :title  [
+             a :Title;
+             :value "Variations for violin and orchestra, op. 71" ],
+                 [
+             a :UniformTitle;
+             :partNumber "op. 71; arr";
+             :value "Variations, violin, orchestra" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Riegger,_Wallingford_1885-1961> .
+    
+    <info:marc:/>     a :Cartographic,
+                :NotatedMusic,
+                :Text;
+         :classification  [
+             a :Classification;
+             :authority "lcc";
+             :value "TA169.K68 2003" ];
+         :dateIssued  [
+             a :Date;
+             :value "c2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "2003" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "start";
+             :value "1984" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "end";
+             :value "9999" ],
+                 [
+             a :Date;
+             :value "c1949" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "1949" ];
+         :edition "Deluxe ed.";
+         :frequency "Annual";
+         :genre <http://simile.mit.edu/2006/01/genre/marc/atlas>,
+                <http://simile.mit.edu/2006/01/genre/marc/bibliography>;
+         :issuance "continuing",
+                "monographic";
+         :language <http://simile.mit.edu/2006/01/language/iso639-2b/eng>;
+         :note "\"P(X<Y).\"",
+                "At head of title: Rand McNally, <2000->",
+                "Description based on: 1993; title from cover.",
+                "Includes bibliographical references (p. 233-249) and index.",
+                "Richard Yardumian.",
+                "Samuel Kotz, Yan Lumelskii, Marianna Pensky.";
+         :physicalDescription  [
+             a :Description;
+             :extent "xvii, 253 p. : ill. ; 24 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ],
+                 [
+             a :Description;
+             :extent "v. : chiefly col. maps ; 39 cm." ],
+                 [
+             a :Description;
+             :extent "5 p. ; 31 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Elkan-Vogel>,
+                <http://simile.mit.edu/2006/01/publisher/Rand_McNally_&_Co.>,
+                <http://simile.mit.edu/2006/01/publisher/World_Scientific>;
+         :subject <http://simile.mit.edu/2006/01/place/Canada>,
+                <http://simile.mit.edu/2006/01/place/Mexico>,
+                <http://simile.mit.edu/2006/01/place/United_States>,
+                <http://simile.mit.edu/2006/01/place/n-cn--->,
+                <http://simile.mit.edu/2006/01/place/n-mx--->,
+                <http://simile.mit.edu/2006/01/place/n-us--->,
+                <http://simile.mit.edu/2006/01/topic/Distribution_(Probability_theory)>,
+                <http://simile.mit.edu/2006/01/topic/Estimation_theory>,
+                <http://simile.mit.edu/2006/01/topic/Maps>,
+                <http://simile.mit.edu/2006/01/topic/Mathematical_statistics>,
+                <http://simile.mit.edu/2006/01/topic/Reliability_(Engineering)>,
+                <http://simile.mit.edu/2006/01/topic/Roads>,
+                <http://simile.mit.edu/2006/01/topic/Statistical_methods>,
+                <http://simile.mit.edu/2006/01/topic/Violin_music>;
+         :title  [
+             a :Title;
+             :nonSort "The ";
+             :sub "theory and applications";
+             :value "stress-strength model and its generalizations" ],
+                 [
+             a :AlternativeTitle;
+             :value "Stress strength model and its generalizations" ],
+                 [
+             a :Title;
+             :partName "United States, Canada, Mexico";
+             :value "Road atlas" ],
+                 [
+             a :AlternativeTitle;
+             :value "Road atlas, United States, Canada, Mexico" ],
+                 [
+             a :AlternativeTitle;
+             :value "Road atlas deluxe: United States, Canada, and Mexico" ],
+                 [
+             a :AlternativeTitle;
+             :value "Rand McNally road atlas" ],
+                 [
+             a :UniformTitle;
+             :value "Road atlas. United States, Canada, Mexico (Deluxe ed.)" ],
+                 [
+             a :Title;
+             :sub "for violin solo";
+             :value "Monologue" ],
+                 [
+             a :UniformTitle;
+             :value "Monologue, violin" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Kotz,_Samuel.>,
+                <http://simile.mit.edu/2006/01/entity#Lumel%CA%B9ski%C4%AD,_I%EF%B8%A0A%EF%B8%A1n_Petrovich.>,
+                <http://simile.mit.edu/2006/01/entity#Pensky,_Marianna.>,
+                ent:Rand_McNally_and_Company,
+                <http://simile.mit.edu/2006/01/entity#Yardumian,_Richard.> .
+    
+    <info:music%20plate/10116%20G.%20Schirmer>     a :NotatedMusic;
+         :dateIssued  [
+             a :Date;
+             :value "[19--]" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "start";
+             :value "1900" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "end";
+             :value "1980" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "start";
+             :qualifier "questionable";
+             :value "1900" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "end";
+             :qualifier "questionable";
+             :value "1980" ];
+         :issuance "monographic";
+         :note "Franz Ries.";
+         :physicalDescription  [
+             a :Description;
+             :extent "score (37 p.) and part ; 31 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/G._Schirmer>;
+         :series  [
+             a :Item;
+             :title  [
+                 a :Title;
+                 :value "Schirmer's library of musical classics ; v. 1065" ] ];
+         :subject <http://simile.mit.edu/2006/01/topic/Scores_and_parts>,
+                <http://simile.mit.edu/2006/01/topic/Suites_(Violin_and_piano)>;
+         :title  [
+             a :Title;
+             :sub "in F for violin with piano accompaniment, op. 27";
+             :value "Second suite" ],
+                 [
+             a :UniformTitle;
+             :partNumber "no. 2, op. 27, F major";
+             :value "Suites, violin, piano" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Ries,_Franz.> .
+    
+    
+    <info:music%20plate/AMP-96010%20Associated%20Music%20Publishers>     a :NotatedMusic;
+         = <info:lccn/m%2061000429> .
+    
+    <info:music%20plate/Abr.L.%203359%20Lundquists%20Kongl.%20Hof-Musikhandel>     a :NotatedMusic;
+         :dateIssued  [
+             a :Date;
+             :value "[190-]" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "start";
+             :value "1900" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "end";
+             :value "1909" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "start";
+             :qualifier "questionable";
+             :value "1900" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :point "end";
+             :qualifier "questionable";
+             :value "1909" ];
+         :issuance "monographic";
+         :physicalDescription  [
+             a :Description;
+             :extent "score (47 p.) and part. 34 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Lundquists_Kongl._Hof-Musikhandel>;
+         :subject <http://simile.mit.edu/2006/01/topic/Scores_and_parts>,
+                <http://simile.mit.edu/2006/01/topic/Sonatas_(Violin_and_piano)>;
+         :title  [
+             a :Title;
+             :value "Sonate fÃ¼r Violine und Pianoforte" ],
+                 [
+             a :UniformTitle;
+             :value "Sonatas, violin, piano" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Peterson-Berger,_Wilhelm_1867-1942> .
+    
+    <info:music%20plate/B-B%2030%20Boelke-Bomart>     a :NotatedMusic;
+         = <info:lccn/76772238> .
+    
+    <info:music%20plate/B.%20&%20B.%2016921%20Ed.%20Bote%20&%20G.%20Bock>     a :NotatedMusic;
+         :dateIssued  [
+             a :Date;
+             :value "c1904" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "1904" ];
+         :issuance "monographic";
+         :note "Caption title.",
+                "Max Reger ; rev. von Theodor Prusse.";
+         :physicalDescription  [
+             a :Description;
+             :extent "1 score (51 p.) and 1 part (12 p.) ; 33 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Ed._Bote_&_G._Bock>;
+         :subject <http://simile.mit.edu/2006/01/topic/Scores_and_parts>,
+                <http://simile.mit.edu/2006/01/topic/Sonatas_(Violin_and_piano)>;
+         :title  [
+             a :Title;
+             :sub "fÃ¼r Violine und Klavier ; op. 72";
+             :value "Sonate C-Dur" ],
+                 [
+             a :UniformTitle;
+             :partNumber "no. 4, op. 72, C major";
+             :value "Sonatas, violin, piano" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Prusse,_Theodor.>,
+                <http://simile.mit.edu/2006/01/entity#Reger,_Max_1873-1916> .
+    
+    <info:music%20plate/B.%20&%20B.%2017057%20Ed.%20Bote%20&%20G.%20Bock>     a :NotatedMusic;
+         :dateIssued  [
+             a :Date;
+             :value "c1905" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "1905" ];
+         :issuance "monographic";
+         :note "Caption title.",
+                "Rev. von Th. Prusse.";
+         :physicalDescription  [
+             a :Description;
+             :extent "score (51 p.) and part. 34 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Associated_Music_Publishers>,
+                <http://simile.mit.edu/2006/01/publisher/Ed._Bote_&_G._Bock>;
+         :subject <http://simile.mit.edu/2006/01/era/d1905>,
+                <http://simile.mit.edu/2006/01/topic/Scores_and_parts>,
+                <http://simile.mit.edu/2006/01/topic/Sonatas_(Violin_and_piano)>;
+         :title  [
+             a :Title;
+             :value "Sonate (Fismoll) fÃ¼r Violine und Klavier, Op. 84" ],
+                 [
+             a :UniformTitle;
+             :partNumber "no. 5, op. 84, F# minor";
+             :value "Sonatas, violin, piano" ];
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Prusse,_Theodor.>,
+                <http://simile.mit.edu/2006/01/entity#Reger,_Max_1873-1916> .
+    
+    <info:music%20plate/B.%20&%20H.%2018760%20Boosey%20&%20Hawkes>     a :NotatedMusic;
+         :dateIssued  [
+             a :Date;
+             :value "c1960" ],
+                 [
+             a :Date;
+             :encoding "marc";
+             :value "1960" ];
+         :issuance "monographic";
+         :note "Based on Paganini's Caprice no. 24.",
+                "EugÃ¨ne YsaÃ¿e ; arranged by Jacques YsaÃ¿e [for] violin and piano.",
+                "Originally for solo violin.";
+         :physicalDescription  [
+             a :Description;
+             :extent "1 score (16 p.) + 1 part (7 p.) ; 31 cm.";
+             :form <http://simile.mit.edu/2006/01/form/marcform/print> ];
+         :publisher <http://simile.mit.edu/2006/01/publisher/Boosey_&_Hawkes>;
+         :relatedTo  [
+             a :Item;
+             :name <http://simile.mit.edu/2006/01/entity#Paganini,_Nicol%C3%B2,_1782-1840>;
+             :title  [
+                 a :Title;
+                 :partNumber "M.S. 25. No. 24";
+                 :value "Caprices, violin" ] ];
+         :subject <http://simile.mit.edu/2006/01/topic/Scores_and_parts>,
+                <http://simile.mit.edu/2006/01/topic/Variations_(Violin)>,
+                <http://simile.mit.edu/2006/01/topic/Variations_(Violin_and_piano),_Arranged>;
+         :title  [
+             a :Title;
+             :sub "op. posth";
+             :value "Paganini variations" ],
+                 [
+             a :UniformTitle;
+             :value "Variations sur un thÃ¨me de Paganini" ];
+         <http://simile.mit.edu/2006/01/role/arr> <http://simile.mit.edu/2006/01/entity#Ysa%C3%BFe,_Jacques.>;
+         <http://simile.mit.edu/2006/01/role/creator> <http://simile.mit.edu/2006/01/entity#Ysa%C3%BFe,_Eug%C3%A8ne_1858-1931> .
+    
+    
+    <info:music%20publisher/Edition%20Peters%209102>     a :NotatedMusic;
+         = <info:lccn/72202388> .
+    
+    <info:music%20publisher/GM%201311%20Edition%20Kunzelmann>     a :NotatedMusic;
+         = <info:lccn/99478338> .
+    
+    <info:music%20publisher/GM%201313a%20Kunzelmann>     a :NotatedMusic;
+         = <info:lccn/99478337> .
+    
+    <info:music%20publisher/K%205288%20Belwin-Mills>     a :NotatedMusic;
+         = <info:lccn/83750266> .
+    
+    <info:uri/http://ieeexplore.ieee.org/servlet/opac?punumber=7727>     a :Text;
+         = <info:stock%20number/IEEE%20Service%20Center,%20445%20Hoes%20Lane,%20Piscataway,%20NJ%2008855-1331> .
+    
+    <info:uri/http://ieeexplore.ieee.org/servlet/opac?punumber=8441>     a :Text;
+         = <info:lccn/2002104121> .
+    
+    <info:uri/http://ieeexplore.ieee.org/xpl/conferences.jsp>     a :Text;
+         = <info:stock%20number/IEEE%20Operations%20Center,%20P.%20O.%20Box%201331,%20445%20Hose%20Lane,%20Piscataway,%20NJ%2008855-1331> .
+    
+    <info:uri/http://link.springer.de/link/service/series/0642/index.htm>     a :Text;
+         = <info:lccn/2003042521> .
+    
+    <info:uri/http://openurl.ingenta.com/content?genre=journal&issn=1478-422X>     a :Text;
+         = <info:stock%20number/Maney%20Publishing,%201%20Carlton%20House%20Terrace,%20London%20SW1Y%205DB,%20UK> .
+    
+    <info:uri/http://portal.acm.org/browse_dl.cfm?linked=1&part=series&idx=SERIES104&coll=portal&dl=ACM>     a :Text;
+         = <info:lccn/2003242092> .
+    
+    <info:uri/http://www.loc.gov/catdir/toc/fy037/2003004788.html>     a :Text;
+         = <info:lccn/2003004788> .
+    
+    <info:uri/http://www.loc.gov/catdir/toc/wiley031/2002191010.html>     a :Text;
+         = <info:lccn/2002191010> .
+    
+    <info:uri/http://www.loc.gov/catdir/toc/wiley031/2002193382.html>     a :Text;
+         = <info:lccn/2002193382> .
+    
+#ENDS
