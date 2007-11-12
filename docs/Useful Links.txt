@@ -1,0 +1,7 @@
+RDF Validator:
+
+Paste some XML into the window and it will spit out the full
+property table for you.  Its a good triple visualizer, but only
+will work for small pieces of data
+
+http://www.w3.org/RDF/Validator/
