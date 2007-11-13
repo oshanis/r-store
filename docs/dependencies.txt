@@ -1,0 +1,10 @@
+Make sure the following jars are in your classpath before building the project
+
+Jena 2.5.4
+http://prdownloads.sourceforge.net/jena/Jena-2.5.4.zip?download
+
+Tomcat 6.0.14
+http://www.alliedquotes.com/mirrors/apache/tomcat/tomcat-6/v6.0.14/bin/apache-tomcat-6.0.14.zip
+
+Postgres JDBC Driver
+http://jdbc.postgresql.org/download/postgresql-8.2-506.jdbc4.jar
