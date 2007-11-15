@@ -6,9 +6,9 @@ package edu.mit.db.rstore.impl;
  * It consists of the following pieces of information:
  * 		A String which is the name of the table in the database
  * 		A String which is the command to send to the database command line to actually instantiate the Property Table
- * 		A LinkedList of RDF Subject types which comprise the primary key of the table
- * 		A LinkedList of RDF Predicates which comprise the other attributes in the property table, aside from the primary key
- * 		A HashMap to map from RDF Subject / Predicate -> SQL column names
+ *		A String which is a single RDF subject type which is the primary key for the table
+ *		A String which is the column identifier for the primary key
+ *		A HashMap from predicates to column identifiers within the table
  * 
  * A Property Table can be thought of in the following way:
  * Schema:	Subject (pkey)					Predicate1													Predicate2  ...
@@ -16,10 +16,19 @@ package edu.mit.db.rstore.impl;
  * 			.								.															.
  * 			.								.															.
  * 
+ * 11/13/07
  * This class specifies ONLY the schema, and a set of rules for populating the table given triples.  It does not actually populate the table
  * Foreign keys are not currently supported, that would be nice to do.
  * Automatic create table generation should be taken care of
  * Storing the database data types for fields should also be done
+ * This class currently requires unique subject names.  This is a problem
+ * 
+ * 11/15/07
+ * The class is now only defined for standard property tables.  A subclass should be used for many to many relations
+ * Database datatypes should be provided either by the Schema Generator or some other relaxation algorithm module, but not this.
+ * That means SQL command generation can not be done internally - it would require type information which exists outside the class
+ * Unique subject problem is avoided because now we assume only one primary key.  Will have to revisit it for the many to many case,
+ * but it seems best to me to tackle this problem in a different class.
  */
 
 import java.util.*;
@@ -27,30 +36,29 @@ public class PropertyTable
 {
 	//Identifier for the table
 	private String table_name;
+	//RDF type of the primary key
+	private String pkey;
+	//Identifier for the primary key
+	private String pkey_col_name;
 	//The formatted SQL command to create the table
 	private String create_table_command;
-	//Lists the primary keys of a table represented as RDF namespace prefixes (subject types)
-	private LinkedList<String> primary_keys;
-	//Lists the other attributes in the property table as RDF namespace prefixes (PREDICATE types)
-	private LinkedList<String> other_attributes;
-	//Maps each RDF entity, either a predicate or a subject type, to the string representation of its column name within the table
-	private HashMap<String, String> attributes_to_columns;
+	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
+	private HashMap<String, String> predicates_to_columns;
 	
 	/**
 	 * PropertyTable constructor.
 	 * 
-	 * @param name - String specifying the SQL identifier for the table.  Not mutable.
-	 * @param pkeys - LinkedList<String> specifying the initial primary keys of the table as RDF Subject(s)
-	 * @param attr - LinkedList<String> specifying the initial attributes of the tables as RDF Predicate(s)
-	 * @param attr_to_cols - HashMap<String, String> mapping the RDF identifiers in the above two params to their column identifiers in the Property Table
+	 * @param tname - String specifying the SQL identifier for the table.  Not mutable.
+	 * @param primary_key - String specifying the RDF type of the primary key for the table
+	 * @param primary_key_name - String specifying the column name for the primary key
 	 */
-	public PropertyTable(String name, LinkedList<String> pkeys, LinkedList<String> attr, HashMap<String, String> attr_to_cols)
+	public PropertyTable(String tname, String primary_key, String primary_key_name)
 	{
-		table_name = name;
+		table_name = tname;
 		create_table_command = "";
-		primary_keys = pkeys;
-		other_attributes = attr;
-		attributes_to_columns = attr_to_cols;
+		pkey = primary_key;
+		pkey_col_name = primary_key_name;
+		predicates_to_columns = new HashMap<String, String>();
 	}
 	
 	/**
@@ -82,19 +90,27 @@ public class PropertyTable
 	}
 	
 	/**
-	 * Accessor for primary keys as RDF Subjects.  Note that there is rep exposure here, DO NOT MODIFY THIS LIST.
+	 * Accessor for primary keys as RDF Subject.
 	 */
-	public LinkedList<String> getPrimaryKey()
+	public String getPrimaryKey()
 	{
-		return primary_keys;
+		return new String(pkey);
+	}
+	
+	/**
+	 * Accessor for the primary key column name
+	 */
+	public String getPrimaryKeyColumn()
+	{
+		return new String(pkey_col_name);
 	}
 	
 	/**
 	 * Accessor for the other attributes as RDF Predicates.  Also rep exposure here.
 	 */
-	public LinkedList<String> getAttributes()
+	public HashSet<String> getAttributes()
 	{
-		return other_attributes;
+		return new HashSet<String>(predicates_to_columns.keySet());
 	}
 	
 	/**
@@ -102,47 +118,32 @@ public class PropertyTable
 	 */
 	public HashMap<String, String> getMap()
 	{
-		return attributes_to_columns;
+		return predicates_to_columns;
 	}
 	
 	/**
-	 * Add a primary key Subject.  You will also need to specify a column identifier.  This method will keep the interals consistent
-	 * 
-	 * @param subj - String specifying the RDF Subject to add
-	 * @param col - String specifying the identifier with in the Property Table to map to
+	 * Accessor for the column names, including the primary key.  Does not guarentee order
 	 */
-	public void addPrimaryKey(String subj, String col)
+	public HashSet<String> getColNames()
 	{
-		primary_keys.add(subj);
-		attributes_to_columns.put(subj, col);
+		HashSet<String> ids = new HashSet<String>(predicates_to_columns.values());
+		ids.add(new String(pkey_col_name));
+		return ids;
 	}
 	
 	/**
-	 * Remove a primary key Subject
-	 * 
-	 * @param subj - String specifying what to remove
-	 */
-	public void removePrimaryKey(String subj)
-	{
-		primary_keys.remove(subj);
-		attributes_to_columns.remove(subj);
-	}
-	
-	/**
-	 * Add an attribute.  Does the same thing as adding a primary key
+	 * Add an attribute.
 	 */
 	public void addAttribute(String pred, String col)
 	{
-		other_attributes.add(pred);
-		attributes_to_columns.put(pred, col);
+		predicates_to_columns.put(pred, col);
 	}
 	
 	/**
-	 * Remove an attribute.  Does the same thing as removing a primary key
+	 * Remove an attribute.
 	 */
 	public void removeAttribute(String pred)
 	{
-		other_attributes.remove(pred);
-		attributes_to_columns.remove(pred);
+		predicates_to_columns.remove(pred);
 	}
 }
