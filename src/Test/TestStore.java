@@ -10,8 +10,9 @@ public class TestStore
 	
 	public static void main (String args[]) {
     	
-    	String path= "C:/Users/Sergio/Desktop/RStore/data/rdf/";
+    	String path= "data/rdf/";
         
+		
     	Store myStore = new Store (path);
     	Model testModel= myStore.CreateModel();
     	//Store.PrintModel(testModel);
