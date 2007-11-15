@@ -1,5 +1,6 @@
 package Test;
 
+import java.util.*;
 
 import edu.mit.db.rstore.impl.Store;
 import com.hp.hpl.jena.rdf.model.*;
@@ -15,10 +16,14 @@ public class TestStore
     	Model testModel= myStore.CreateModel();
     	//Store.PrintModel(testModel);
     	
-    	StmtIterator iter= myStore.getIterator();
-    	Store.PrintTriples(iter);
+    	StmtIterator iter= myStore.getIterator();  	
+    	//Store.PrintTriples(iter);
     	
-        
+    	HashSet<String> nsSet= myStore.getClassNamespaces();
+    	//Store.PrintNamespaces(nsSet);
+    	
+    	HashMap<String, LinkedList<String>> predicateTable= myStore.getPredicateTable();
+    	Store.PrintPredicateTable(predicateTable);
             
     }
 }
