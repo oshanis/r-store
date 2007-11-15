@@ -1,5 +1,5 @@
 package edu.mit.db.rstore.impl;
-
+import java.util.*;
 
 /*
  * Written by Sergio
@@ -104,6 +104,59 @@ public class Store implements RDFStore
 	}
 	
 	/**
+	 * Prints the namespaces to the console 
+	 */
+	
+	public static void PrintNamespaces (HashSet<String> nspaces)
+	{
+		// print out the predicate, subject and object of each statement
+        if (!nspaces.isEmpty())
+        {
+        	Iterator <String> nsIterator= nspaces.iterator();
+        	
+            while ( nsIterator.hasNext())
+            {
+            	System.out.println( nsIterator.next());
+            }
+           
+        }
+	}
+	
+	/**
+	 * Prints the the predicate table to the console 
+	 */
+	
+	public static void PrintPredicateTable (HashMap<String, LinkedList<String>> predTable)
+	{
+		// print out the predicate, subject and object of each statement
+        if (!predTable.isEmpty())
+        {
+        	Set<String> propertySet= predTable.keySet();
+        	
+        	Iterator<String> propertyIterator= propertySet.iterator();
+        	
+            while ( propertyIterator.hasNext())
+            {
+            	String key= propertyIterator.next();
+            	LinkedList<String> list= predTable.get(key);
+            	
+            	String output= "\n Predicate : " + key;
+            	if(list.size()>0)
+            	{
+            		output+= "\n Subject ns : " + list.get(0);
+            	}
+            	if(list.size()>1)
+            	{
+            		output+= "\n Object ns : " + list.get(1);
+            	}
+            	
+            	System.out.println(output);
+            }
+           
+        }
+	}
+	
+	/**
 	 * Generates an Iterator on the model where the statements are grouped by namespace:subject 
 	 * return StmtIterator: Returns the statement iterator
 	 */
@@ -150,13 +203,90 @@ public class Store implements RDFStore
 	{
 		HashSet<String> classNamespaces= new HashSet<String>();
 		
+		
+		ResIterator qsubjectIterator= this.rdfModel.listSubjects();
+		
+		while (qsubjectIterator.hasNext())
+		{
+			Resource qsubject = (Resource)qsubjectIterator.next();
+			
+			
+			classNamespaces.add(qsubject.getNameSpace());
+			
+		}
+		
+		NodeIterator qobjectIterator= this.rdfModel.listObjects();
+		
+		while (qobjectIterator.hasNext())
+		{
+			RDFNode qobject = (RDFNode) qobjectIterator.next();
+			if(qobject.isURIResource())
+			{
+				Resource qobjectResource= (Resource)qobject;
+				
+				classNamespaces.add(qobjectResource.getNameSpace());
+				
+			}
+		}
+		
 		return classNamespaces;
 	}
 	
+	
+	/**
+	 * This data structure encodes a table which maps predicate namespaces to the namespaces of their subjects and objects.  Each
+	 * LinkedList will be non-null, and contain precisely two Strings.  The first String will correspond to the subject namespace,
+	 * the second String will correspond to the object namespace.  Both the subject and object namespaces must exist in the HashSet
+	 * returned by getClassNamespaces, and the predicate namespace must not occur in that HashSet.
+	 * 
+	 * @return A mapping from predicate namespaces to subject and object namespaces in the form of a HashMap.
+	 */
 	public HashMap<String, LinkedList<String>> getPredicateTable()
 	{
-		HashMap<String, LinkedList<String>> table= new HashMap<String, LinkedList<String>>();
-		return table;
+		HashMap<String, LinkedList<String>> predicateTable= new HashMap<String, LinkedList<String>>();
+		
+		StmtIterator it= this.rdfModel.listStatements();
+		
+		while (it.hasNext())
+		{
+			Statement st= (Statement) it.next();
+			
+			//Get predicate namespaces
+			Property prop =st.getPredicate();
+			String propString= prop.toString();
+			
+			//Get subject  namespaces
+			Resource res= st.getSubject();
+			String resString=res.getNameSpace();
+			
+			if(resString==null)
+			{
+				resString="";
+			}
+			
+			//Get object namespace
+			RDFNode objectnode=(RDFNode) st.getObject();
+			String objectString="";
+			
+			if(objectnode.isURIResource())
+			{
+				Resource objectresource= (Resource)objectnode;
+				objectString= objectresource.getNameSpace();
+				
+			}
+			
+			if(!predicateTable.containsKey(propString) && !objectString.isEmpty()  && !resString.isEmpty())
+			{
+				LinkedList <String> list= new LinkedList <String>();
+				list.add(resString);
+				list.add(objectString);
+				
+				
+				predicateTable.put(propString, list);
+			}
+		}
+		
+		return predicateTable;
 	}
 	
     
