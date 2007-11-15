@@ -34,9 +34,13 @@ public class FrequencyCounter
 		frequencies = new Vector<Vector<Integer>>(subjects.keySet().size());
 		int width = predicates.keySet().size() + 1;
 		for(Vector<Integer> v : frequencies)
+		{
 			v = new Vector<Integer>(width);
+			for(Integer i : v)
+				i = new Integer(0);
+		}
 		
-		//Now the iteration part
+		constructTable();
 	}
 	
 	public Vector<Vector<Integer>> getFrequencyTable()
@@ -95,7 +99,7 @@ public class FrequencyCounter
 	private void constructTable()
 	{
 		StmtIterator triples = rdf.getIterator();
-		int width = predicates.keySet().size() + 1;
+		int width = predicates.keySet().size();
 		
 		String prev_subject = "";
 		String this_subject = "";
@@ -114,25 +118,37 @@ public class FrequencyCounter
 			//Need to eventually add some book keeping here for multiple outgoing arcs, but for now we assume none
 			col_index = predicates.get(predicate.toString());
 			
+			if(row_index == null || col_index == null)
+				System.err.println("ERROR in FrequencyCounter.constructTable(); row index or column index was null!");
+			
+			//Increment the frequency
+			Vector<Integer> row = frequencies.get(row_index);
+			Integer count = row.get(col_index);
+			count++;
+			
+			//Increment the count of the subject occurrence, if its different than the previous subject
+			if(!prev_subject.equals(this_subject))
+			{
+				count = row.get(width);
+				count++;
+				prev_subject = this_subject;
+			}
+			
 		}
 		
-		/*
-		 * 		// print out the predicate, subject and object of each statement
-        while (iter.hasNext()) {
-            Statement stmt      = iter.nextStatement();         // get next statement
-            Resource  subject   = stmt.getSubject();   // get the subject
-            Property  predicate = stmt.getPredicate(); // get the predicate
-            RDFNode   object    = stmt.getObject();    // get the object
-            
-            System.out.print("Subject: " + subject.toString());
-            System.out.print(" Predicate: " + predicate.toString() + " ");
-            if (object instanceof Resource) {
-                System.out.print("Object: " + object.toString());
-            } else {
-                // object is a literal
-                System.out.print(" \"" + object.toString() + "\"");
-            }
-            System.out.println(" .");
-        }*/
+		//Need to update the count field for the final subject because the loop has expired.  Its the same row_index
+		Integer count = frequencies.get(row_index).get(width);
+		count++;
+	}
+	
+	//For now just the number format
+	public void dumpTable()
+	{
+		for(Vector<Integer> v : frequencies)
+		{
+			for(Integer i : v)
+				System.out.print(i + "  ");
+			System.out.println();
+		}
 	}
 }
