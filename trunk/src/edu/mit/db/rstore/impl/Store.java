@@ -278,15 +278,16 @@ public class Store implements RDFStore
 	
 			//Attn:Sergio, I am getting compilation errors here!,  So I commented out - Oshani
 			
-//			if(!predicateTable.containsKey(propString) && !objectString.isEmpty()  && !resString.isEmpty())
-//			{
-//				LinkedList <String> list= new LinkedList <String>();
-//				list.add(resString);
-//				list.add(objectString);
-//				
-//				
-//				predicateTable.put(propString, list);
-//			}
+			//Hey I need that there :)  It compiles just fine.  Check your compiler settings, make sure its compatible with java 6.0 -AM
+			
+			if(!predicateTable.containsKey(propString) && !objectString.isEmpty()  && !resString.isEmpty())
+			{
+				LinkedList <String> list= new LinkedList <String>();
+				list.add(resString);
+				list.add(objectString);				
+				
+				predicateTable.put(propString, list);
+			}
 		}
 		
 		return predicateTable;
