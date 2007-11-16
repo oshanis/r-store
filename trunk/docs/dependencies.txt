@@ -1,5 +1,8 @@
 Make sure the following jars are in your classpath before building the project
 
+Java 6 (The code does not compile in Java 1.5 unfortunately)
+http://java.sun.com/javase/downloads/index.jsp
+
 Jena 2.5.4
 http://prdownloads.sourceforge.net/jena/Jena-2.5.4.zip?download
 

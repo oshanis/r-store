@@ -16,7 +16,11 @@ public class TestMainAngelique
 	//Dumps a frequency generator
 	public static void main(String[] args) 
 	{
-    	String path= "F:/Workspace/rstore/data/rdf/";
+		//Let's always try to use relative paths. (I changed the path variable here) 
+		//Otherwise we would have to change the code back and forth 
+		//when we commit and get an update in the SVN. - Oshani
+    	
+		String path= "data/rdf/";
         
     	Store myStore = new Store (path);
     	Model testModel= myStore.CreateModel();
