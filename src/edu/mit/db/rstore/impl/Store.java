@@ -280,6 +280,9 @@ public class Store implements RDFStore
 			
 			//Hey I need that there :)  It compiles just fine.  Check your compiler settings, make sure its compatible with java 6.0 -AM
 			
+			//Usual SE advice is that we should be backward compatible. :)
+			//Anyways, I changed my JDK - Oshani
+			
 			if(!predicateTable.containsKey(propString) && !objectString.isEmpty()  && !resString.isEmpty())
 			{
 				LinkedList <String> list= new LinkedList <String>();
