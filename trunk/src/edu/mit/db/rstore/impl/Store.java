@@ -109,7 +109,7 @@ public class Store implements RDFStore
 	
 	public static void PrintNamespaces (HashSet<String> nspaces)
 	{
-		// print out the predicate, subject and object of each statement
+		
         if (!nspaces.isEmpty())
         {
         	Iterator <String> nsIterator= nspaces.iterator();
@@ -128,7 +128,7 @@ public class Store implements RDFStore
 	
 	public static void PrintPredicateTable (HashMap<String, LinkedList<String>> predTable)
 	{
-		// print out the predicate, subject and object of each statement
+		
         if (!predTable.isEmpty())
         {
         	Set<String> propertySet= predTable.keySet();
