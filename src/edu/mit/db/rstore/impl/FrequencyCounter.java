@@ -23,29 +23,52 @@ public class FrequencyCounter
 	private RDFStore rdf;
 	private HashMap<String, Integer> predicates;
 	private HashMap<String, Integer> subjects;
-	private Vector<Vector<Integer>> frequencies;
+	private Integer [] [] frequencies;
+	private int discarded_statements;
 	
 	
 	public FrequencyCounter(RDFStore r)
 	{
 		rdf = r;
+		discarded_statements = 0;
 		sortStrings();
-		dumpIndicies();
-		frequencies = new Vector<Vector<Integer>>(subjects.keySet().size());
-		int width = predicates.keySet().size() + 1;
-		for(Vector<Integer> v : frequencies)
-		{
-			v = new Vector<Integer>(width);
-			for(Integer i : v)
-				i = new Integer(0);
-		}
+		//dumpIndicies();
+		frequencies = new Integer [subjects.size()][predicates.size() + 1];
+		for(int i = 0; i < subjects.size(); i++)
+			for(int j = 0; j <= predicates.size(); j++)
+				frequencies[i][j] = new Integer(0);
+		
+		System.out.println("Subjects:  " + subjects.keySet().size());
+		System.out.println("Predicates:  " + predicates.keySet().size());
 		
 		constructTable();
+		dumpTable();
 	}
 	
 	public Vector<Vector<Integer>> getFrequencyTable()
 	{
-		return frequencies;
+		Vector<Vector<Integer>> v = new Vector<Vector<Integer>>();
+		
+		for(int i = 0; i < subjects.size(); i++)
+		{
+			Vector<Integer> row = new Vector<Integer>();
+			for(int j = 0; j <= predicates.size(); j++)
+				row.add(frequencies[i][j]);
+			v.add(row);
+		}
+		
+		
+		return v;
+	}
+	
+	public HashMap<String, Integer> getRowMapping()
+	{
+		return subjects;
+	}
+	
+	public HashMap<String, Integer> getColumnMapping()
+	{
+		return predicates;
 	}
 	
 	private void sortStrings()
@@ -58,7 +81,8 @@ public class FrequencyCounter
 		
 		HashSet<String> str = rdf.getClassNamespaces();
 		for(String s : str)
-			sorter.add(s);
+			if(s != null)
+				sorter.add(s);
 		
 		int i = 0;
 		for(String s : sorter)
@@ -70,10 +94,12 @@ public class FrequencyCounter
 		i = 0;
 		sorter.clear();
 		
-		str = (HashSet<String>)rdf.getPredicateTable().keySet();
+		//Stupid hash maps...
+		Collection<String> strings = rdf.getPredicateTable().keySet();
 		
-		for(String s : str)
-			sorter.add(s);
+		for(String s : strings)
+			if(s != null)
+				sorter.add(s);
 		
 		for(String s : sorter)
 		{
@@ -118,37 +144,37 @@ public class FrequencyCounter
 			//Need to eventually add some book keeping here for multiple outgoing arcs, but for now we assume none
 			col_index = predicates.get(predicate.toString());
 			
-			if(row_index == null || col_index == null)
-				System.err.println("ERROR in FrequencyCounter.constructTable(); row index or column index was null!");
-			
-			//Increment the frequency
-			Vector<Integer> row = frequencies.get(row_index);
-			Integer count = row.get(col_index);
-			count++;
-			
-			//Increment the count of the subject occurrence, if its different than the previous subject
-			if(!prev_subject.equals(this_subject))
+			if(row_index != null && col_index != null)
 			{
-				count = row.get(width);
-				count++;
-				prev_subject = this_subject;
+				//Increment the frequency
+				frequencies[row_index][col_index]++;
+				
+				//Increment the count of the subject occurrence, if its different than the previous subject
+				if(!prev_subject.equals(this_subject))
+				{
+					frequencies[row_index][width]++;
+					prev_subject = this_subject;
+				}
 			}
-			
+			else
+				discarded_statements++;
 		}
 		
 		//Need to update the count field for the final subject because the loop has expired.  Its the same row_index
-		Integer count = frequencies.get(row_index).get(width);
-		count++;
+		if(row_index != null)
+			frequencies[row_index][width]++;
 	}
 	
 	//For now just the number format
 	public void dumpTable()
 	{
-		for(Vector<Integer> v : frequencies)
+		for(int i = 0; i < subjects.size(); i++)
 		{
-			for(Integer i : v)
-				System.out.print(i + "  ");
+			for(int j = 0; j <= predicates.size(); j++)
+				System.out.print(frequencies[i][j] + "  ");
 			System.out.println();
 		}
+		
+		System.out.println("Discarded statements due to null subject or predicate:  " + discarded_statements);
 	}
 }

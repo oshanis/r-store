@@ -210,8 +210,9 @@ public class Store implements RDFStore
 		{
 			Resource qsubject = (Resource)qsubjectIterator.next();
 			
-			
-			classNamespaces.add(qsubject.getNameSpace());
+			//Changed this:  Need to make sure never to add nulls...  -AM
+			if(qsubject.getNameSpace() != null)
+				classNamespaces.add(qsubject.getNameSpace());
 			
 		}
 		
