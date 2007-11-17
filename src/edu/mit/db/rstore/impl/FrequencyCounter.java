@@ -24,13 +24,15 @@ public class FrequencyCounter
 	private HashMap<String, Integer> predicates;
 	private HashMap<String, Integer> subjects;
 	private Integer [] [] frequencies;
+	
+	//diagnostics...
 	private int discarded_statements;
+	private long total_statements;
 	
 	
 	public FrequencyCounter(RDFStore r)
 	{
 		rdf = r;
-		discarded_statements = 0;
 		sortStrings();
 		//dumpIndicies();
 		frequencies = new Integer [subjects.size()][predicates.size() + 1];
@@ -132,6 +134,9 @@ public class FrequencyCounter
 		Integer row_index = new Integer(0);
 		Integer col_index = new Integer(0);
 		
+		discarded_statements = 0;
+		total_statements = 0;
+		
 		while(triples.hasNext())
 		{
 			Statement stmt = triples.nextStatement();
@@ -158,6 +163,8 @@ public class FrequencyCounter
 			}
 			else
 				discarded_statements++;
+			
+			total_statements++;
 		}
 		
 		//Need to update the count field for the final subject because the loop has expired.  Its the same row_index
@@ -176,5 +183,6 @@ public class FrequencyCounter
 		}
 		
 		System.out.println("Discarded statements due to null subject or predicate:  " + discarded_statements);
+		System.out.println("Total statements processed:  " + total_statements);
 	}
 }
