@@ -25,9 +25,10 @@ public class TestMainAngelique
      
     	Store myStore = new Store (path);
     	Model testModel= myStore.CreateModel();
+    	Store.PrintTriples(myStore.getIterator());
     	//Store.PrintModel(testModel);
     	
-    	FrequencyCounter f = new FrequencyCounter(myStore);
+    	//FrequencyCounter f = new FrequencyCounter(myStore);
 	}
 
 }
