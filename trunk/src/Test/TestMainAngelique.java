@@ -21,7 +21,7 @@ public class TestMainAngelique
 		//Otherwise we would have to change the code back and forth 
 		//when we commit and get an update in the SVN. - Oshani
     	
-		String path= "data/rdf/";
+		String path= "F:/Workspace/rstore/data/rdf";
      
     	Store myStore = new Store (path);
     	Model testModel= myStore.CreateModel();
