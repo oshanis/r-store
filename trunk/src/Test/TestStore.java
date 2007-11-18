@@ -18,13 +18,13 @@ public class TestStore
     	//Store.PrintModel(testModel);
     	
     	StmtIterator iter= myStore.getIterator();  	
-    	//Store.PrintTriples(iter);
+    	Store.PrintTriples(iter);
     	
     	HashSet<String> nsSet= myStore.getClassNamespaces();
     	//Store.PrintNamespaces(nsSet);
     	
     	HashMap<String, LinkedList<String>> predicateTable= myStore.getPredicateTable();
-    	Store.PrintPredicateTable(predicateTable);
+    	//Store.PrintPredicateTable(predicateTable);
             
     }
 }
