@@ -1,10 +1,6 @@
 package edu.mit.db.rstore.impl;
 import java.util.*;
 
-/*
- * Written by Sergio
- */
-
 import com.hp.hpl.jena.rdf.model.*;
 import edu.mit.db.rstore.*;
 import com.hp.hpl.jena.util.FileManager;
@@ -13,6 +9,11 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+
+/**
+ * This class implements the RDFStore interface
+ * @author Sergio
+ */
 
 
 public class Store implements RDFStore 
@@ -67,6 +68,17 @@ public class Store implements RDFStore
         
         return this.rdfModel;
 	}
+	
+	/**
+	 * This is an accessor to the mode.
+	 * return Model: private model
+	 */
+	
+	public Model GetModel ()
+	{
+		return this.rdfModel;
+	}
+	
 	
 	/**
 	 * Prints the model to the console 
