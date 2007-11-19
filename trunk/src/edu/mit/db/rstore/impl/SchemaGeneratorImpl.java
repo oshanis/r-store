@@ -1,9 +1,6 @@
 package edu.mit.db.rstore.impl;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Vector;
+import java.util.*;
 
 import edu.mit.db.rstore.SchemaGenerator;
 
@@ -17,7 +14,7 @@ import edu.mit.db.rstore.SchemaGenerator;
  * (Please note that the numbers used in the table are arbitrary and is only used for the
  * purpose of visualizing the algorithm only.)
  * 
- * 	Angelika's Frequency Table:
+ * 	Angelika's Frequency Table: (have ignored the last column for the count)
  * 
  *  			|Properties							   	|
  * ------------------------------------------------------
@@ -45,7 +42,7 @@ import edu.mit.db.rstore.SchemaGenerator;
  *  Pass2 (Generate the initial schema):
  *  ===================================
  *  Create a table for each of the Subjects/Objects
- *  Start grouping each of the tables with pairs of the highest occuring predicates
+ *  Start grouping each of the tables with pairs of the highest occurring predicates
  *  Update the Leftovers with, well, leftover predicates
  *  
  *  Now we would have something like this:
@@ -99,44 +96,145 @@ import edu.mit.db.rstore.SchemaGenerator;
  */
 public class SchemaGeneratorImpl implements SchemaGenerator {
 
-	private Vector<Vector<Integer>> originalFrequencyTable ;
+	private FrequencyCounter frequencyCounter;
 	
-	private Vector<Vector<Integer>> leftoversTable ; //A copy of the originalFrequencyTable we could mutate
-
-	private HashSet<String> subjectDomains; //This is what the RDFStore returns
+	private HashMap<String, HashMap<String, Integer>> leftoversTable;
 	
 	private LinkedList<String> schema; //The final schema the 'schema generating' algorithm produces
 	
-	private Vector<Table> tables;
+	private HashMap<String, Vector<String>> tables;
+	
+	/**
+	 * Constructor
+	 */
+	public SchemaGeneratorImpl(FrequencyCounter fc){
+		this.frequencyCounter = fc;
+		this.sortPropertyFrequencyValues();
+	}
 	
 	public LinkedList<String> getSchema() {
-		return schema;
+		return this.schema;
+	}
+	
+	public HashMap<String, HashMap<String, Integer>> getLeftoversTable(){
+		return this.leftoversTable;
+	}
+	
+	public HashMap<String, Vector<String>> getTables(){
+		return this.tables;
 	}
 	
 	/**
-	 * For each of the subjects this method should sort the property values sorted by their frequency
-	 * Since the FrequencyCounter does not have a method to return which property these frequencies
-	 * are referring to let's just for the moment return them like <p1, frequency> where "p1" refers 
-	 * to the first property the entire RDF graph has
+	 * Pass 1:
+	 * For each of the subjects this method should sort the property values by their frequency
 	 * 
-	 * @return sorted frequency values per each property
+	 * @return sorted frequency values per each subject
 	 */
-	private HashMap<String, Integer> sortPropertyFrequencyValues
-							(Vector<Integer> propertyFrequenciesPerSubjectDomain){
+	private void sortPropertyFrequencyValues(){
 		
-		return null;
+		HashMap<Integer, String> predicates = frequencyCounter.getColumnMapping_1();
+		HashMap<Integer, String> subjects = frequencyCounter.getRowMapping_1();
+		Vector<Vector<Integer>> frequencies = frequencyCounter.getFrequencyTable();
+		this.leftoversTable = new HashMap<String, HashMap<String,Integer>>();
+		
+		//Get the property strings into an array
+		String [] propertyLabelArray = new String[predicates.size()];
+		for (int i=0; i<predicates.size(); i++){
+			propertyLabelArray[i] = predicates.get(i);
+		}
+		
+		for(int i = 0; i < subjects.size(); i++){
+			
+			Vector<Integer> frequenciesPerSubject = frequencies.get(i);
+			int[] propertyFrequencyArray = new int[predicates.size()];
+			
+			for(int j = 0; j < predicates.size(); j++){
+				//Add the frequencies in a row to an array
+				propertyFrequencyArray[j] = frequenciesPerSubject.get(j); 
+			}
+			
+			//Arrays.sort(propertyFrequencyArray);
+			//Do the sorting explicitly, as we need the property associated with the frequency
+			quickSort(propertyFrequencyArray, propertyLabelArray, propertyFrequencyArray.length);
+			
+			HashMap<String, Integer> propertiesAndFrequencies = new HashMap<String, Integer>();
+			
+			//Add the properties and frequencies in sorted order ignoring the 0s
+			for(int j = predicates.size()-1 ; j >= 0 ; j--){
+				if (propertyFrequencyArray[j] != 0){
+					propertiesAndFrequencies.put(propertyLabelArray[j], propertyFrequencyArray[j]);
+				}
+			}
+
+			//Add the subject and the corresponding HashMap to the leftovers table if we have good properties
+			if (!(propertiesAndFrequencies.keySet().equals(null)))
+				leftoversTable.put(subjects.get(i), propertiesAndFrequencies);
+		}
 	}
 	
 	/**
-	 * Do Pass1 and Pass2 here
+	 * Quick sort algorithm copied and modified from http://linux.wku.edu/~lamonml/algor/sort/quick.html
+	 * @param numbers
+	 * @param array_size
 	 */
-	private void createInitialSchema
-							(HashSet<String> subjectDomains, Vector<Vector<Integer>> propertyFrequencies){
+	private void quickSort(int numbers[], String[] labels, int array_size)
+	{
+	  q_sort(numbers, labels, 0, array_size - 1);
+	}
+
+
+	private void q_sort(int numbers[], String[] labels, int left, int right)
+	{
+	  int pivot, l_hold, r_hold;
+	  String pivotStr;
+	  
+	  l_hold = left;
+	  r_hold = right;
+	  pivot = numbers[left];
+	  pivotStr = labels[left];
+	  
+	  while (left < right)
+	  {
+	    while ((numbers[right] >= pivot) && (left < right))
+	      right--;
+	    if (left != right)
+	    {
+	      numbers[left] = numbers[right];
+	      labels[left] = labels[right];
+	      left++;
+	    }
+	    while ((numbers[left] <= pivot) && (left < right))
+	      left++;
+	    if (left != right)
+	    {
+	      numbers[right] = numbers[left];
+	      labels[right] = labels[left];
+	      right--;
+	    }
+	  }
+	  numbers[left] = pivot;
+	  labels[left] = pivotStr;
+	  pivot = left;
+	  left = l_hold;
+	  right = r_hold;
+	  if (left < pivot)
+	    q_sort(numbers, labels, left, pivot-1);
+	  if (right > pivot)
+	    q_sort(numbers, labels, pivot+1, right);
+	}
+	
+	//End of the customized QuickSort Algorithm
+	
+	
+	/**
+	 * Pass2
+	 */
+	private void createInitialSchema(){
 		
 	}
 	
 	/**
-	 * Do Pass3 here
+	 * Pass3
 	 */
 	private void eliminateLeftoverTable(Vector<Vector<Integer>> leftoversTable){
 		
@@ -151,3 +249,4 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	}
 
 }
+

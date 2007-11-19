@@ -24,7 +24,12 @@ public class FrequencyCounter
 	private HashMap<String, Integer> predicates;
 	private HashMap<String, Integer> subjects;
 	private Integer [] [] frequencies;
-	
+
+	//Introduced the following 2 variables and the supporting methods, 
+	//because I had trouble mapping from the String -- Oshani
+	private HashMap<Integer, String> predicates_1; 
+	private HashMap<Integer, String> subjects_1;
+
 	//diagnostics...
 	private int discarded_statements;
 	private long total_statements;
@@ -73,11 +78,24 @@ public class FrequencyCounter
 		return predicates;
 	}
 	
+	public HashMap<Integer, String> getRowMapping_1()
+	{
+		return subjects_1;
+	}
+	
+	public HashMap<Integer, String> getColumnMapping_1()
+	{
+		return predicates_1;
+	}
+	
 	private void sortStrings()
 	{
 		predicates = new HashMap<String, Integer>();
 		subjects = new HashMap<String, Integer>();
-		
+
+		predicates_1 = new HashMap<Integer, String>();
+		subjects_1 = new HashMap<Integer, String>();
+
 		//Put the thingies inside a tree set to sort them
 		TreeSet<String> sorter = new TreeSet<String>();
 		
@@ -90,6 +108,7 @@ public class FrequencyCounter
 		for(String s : sorter)
 		{
 			subjects.put(s, i);
+			subjects_1.put(i, s);
 			i++;
 		}
 		
@@ -106,6 +125,7 @@ public class FrequencyCounter
 		for(String s : sorter)
 		{
 			predicates.put(s, i);
+			predicates_1.put(i, s);
 			i++;
 		}
 	}
