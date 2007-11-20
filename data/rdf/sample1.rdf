@@ -1,0 +1,31 @@
+<?xml version="1.0"?> 
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	    xmlns="http://www.cs.rpi.edu/~puninj/XMLJ/course_schema.rdf#">
+     <Course rdf:ID="MIT6.830">
+        <name>Database Systems</name>
+        <teacher>
+            <Teacher rdf:ID="sm">
+               <name>Sam Madden</name>
+	    </Teacher>
+        </teacher>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:ID="am">
+		      <name>Angelique Moscicki</name>
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:ID="os">
+		      <name>Oshani Seneviratne</name>
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:ID="sh">
+		      <name>Sergio Herrero</name>
+		   </Student>
+	        </rdf:li>
+            </rdf:Seq>
+        </students>
+     </Course>
+   </rdf:RDF>
