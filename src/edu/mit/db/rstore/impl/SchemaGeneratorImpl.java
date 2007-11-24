@@ -112,8 +112,9 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 		this.sortPropertyFrequencyValues();
 	}
 	
-	public LinkedList<String> getSchema() {
-		return this.schema;
+	//Modified return type and set return value to null for now  -AM
+	public LinkedList<PropertyTable> getSchema() {
+		return null;
 	}
 	
 	public HashMap<String, HashMap<String, Integer>> getLeftoversTable(){
