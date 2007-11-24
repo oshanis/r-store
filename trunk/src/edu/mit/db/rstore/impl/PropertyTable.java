@@ -29,6 +29,9 @@ package edu.mit.db.rstore.impl;
  * That means SQL command generation can not be done internally - it would require type information which exists outside the class
  * Unique subject problem is avoided because now we assume only one primary key.  Will have to revisit it for the many to many case,
  * but it seems best to me to tackle this problem in a different class.
+ * 
+ * 11/24/07
+ * Added the stub for SQL generation method, will complete as soon as external interfaces are satisfied
  */
 
 import java.util.*;
@@ -87,6 +90,18 @@ public class PropertyTable
 	public void setSQL(String sql_command)
 	{
 		create_table_command = sql_command;
+	}
+	
+	/**
+	 * Pass the property table the database type mappings and the predicate's object type mappings, both of which should be available
+	 * from the RDFStore, so the Schema Generator has access to them, and the PropertyTable will generate the SQL for you
+	 */
+	public void constructSQL(/*TODO:  Decide on parameter data structures*/)
+	{
+		//TODO:
+		/*
+		 * Write the generation code.  Will be quick once the parameter data structures are decided
+		 */
 	}
 	
 	/**
