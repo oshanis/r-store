@@ -16,20 +16,28 @@ public interface RDFStore
 	public StmtIterator getIterator();
 	
 	/**
-	 * These are the namespace prefixes that are at some point used either as a subject or as an object, but not as a predicate. 
+	 * These are the subject types
 	 * 
-	 * @return A HashSet of Strings which represent the namespaces, which can be interpreted as class names or types.
+	 * @return A HashSet of Strings which represent the types
 	 */
-	public HashSet<String> getClassNamespaces();
+	public HashSet<String> getSubjectTypes();
+	
 	
 	/**
-	 * This data structure encodes a table which maps predicate namespaces to the namespaces of their subjects and objects.  Each
-	 * LinkedList will be non-null, and contain precisely two Strings.  The first String will correspond to the subject namespace,
-	 * the second String will correspond to the object namespace.  Both the subject and object namespaces must exist in the HashSet
-	 * returned by getClassNamespaces, and the predicate namespace must not occur in that HashSet.
+	 * Maps subjects to their types
 	 * 
-	 * @return A mapping from predicate namespaces to subject and object namespaces in the form of a HashMap.
+	 * @return A map from subjects to types
 	 */
-	public HashMap<String, LinkedList<String>> getPredicateTable();
+	public HashMap<String, String> getSubjectTypeMap();
+	
+	/**
+	 * This data structure encodes a table which maps predicate types to the types of their subjects and objects.  Each
+	 * LinkedList will be non-null, and contain precisely two Strings.  The first String will correspond to the subject type,
+	 * the second String will correspond to the object type.  Both the subject and object types must exist in the HashSet
+	 * returned by getClassNamespaces, and the predicate type must not occur in that HashSet.
+	 * 
+	 * @return A mapping from predicate type to subject and object type in the form of a HashMap.
+	 */
+	public HashMap<String, Vector<LinkedList<String>>> getPredicateTable();
 	
 }
