@@ -2,6 +2,7 @@ package edu.mit.db.rstore.impl;
 import java.util.*;
 
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.*;
 import edu.mit.db.rstore.*;
 import com.hp.hpl.jena.util.FileManager;
 
@@ -21,7 +22,10 @@ public class Store implements RDFStore
 
     
 	private String directoryPath;
+	
 	private Model rdfModel;
+	private Model schemaModel;
+	private InfModel infModel;
 
 	/**
 	 * Constructor
@@ -30,8 +34,10 @@ public class Store implements RDFStore
 	public Store( String path)
 	{
 		this.directoryPath= path;
+		
 		// create an empty model
         this.rdfModel = ModelFactory.createDefaultModel();
+        this.schemaModel= ModelFactory.createDefaultModel();
 		
 	}
 	
@@ -43,7 +49,7 @@ public class Store implements RDFStore
 	public Model CreateModel ()
 	{
 		
-        File folder = new File(this.directoryPath);
+        File folder = new File(this.directoryPath+"rdf/");
         File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {
@@ -69,14 +75,80 @@ public class Store implements RDFStore
         return this.rdfModel;
 	}
 	
+	
 	/**
-	 * This is an accessor to the mode.
+	 * Creates a Model from the rdf files in the indicated directory. Models are merged
+	 * return Model: Merged model
+	 */
+	
+	public Model CreateSchema ()
+	{
+		
+        File folder = new File(this.directoryPath+"schema/");
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+        	
+        	// create an empty model
+            Model tempModel = ModelFactory.createDefaultModel();
+        	
+            if (listOfFiles[i].isFile()) 
+            {
+        	  InputStream in = FileManager.get().open( listOfFiles[i].getAbsolutePath() );
+              
+        	  if (in == null) {
+                  throw new IllegalArgumentException( "File: " + listOfFiles[i].getName() + " not found");
+              }
+              
+              // read the RDF/XML file
+        	               
+        	  tempModel.read(in, "");
+              this.schemaModel=schemaModel.union(tempModel);
+            } 
+        }
+        
+        return this.schemaModel;
+	}
+	
+	/**
+	 * Creates a Model from the rdf file and the rdfs schema.
+	 * return Model: Inference Model
+	 */
+	
+	public InfModel CreateInferenceModel ()
+	{			
+		this.infModel= ModelFactory.createRDFSModel(this.schemaModel, this.rdfModel);	     
+        return this.infModel;
+	}
+	
+	/**
+	 * This is an accessor to the model.
 	 * return Model: private model
 	 */
 	
-	public Model GetModel ()
+	public InfModel GetInfModel ()
+	{
+		return this.infModel;
+	}
+	
+	/**
+	 * This is an accessor to the data model.
+	 * return Model: private data model
+	 */
+	
+	public Model GetDataModel ()
 	{
 		return this.rdfModel;
+	}
+	
+	/**
+	 * This is an accessor to the data model.
+	 * return Model: private schema model
+	 */
+	
+	public Model GetSchemaModel ()
+	{
+		return this.schemaModel;
 	}
 	
 	
@@ -116,10 +188,10 @@ public class Store implements RDFStore
 	}
 	
 	/**
-	 * Prints the namespaces to the console 
+	 * Prints the Types to the console 
 	 */
 	
-	public static void PrintNamespaces (HashSet<String> nspaces)
+	public static void PrintTypes (HashSet<String> nspaces)
 	{
 		
         if (!nspaces.isEmpty())
@@ -138,7 +210,7 @@ public class Store implements RDFStore
 	 * Prints the the predicate table to the console 
 	 */
 	
-	public static void PrintPredicateTable (HashMap<String, LinkedList<String>> predTable)
+	public static void PrintPredicateTable (HashMap<String, Vector<LinkedList<String>>> predTable)
 	{
 		
         if (!predTable.isEmpty())
@@ -150,23 +222,63 @@ public class Store implements RDFStore
             while ( propertyIterator.hasNext())
             {
             	String key= propertyIterator.next();
-            	LinkedList<String> list= predTable.get(key);
+            	Vector<LinkedList<String>> list= predTable.get(key);
             	
             	String output= "\n Predicate : " + key;
-            	if(list.size()>0)
+            	            	
+            	LinkedList<String> subjectTypes= list.get(0);
+            	LinkedList<String> objectTypes= list.get(1);
+            	
+            	for (int i=0; i< subjectTypes.size(); i++)
             	{
-            		output+= "\n Subject ns : " + list.get(0);
+            		output+= "\n Subject Type : " + subjectTypes.get(i);
             	}
-            	if(list.size()>1)
+            	
+            	for (int i=0; i< objectTypes.size(); i++)
             	{
-            		output+= "\n Object ns : " + list.get(1);
+            		output+= "\n Object Type : " + objectTypes.get(i);
             	}
+            	
+            	            	
+            	
             	
             	System.out.println(output);
             }
            
         }
 	}
+	
+	/**
+	 * Prints the the predicate table to the console 
+	 */
+	
+	public static void PrintTypeMap (HashMap<String, String> typeMap)
+	{
+		
+        if (!typeMap.isEmpty())
+        {
+        	Set<String> subjectSet= typeMap.keySet();
+        	
+        	Iterator<String> subjectIterator= subjectSet.iterator();
+        	
+            while ( subjectIterator.hasNext())
+            {
+            	String key= subjectIterator.next();
+            	String type= typeMap.get(key);
+            	
+            	String output= "\n Subject : " + key;
+            	
+            	
+            	output+= "\n Type : " + type;
+            	
+            	
+            	System.out.println(output);
+            }
+           
+        }
+	}
+	
+	
 	
 	/**
 	 * Generates an Iterator on the model where the statements are grouped by namespace:subject 
@@ -176,135 +288,275 @@ public class Store implements RDFStore
 	public StmtIterator getIterator()
 	{
 		Model orderedModel=ModelFactory.createDefaultModel();
-		
+				
 		//List all different qualified subjects
 		LinkedList<Resource> qsubjects= new LinkedList<Resource>();
 		
-		ResIterator qsubjectIterator= this.rdfModel.listSubjects();
+		StmtIterator iterOuter = this.rdfModel.listStatements();
 		
-		while(qsubjectIterator.hasNext())
+		while(iterOuter.hasNext())
 		{
-			if(!qsubjects.contains(qsubjectIterator.next()))
+			Statement stat= iterOuter.nextStatement();
+			if(!qsubjects.contains(stat.getSubject()))
 			{
-				qsubjects.add((Resource)qsubjectIterator.next());
-			}
-			
-		}
-		
-		for (int i=0; i< qsubjects.size(); i++)
-		{
-			Property property=null;
-			RDFNode rdfNode=null;
-			StmtIterator stmtIter = this.rdfModel.listStatements(new SimpleSelector(qsubjects.get(i),property, rdfNode));
-			if(stmtIter.hasNext() )
-			{	
-				orderedModel.add(stmtIter);
-			
+				qsubjects.add(stat.getSubject());
+				
+				StmtIterator iterInner = this.rdfModel.listStatements();
+				while(iterInner.hasNext())
+				{
+					Statement statInner= iterInner.nextStatement();
+					if(statInner.getSubject().equals(stat.getSubject()))
+					{
+						orderedModel.add(statInner);
+					}
+				}
 			}
 		}
 		
+				
 		return orderedModel.listStatements();
 	}
 	
 	/**
-	 * These are the namespace prefixes that are at some point used either as a subject or as an object, but not as a predicate. 
+	 * These are the subject types
 	 * 
-	 * @return A HashSet of Strings which represent the namespaces, which can be interpreted as class names or types.
+	 * @return A HashSet of Strings which represent the types
 	 */
-	public HashSet<String> getClassNamespaces()
+	public HashSet<String> getSubjectTypes()
 	{
-		HashSet<String> classNamespaces= new HashSet<String>();
+		HashSet<String> types= new HashSet<String>();
 		
+		StmtIterator stmtIter= this.schemaModel.listStatements();
 		
-		ResIterator qsubjectIterator= this.rdfModel.listSubjects();
-		
-		while (qsubjectIterator.hasNext())
+		while(stmtIter.hasNext())
 		{
-			Resource qsubject = (Resource)qsubjectIterator.next();
-			
-			//Changed this:  Need to make sure never to add nulls...  -AM
-			if(qsubject.getNameSpace() != null)
-				classNamespaces.add(qsubject.getNameSpace());
-			
-		}
-		
-		NodeIterator qobjectIterator= this.rdfModel.listObjects();
-		
-		while (qobjectIterator.hasNext())
-		{
-			RDFNode qobject = (RDFNode) qobjectIterator.next();
-			if(qobject.isURIResource())
+			Statement st= stmtIter.nextStatement();
+			if(!types.contains(st.getSubject().toString()))
 			{
-				Resource qobjectResource= (Resource)qobject;
-				
-				classNamespaces.add(qobjectResource.getNameSpace());
-				
+				types.add(st.getSubject().getLocalName().toString());
 			}
 		}
 		
-		return classNamespaces;
+		
+		return types;
+	}
+	
+
+	
+	
+	/**
+	 * Maps subjects to their types
+	 * 
+	 * @return A map from subjects to types
+	 */
+	public HashMap<String, String> getSubjectTypeMap()
+	{
+		HashMap<String, String> typeMap= new HashMap<String, String>();
+		
+		StmtIterator stmtIter= this.rdfModel.listStatements();
+			
+		
+		while(stmtIter.hasNext())
+		{
+			Statement st= stmtIter.nextStatement();
+			Resource subject= st.getSubject();
+			
+			if(subject!=null)
+			{
+				String subjectString="";
+				
+				if (subject.isURIResource())
+				{
+					subjectString= subject.getLocalName();
+				}
+				else
+				{
+					subjectString= subject.toString();
+					
+				}
+				
+				String propertyString= st.getPredicate().getLocalName().toString();
+							
+				RDFNode object= st.getObject();
+				
+				if(object.isURIResource())
+				{
+					Resource objectResource= (Resource)object;
+					String objectString= objectResource.getLocalName().toString();
+					
+					
+				
+				
+					if(!typeMap.containsKey(subjectString) && propertyString.equals("type"))
+					{
+						typeMap.put(subjectString, objectString );
+					}
+				}
+				else
+				{
+					String objectString= object.toString();
+					
+					if(!typeMap.containsKey(subjectString) && propertyString.equals("type"))
+					{
+						typeMap.put(subjectString, objectString );
+					}
+				}
+			}
+		}
+		
+		
+		return typeMap;
 	}
 	
 	
 	/**
-	 * This data structure encodes a table which maps predicate namespaces to the namespaces of their subjects and objects.  Each
-	 * LinkedList will be non-null, and contain precisely two Strings.  The first String will correspond to the subject namespace,
-	 * the second String will correspond to the object namespace.  Both the subject and object namespaces must exist in the HashSet
-	 * returned by getClassNamespaces, and the predicate namespace must not occur in that HashSet.
+	 * This data structure encodes a table which maps predicate types to the types of their subjects and objects.  Each
+	 * LinkedList will be non-null, and contain precisely two Strings.  The first String will correspond to the subject type,
+	 * the second String will correspond to the object type.  Both the subject and object types must exist in the HashSet
+	 * returned by getClassNamespaces, and the predicate type must not occur in that HashSet.
 	 * 
-	 * @return A mapping from predicate namespaces to subject and object namespaces in the form of a HashMap.
+	 * @return A mapping from predicate type to subject and object type in the form of a HashMap.
 	 */
-	public HashMap<String, LinkedList<String>> getPredicateTable()
+	public HashMap<String, Vector<LinkedList<String>>> getPredicateTable()
 	{
-		HashMap<String, LinkedList<String>> predicateTable= new HashMap<String, LinkedList<String>>();
+		HashMap<String, Vector<LinkedList<String>>> predicateTable= new HashMap<String, Vector<LinkedList<String>>>();
+		HashMap<String, String> typeMap= this.getSubjectTypeMap();
 		
-		StmtIterator it= this.rdfModel.listStatements();
+		StmtIterator stmtIter= this.rdfModel.listStatements();
 		
-		while (it.hasNext())
+		
+		while( stmtIter.hasNext())
 		{
-			Statement st= (Statement) it.next();
+			Statement st= stmtIter.nextStatement();
 			
-			//Get predicate namespaces
-			Property prop =st.getPredicate();
-			String propString= prop.toString();
+			Resource subj= st.getSubject();
+			Property prop=st.getPredicate();
+			RDFNode obj= st.getObject();
 			
-			//Get subject  namespaces
-			Resource res= st.getSubject();
-			String resString=res.getNameSpace();
 			
-			if(resString==null)
+			
+			String subjectType="";
+			
+			if(subj!=null)
 			{
-				resString="";
+				String subjectString="";
+				
+				if (subj.isURIResource())
+				{
+					subjectString= subj.getLocalName();
+				}
+				else
+				{
+					subjectString= subj.toString();
+					
+				}
+				
+				if(typeMap.containsKey(subjectString))
+				{
+					subjectType= typeMap.get(subjectString);
+				}
+				else
+				{
+					subjectType="Literal";
+				}
 			}
+		
+			String objectType="";
 			
-			//Get object namespace
-			RDFNode objectnode=(RDFNode) st.getObject();
-			String objectString="";
-			
-			if(objectnode.isURIResource())
+			if(obj!=null)
 			{
-				Resource objectresource= (Resource)objectnode;
-				objectString= objectresource.getNameSpace();
+				String objectString="";
+				
+				if (obj.isURIResource())
+				{
+					Resource objResource= (Resource)obj;
+					
+					if(objResource.getLocalName()== null)
+					{
+						objectString= obj.toString();
+					}
+					else
+					{
+						objectString= objResource.getLocalName();
+					}
+				}
+				else
+				{
+					objectString= obj.toString();
+					
+				}
+				
+				
+				if(typeMap.containsKey(objectString))
+				{
+					objectType= typeMap.get(objectString);
+				}
+				else
+				{
+					objectType="Literal";
+				}
+				
 				
 			}
-	
-			//Attn:Sergio, I am getting compilation errors here!,  So I commented out - Oshani
+					
 			
-			//Hey I need that there :)  It compiles just fine.  Check your compiler settings, make sure its compatible with java 6.0 -AM
 			
-			//Usual SE advice is that we should be backward compatible. :)
-			//Anyways, I changed my JDK - Oshani
-			
-			if(!predicateTable.containsKey(propString) && !objectString.isEmpty()  && !resString.isEmpty())
+			if(!predicateTable.containsKey(prop.toString()))
 			{
-				LinkedList <String> list= new LinkedList <String>();
-				list.add(resString);
-				list.add(objectString);				
+				LinkedList<String> subjectTypes= new LinkedList<String>();
 				
-				predicateTable.put(propString, list);
+				if(!subjectTypes.contains(subjectType))
+				{
+					subjectTypes.add(subjectType);
+				}
+				
+				LinkedList<String> objectTypes = new LinkedList <String>();
+				objectTypes.add(objectType);
+				
+				if(!objectTypes.contains(objectType))
+				{
+					objectTypes.add(objectType);
+				}
+				
+				Vector<LinkedList<String>> vector= new Vector<LinkedList<String>>();
+				
+				vector.add(subjectTypes);
+				vector.add(objectTypes);
+				
+				predicateTable.put(prop.toString(), vector);
 			}
+			else
+			{
+				Vector<LinkedList<String>> vector= predicateTable.get(prop.toString());
+				LinkedList<String> subjectTypes= vector.get(0);
+				
+				if(!subjectTypes.contains(subjectType))
+				{
+					subjectTypes.add(subjectType);
+				}
+				
+				vector.set(0, subjectTypes);
+				
+				LinkedList<String> objectTypes= vector.get(1);
+				
+				if(!objectTypes.contains(objectType))
+				{
+					objectTypes.add(objectType);
+				}
+				
+				vector.set(1, objectTypes);
+				
+				predicateTable.put(prop.toString(),vector);
+				
+			}
+			
+			
 		}
 		
+		
+	
+		
+				
 		return predicateTable;
 	}
 	

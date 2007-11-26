@@ -10,21 +10,34 @@ public class TestStore
 	
 	public static void main (String args[]) {
     	
-    	String path= "data/rdf/";
+    	String path= "data/";
         
 		
     	Store myStore = new Store (path);
-    	Model testModel= myStore.CreateModel();
-    	//Store.PrintModel(testModel);
+    	Model dataModel= myStore.CreateModel();
+    	//Store.PrintModel(dataModel);
+    	//Store.PrintTriples(dataModel.listStatements());
+    	
+    	Model schemaModel= myStore.CreateSchema();
+    	//Store.PrintModel(schemaModel);  	
+    	//Store.PrintTriples(schemaModel.listStatements());
+    	
+    	InfModel infModel= myStore.CreateInferenceModel();
+    	//Store.PrintModel(infModel);
     	
     	StmtIterator iter= myStore.getIterator();  	
-    	Store.PrintTriples(iter);
+    	//Store.PrintTriples(iter);
     	
-    	HashSet<String> nsSet= myStore.getClassNamespaces();
-    	//Store.PrintNamespaces(nsSet);
+    	HashSet<String> typeSet= myStore.getSubjectTypes();
+    	//Store.PrintTypes(typeSet);
     	
-    	HashMap<String, LinkedList<String>> predicateTable= myStore.getPredicateTable();
-    	//Store.PrintPredicateTable(predicateTable);
+    	HashMap<String, String> typeMap= myStore.getSubjectTypeMap();
+    	//Store.PrintTypeMap(typeMap);
+    	
+    	
+    	
+    	HashMap<String, Vector<LinkedList<String>>>  predicateTable= myStore.getPredicateTable();
+    	Store.PrintPredicateTable(predicateTable);
             
     }
 }
