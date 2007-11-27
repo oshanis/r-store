@@ -31,6 +31,21 @@ public interface RDFStore
 	public HashMap<String, String> getSubjectTypeMap();
 	
 	/**
+	 * Given a type, returns a set of subjects that belong to this type
+	 * 
+	 * @return A set of subjects
+	 */
+	public HashSet<String> getSubjectsFromType(String type );
+	
+	/**
+	 * Given a subject, returns its type
+	 * 
+	 * @return a string that indicates the type
+	 */
+	
+	public String getTypeFromSubjects(String subject );
+	
+	/**
 	 * This data structure encodes a table which maps predicate types to the types of their subjects and objects.  Each
 	 * LinkedList will be non-null, and contain precisely two Strings.  The first String will correspond to the subject type,
 	 * the second String will correspond to the object type.  Both the subject and object types must exist in the HashSet
