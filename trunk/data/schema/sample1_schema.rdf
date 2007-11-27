@@ -11,10 +11,6 @@ xml:base=  "http://www.persons.fake/Persons#">
           rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
    </rdfs:Class>
 
-<rdfs:Class rdf:ID="Professor">
-  <rdfs:subClassOf rdf:resource="#Person"/>
-</rdfs:Class>
-
 <rdfs:Class rdf:ID="Student">
      <rdfs:comment>Student Class</rdfs:comment>
      <rdfs:subClassOf rdf:resource="#Person"/>

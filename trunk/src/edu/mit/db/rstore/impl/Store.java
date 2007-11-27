@@ -207,7 +207,7 @@ public class Store implements RDFStore
 	}
 	
 	/**
-	 * Prints the the predicate table to the console 
+	 * Prints the predicate table to the console 
 	 */
 	
 	public static void PrintPredicateTable (HashMap<String, Vector<LinkedList<String>>> predTable)

@@ -2,6 +2,18 @@ package edu.mit.db.rstore.impl;
 
 import java.util.*;
 
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.ResIterator;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.*;
+
+
+import edu.mit.db.rstore.RDFStore;
 import edu.mit.db.rstore.SchemaGenerator;
 
 /**
@@ -112,6 +124,13 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 		this.sortPropertyFrequencyValues();
 	}
 	
+	/**
+	 * The new constructor which will be used when refactoring the code
+	 */
+	public SchemaGeneratorImpl() {
+		// TODO Auto-generated constructor stub
+	}
+
 	//Modified return type and set return value to null for now  -AM
 	public LinkedList<PropertyTable> getSchema() {
 		return null;
@@ -230,8 +249,68 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	/**
 	 * Pass2
 	 */
-	private void createInitialSchema(){
+	public void createInitialSchema(){
 		
+    	String path= "data/";
+		
+    	Store myStore = new Store (path);
+    	HashSet<Resource> superSubjectSet = new HashSet<Resource>();
+    	HashSet<Resource> subjectSet = new HashSet<Resource>();
+    	HashSet<String> tableNames = new HashSet<String>();
+    	
+    	Model schemaModel= myStore.CreateSchema();
+
+    	//Create the tables based on the subClass relationships
+
+    	NodeIterator superNodes = schemaModel.listObjectsOfProperty(RDFS.subClassOf);
+    	while (superNodes.hasNext()){
+    		Resource superClass = (Resource)superNodes.next();
+    		superSubjectSet.add(superClass);
+    	}
+    	
+    	ResIterator sc = schemaModel.listSubjectsWithProperty(RDFS.subClassOf);
+    	while (sc.hasNext()){
+    		Resource subClass = sc.nextResource();
+    		if (!superSubjectSet.contains(subClass)){
+    			subjectSet.add(subClass);
+    			tableNames.add(subClass.getLocalName());
+    		}
+    	}
+    	
+    	//Create the tables based on the DomainRange pair
+    	ResIterator d = schemaModel.listSubjectsWithProperty(RDFS.domain);
+    	ResIterator r = schemaModel.listSubjectsWithProperty(RDFS.range);
+    	
+    	NodeIterator domainObjs = schemaModel.listObjectsOfProperty(RDFS.domain);
+    	ResIterator domainSubs = schemaModel.listSubjectsWithProperty(RDFS.domain);
+    	
+    	while (domainSubs.hasNext()){
+
+    		Resource domainSub = domainSubs.nextResource();
+    		StmtIterator iter = domainSub.listProperties();
+    		
+    		Resource dom = null;
+    		Resource ran = null;
+    		
+    		while (iter.hasNext()){
+    		
+    			Statement st = (Statement)iter.next();
+    			Property prop = st.getPredicate();
+    			if (prop.equals(RDFS.range) ){
+    				dom =  (Resource) st.getObject();
+    			}
+    			if (prop.equals(RDFS.domain)){
+    				ran = (Resource) st.getObject();
+    			}
+    			if (dom != null && ran != null){
+    				tableNames.add(dom.getLocalName()+ran.getLocalName());
+    			}
+    		}
+    	}
+    	
+    	for ( String tn : tableNames){
+    		System.out.println(tn);
+    	}
 	}
 	
 	/**
@@ -248,6 +327,7 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	private void constructSchema(){
 		
 	}
+	
 
 }
 
