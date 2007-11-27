@@ -99,7 +99,7 @@ public class FrequencyCounter
 		//Put the thingies inside a tree set to sort them
 		TreeSet<String> sorter = new TreeSet<String>();
 		
-		HashSet<String> str = rdf.getClassNamespaces();
+		HashSet<String> str = rdf.getSubjectTypes();
 		for(String s : str)
 			if(s != null)
 				sorter.add(s);
