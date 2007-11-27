@@ -225,7 +225,8 @@ public class Store implements RDFStore
             	Vector<LinkedList<String>> list= predTable.get(key);
             	
             	String output= "\n Predicate : " + key;
-            	            	
+            	    
+            	/*
             	LinkedList<String> subjectTypes= list.get(0);
             	LinkedList<String> objectTypes= list.get(1);
             	
@@ -238,9 +239,18 @@ public class Store implements RDFStore
             	{
             		output+= "\n Object Type : " + objectTypes.get(i);
             	}
-            	
-            	            	
-            	
+            	*/
+            	    
+            	output+="\n";
+            	for (int i=0; i< list.size(); i++)
+            	{
+            		LinkedList<String> l= list.get(i);
+            		output+= "\n Subject Type : " + l.get(0);
+            		output+= "\n Object Type : " + l.get(1);
+            		output+="\n";
+            		
+            		
+            	}
             	
             	System.out.println(output);
             }
@@ -408,6 +418,57 @@ public class Store implements RDFStore
 		return typeMap;
 	}
 	
+
+	
+	/**
+	 * Given a type, returns a set of subjects that belong to this type
+	 * 
+	 * @return A set of subjects
+	 */
+	public HashSet<String> getSubjectsFromType(HashMap<String,String> typeMap, String type )
+	{
+		HashSet<String> subjects = new HashSet<String>();
+		
+		Set <String> keySet=typeMap.keySet();
+		
+		Iterator<String> keyIterator= keySet.iterator();
+    	
+        while ( keyIterator.hasNext())
+        {
+        	String key= keyIterator.next();
+			String keyType= typeMap.get(key);
+			
+			if(keyType.equals(type))
+			{
+				subjects.add(key);
+			}
+			
+		}
+		
+		return subjects;
+	}
+	
+	
+	public void PrintSubjectsAndTypes (HashMap<String,String> typeMap, HashSet<String> types )
+	{		
+		Iterator<String> typeIterator= types.iterator();
+		
+		while (typeIterator.hasNext())
+		{
+			String type= typeIterator.next();
+			HashSet <String> subjectSet= getSubjectsFromType (typeMap,type);
+			Iterator<String> subjectIterator= subjectSet.iterator();
+
+			System.out.println("Type: " + type);
+			
+			while(subjectIterator.hasNext())
+			{
+				System.out.println("Subject: " + subjectIterator.next());
+				
+			}
+			
+		}
+	}
 	
 	/**
 	 * This data structure encodes a table which maps predicate types to the types of their subjects and objects.  Each
@@ -503,7 +564,7 @@ public class Store implements RDFStore
 			
 			if(!predicateTable.containsKey(prop.toString()))
 			{
-				LinkedList<String> subjectTypes= new LinkedList<String>();
+				/*LinkedList<String> subjectTypes= new LinkedList<String>();
 				
 				if(!subjectTypes.contains(subjectType))
 				{
@@ -522,13 +583,25 @@ public class Store implements RDFStore
 				
 				vector.add(subjectTypes);
 				vector.add(objectTypes);
+			*/	
 				
+				LinkedList<String> resourceTypes= new LinkedList<String>();
+				resourceTypes.add(subjectType);
+				resourceTypes.add(objectType);
+				
+				Vector<LinkedList<String>> vector= new Vector<LinkedList<String>>();
+				vector.add(resourceTypes);
 				predicateTable.put(prop.toString(), vector);
+			
+				
+				
+				
 			}
 			else
 			{
 				Vector<LinkedList<String>> vector= predicateTable.get(prop.toString());
-				LinkedList<String> subjectTypes= vector.get(0);
+				
+				/*LinkedList<String> subjectTypes= vector.get(0);
 				
 				if(!subjectTypes.contains(subjectType))
 				{
@@ -545,6 +618,13 @@ public class Store implements RDFStore
 				}
 				
 				vector.set(1, objectTypes);
+				*/
+				
+				
+				LinkedList<String> resourceTypes= new LinkedList<String>();
+				resourceTypes.add(subjectType);
+				resourceTypes.add(objectType);
+				vector.add(resourceTypes);
 				
 				predicateTable.put(prop.toString(),vector);
 				

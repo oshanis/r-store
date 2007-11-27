@@ -33,12 +33,11 @@ public class TestStore
     	
     	HashMap<String, String> typeMap= myStore.getSubjectTypeMap();
     	//Store.PrintTypeMap(typeMap);
-    	
-    	
-    	
+    	    	   	
     	HashMap<String, Vector<LinkedList<String>>>  predicateTable= myStore.getPredicateTable();
-    	Store.PrintPredicateTable(predicateTable);
-            
+    	//Store.PrintPredicateTable(predicateTable);
+          
+    	myStore.PrintSubjectsAndTypes(typeMap, typeSet);
     }
 }
 
