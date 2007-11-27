@@ -289,23 +289,27 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     		Resource domainSub = domainSubs.nextResource();
     		StmtIterator iter = domainSub.listProperties();
     		
-    		Resource dom = null;
+    		Resource[] dom = new Resource[10]; //There can be multiple domains, hence the array
     		Resource ran = null;
+    		int count = 0;
     		
     		while (iter.hasNext()){
     		
     			Statement st = (Statement)iter.next();
     			Property prop = st.getPredicate();
     			if (prop.equals(RDFS.range) ){
-    				dom =  (Resource) st.getObject();
-    			}
-    			if (prop.equals(RDFS.domain)){
     				ran = (Resource) st.getObject();
     			}
-    			if (dom != null && ran != null){
-    				tableNames.add(dom.getLocalName()+ran.getLocalName());
+    			if (prop.equals(RDFS.domain)){
+    				dom[count++] = (Resource) st.getObject();
     			}
     		}
+			if (dom.length > 0 && ran != null && !(ran.getLocalName().equals("Literal")) 
+					&& !(ran.getLocalName().equals("Seq"))){
+				for (int i=0; i< count; i++){
+					tableNames.add(dom[i].getLocalName()+ran.getLocalName());
+	    		}				
+			}			
     	}
     	
     	for ( String tn : tableNames){
