@@ -425,8 +425,10 @@ public class Store implements RDFStore
 	 * 
 	 * @return A set of subjects
 	 */
-	public HashSet<String> getSubjectsFromType(HashMap<String,String> typeMap, String type )
+	public HashSet<String> getSubjectsFromType( String type )
 	{
+		HashMap<String,String> typeMap= getSubjectTypeMap();
+		
 		HashSet<String> subjects = new HashSet<String>();
 		
 		Set <String> keySet=typeMap.keySet();
@@ -448,15 +450,33 @@ public class Store implements RDFStore
 		return subjects;
 	}
 	
+	/**
+	 * Given a subject, returns its type
+	 * 
+	 * @return a string that indicates the type
+	 */
+	public String getTypeFromSubjects(String subject )
+	{
+		String type="";
+		HashMap<String,String> typeMap= getSubjectTypeMap();
+		type=typeMap.get(subject);
+		
+		return type;
+	}
 	
-	public void PrintSubjectsAndTypes (HashMap<String,String> typeMap, HashSet<String> types )
+	
+	
+	public void PrintSubjectsAndTypes ( )
 	{		
+		
+		HashSet<String> types = getSubjectTypes();
+		
 		Iterator<String> typeIterator= types.iterator();
 		
 		while (typeIterator.hasNext())
 		{
 			String type= typeIterator.next();
-			HashSet <String> subjectSet= getSubjectsFromType (typeMap,type);
+			HashSet <String> subjectSet= getSubjectsFromType (type);
 			Iterator<String> subjectIterator= subjectSet.iterator();
 
 			System.out.println("Type: " + type);
