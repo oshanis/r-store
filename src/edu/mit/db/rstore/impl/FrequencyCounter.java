@@ -31,7 +31,9 @@ public class FrequencyCounter
 	private HashMap<Integer, String> subjects_1;
 
 	//diagnostics...
-	private int discarded_statements;
+	private int anon_subject;
+	private int anon_object;
+	private int anon_both;
 	private long total_statements;
 	
 	
@@ -49,7 +51,6 @@ public class FrequencyCounter
 		System.out.println("Predicates:  " + predicates.keySet().size());
 		
 		constructTable();
-		dumpTable();
 	}
 	
 	public Vector<Vector<Integer>> getFrequencyTable()
@@ -100,6 +101,7 @@ public class FrequencyCounter
 		TreeSet<String> sorter = new TreeSet<String>();
 		
 		HashSet<String> str = rdf.getSubjectTypes();
+		
 		for(String s : str)
 			if(s != null)
 				sorter.add(s);
@@ -128,6 +130,8 @@ public class FrequencyCounter
 			predicates_1.put(i, s);
 			i++;
 		}
+		
+		//dumpIndicies();
 	}
 	
 	private void dumpIndicies()
@@ -151,45 +155,72 @@ public class FrequencyCounter
 		
 		String prev_subject = "";
 		String this_subject = "";
+		String this_subject_type = "";
 		Integer row_index = new Integer(0);
 		Integer col_index = new Integer(0);
 		
-		discarded_statements = 0;
+		anon_subject = 0;
+		anon_object = 0;
+		anon_both = 0;
 		total_statements = 0;
 		
 		while(triples.hasNext())
 		{
+			total_statements++;
+			
 			Statement stmt = triples.nextStatement();
 			Resource subject = stmt.getSubject();
 			Property predicate = stmt.getPredicate();
-
-			this_subject = subject.toString();
-			
-			row_index = subjects.get(subject.getNameSpace());
-			//Need to eventually add some book keeping here for multiple outgoing arcs, but for now we assume none
-			col_index = predicates.get(predicate.toString());
-			
-			if(row_index != null && col_index != null)
-			{
-				//Increment the frequency
-				frequencies[row_index][col_index]++;
-				
-				//Increment the count of the subject occurrence, if its different than the previous subject
-				if(!prev_subject.equals(this_subject))
-				{
-					frequencies[row_index][width]++;
-					prev_subject = this_subject;
-				}
-			}
-			else
-				discarded_statements++;
-			
-			total_statements++;
+            RDFNode object = stmt.getObject();
+         
+            //Normal statement
+            if(!subject.isAnon() && !object.isAnon())
+            {
+            	this_subject = subject.getLocalName();
+    			this_subject_type = rdf.getTypeFromSubjects(this_subject);
+    			row_index = subjects.get(this_subject_type);
+    			col_index = predicates.get(predicate.toString());
+    			
+    			//Need to eventually add some book keeping here for multiple outgoing arcs, but for now we assume none
+    			//Or that they are in blank nodes, which I am not dealing with now
+    			
+    			if(row_index != null && col_index != null)
+    			{
+    				//Increment the frequency
+    				frequencies[row_index][col_index]++;
+    				
+    				//Increment the count of the subject occurrence, if its different than the previous subject
+    				if(!prev_subject.equals(this_subject))
+    				{
+    					frequencies[row_index][width]++;
+    					prev_subject = this_subject;
+    				}
+    			}
+    			else
+    			{
+    				
+    				System.out.print("Invalid statement:  ");
+    				if(subject.getLocalName() != null)
+    					System.out.print(subject.getLocalName());
+    				else
+    					System.out.print(subject.toString());
+    				System.out.print("  " + predicate.toString() + "  ");
+    	            System.out.println(object.toString());
+    			}
+            }
+            else
+            {
+            	if(subject.isAnon() && object.isAnon())
+            		anon_both++;
+            	else
+            	{
+            		if(subject.isAnon())
+            			anon_subject++;
+            		else
+            			anon_object++;
+            	}
+            }
 		}
-		
-		//Need to update the count field for the final subject because the loop has expired.  Its the same row_index
-		if(row_index != null)
-			frequencies[row_index][width]++;
 	}
 	
 	//For now just the number format
@@ -202,7 +233,10 @@ public class FrequencyCounter
 			System.out.println();
 		}
 		
-		System.out.println("Discarded statements due to null subject or predicate:  " + discarded_statements);
+		//We need to do something about those blank nodes
+		System.out.println("Statements with anonymous subject:  " + anon_subject);
+		System.out.println("Statements with anonymous object:  " + anon_object);
+		System.out.println("Statements with anonymous subject and object:  " + anon_both);
 		System.out.println("Total statements processed:  " + total_statements);
 	}
 }
