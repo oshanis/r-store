@@ -137,7 +137,7 @@ public class PropertyTable
 	}
 	
 	/**
-	 * Accessor for the column names, including the primary key.  Does not guarentee order
+	 * Accessor for the column names, including the primary key.  Does not guarantee order
 	 */
 	public HashSet<String> getColNames()
 	{
