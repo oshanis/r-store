@@ -2,7 +2,6 @@ package edu.mit.db.rstore.impl;
 
 import java.util.*;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -12,8 +11,6 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.*;
 
-
-import edu.mit.db.rstore.RDFStore;
 import edu.mit.db.rstore.SchemaGenerator;
 
 /**
@@ -112,7 +109,7 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	
 	private HashMap<String, HashMap<String, Integer>> leftoversTable;
 	
-	private LinkedList<String> schema; //The final schema the 'schema generating' algorithm produces
+	private LinkedList<PropertyTable> schema; //The final schema the 'schema generating' algorithm produces
 	
 	private HashMap<String, Vector<String>> tables;
 	
@@ -133,7 +130,7 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 
 	//Modified return type and set return value to null for now  -AM
 	public LinkedList<PropertyTable> getSchema() {
-		return null;
+		return schema;
 	}
 	
 	public HashMap<String, HashMap<String, Integer>> getLeftoversTable(){
@@ -278,10 +275,6 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     	}
     	
     	//Create the tables based on the DomainRange pair
-    	ResIterator d = schemaModel.listSubjectsWithProperty(RDFS.domain);
-    	ResIterator r = schemaModel.listSubjectsWithProperty(RDFS.range);
-    	
-    	NodeIterator domainObjs = schemaModel.listObjectsOfProperty(RDFS.domain);
     	ResIterator domainSubs = schemaModel.listSubjectsWithProperty(RDFS.domain);
     	
     	while (domainSubs.hasNext()){
@@ -289,25 +282,27 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     		Resource domainSub = domainSubs.nextResource();
     		StmtIterator iter = domainSub.listProperties();
     		
-    		Resource[] dom = new Resource[10]; //There can be multiple domains, hence the array
-    		Resource ran = null;
-    		int count = 0;
+    		//There can be multiple domains for a single statement, hence the vector
+    		Vector<Resource> domain = new Vector<Resource>();
+    		Resource range = null;
     		
     		while (iter.hasNext()){
     		
     			Statement st = (Statement)iter.next();
     			Property prop = st.getPredicate();
     			if (prop.equals(RDFS.range) ){
-    				ran = (Resource) st.getObject();
+    				range = (Resource) st.getObject();
     			}
     			if (prop.equals(RDFS.domain)){
-    				dom[count++] = (Resource) st.getObject();
+    				domain.add((Resource) st.getObject());
     			}
     		}
-			if (dom.length > 0 && ran != null && !(ran.getLocalName().equals("Literal")) 
-					&& !(ran.getLocalName().equals("Seq"))){
-				for (int i=0; i< count; i++){
-					tableNames.add(dom[i].getLocalName()+ran.getLocalName());
+    		//FIXME Check this for statements which would have other RDF stuff which we are not
+    		// interested in including in our schema structure
+			if (domain.size() > 0 && range != null && !(range.getLocalName().equals("Literal")) 
+					&& !(range.getLocalName().equals("Seq"))){
+				for (int i=0; i< domain.size(); i++){
+					tableNames.add(domain.get(i).getLocalName()+range.getLocalName());
 	    		}				
 			}			
     	}
