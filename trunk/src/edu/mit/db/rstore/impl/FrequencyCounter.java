@@ -20,11 +20,23 @@ import java.util.*;
 
 public class FrequencyCounter 
 {
+	//Need to identify the relation types
+	public enum Relation
+	{
+		//caveat:  one to one is really one to zero or one, so its more like all to some
+		NONE,
+		ONE_TO_ONE,
+		ONE_TO_MANY,
+		MANY_TO_ONE,
+		MANY_TO_MANY
+	};
+	
 	private RDFStore rdf;
 	private HashMap<String, Integer> predicates;
 	private HashMap<String, Integer> subjects;
 	private Integer [] [] frequencies;
-
+	private Relation [] [] mask;
+	
 	//Introduced the following 2 variables and the supporting methods, 
 	//because I had trouble mapping from the String -- Oshani
 	private HashMap<Integer, String> predicates_1; 
@@ -47,6 +59,11 @@ public class FrequencyCounter
 			for(int j = 0; j <= predicates.size(); j++)
 				frequencies[i][j] = new Integer(0);
 		
+		mask = new Relation [subjects.size()] [predicates.size()];
+		for(int i = 0; i < subjects.size(); i++)
+			for(int j = 0; j < predicates.size(); j++)
+				mask[i][j] = Relation.NONE;
+	
 		System.out.println("Subjects:  " + subjects.keySet().size());
 		System.out.println("Predicates:  " + predicates.keySet().size());
 		
@@ -134,7 +151,7 @@ public class FrequencyCounter
 		//dumpIndicies();
 	}
 	
-	private void dumpIndicies()
+	public void dumpIndicies()
 	{
 		System.out.println("Subjects:  ");
 		for(String s : subjects.keySet())
@@ -164,6 +181,9 @@ public class FrequencyCounter
 		anon_both = 0;
 		total_statements = 0;
 		
+		//Assuming for now that there are no duplicate predicate names, though I know there are
+		HashSet<String> outgoing = new HashSet<String>();
+		
 		while(triples.hasNext())
 		{
 			total_statements++;
@@ -181,8 +201,7 @@ public class FrequencyCounter
     			row_index = subjects.get(this_subject_type);
     			col_index = predicates.get(predicate.toString());
     			
-    			//Need to eventually add some book keeping here for multiple outgoing arcs, but for now we assume none
-    			//Or that they are in blank nodes, which I am not dealing with now
+    			//Still don't know how to deal with blank node identification
     			
     			if(row_index != null && col_index != null)
     			{
@@ -194,6 +213,16 @@ public class FrequencyCounter
     				{
     					frequencies[row_index][width]++;
     					prev_subject = this_subject;
+    					outgoing.clear();
+    				}
+    				
+    				//This needs to be after the previous block
+    				if(outgoing.contains(predicate.toString()))
+    					mask[row_index][col_index] = Relation.ONE_TO_MANY;
+    				else
+    				{
+    					mask[row_index][col_index] = Relation.ONE_TO_ONE;
+    					outgoing.add(predicate.toString());
     				}
     			}
     			else
@@ -221,6 +250,9 @@ public class FrequencyCounter
             	}
             }
 		}
+		
+		//Now the reverse direction so I can get the many to one relations
+		//Oops, need the damn thing sorted again
 	}
 	
 	//For now just the number format
@@ -232,6 +264,17 @@ public class FrequencyCounter
 				System.out.print(frequencies[i][j] + "  ");
 			System.out.println();
 		}
+		
+		System.out.println();
+		
+		for(int i = 0; i < subjects.size(); i++)
+		{
+			for(int j = 0; j < predicates.size(); j++)
+				System.out.print(mask[i][j].toString() + "  ");
+			System.out.println();
+		}
+		
+		System.out.println();
 		
 		//We need to do something about those blank nodes
 		System.out.println("Statements with anonymous subject:  " + anon_subject);

@@ -161,4 +161,17 @@ public class PropertyTable
 	{
 		predicates_to_columns.remove(pred);
 	}
+	
+	/**
+	 * Prints out the state of the table
+	 */
+	public void print()
+	{
+		System.out.println(table_name);
+		System.out.print(pkey_col_name + " (pkey)  ");
+		for(String s : predicates_to_columns.values())
+			System.out.print(s + "  ");
+		System.out.println();
+		System.out.println();
+	}
 }
