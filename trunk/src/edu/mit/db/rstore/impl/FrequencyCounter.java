@@ -86,6 +86,21 @@ public class FrequencyCounter
 		return v;
 	}
 	
+	public Vector<Vector<Relation>> getRelationMask()
+	{
+		Vector<Vector<Relation>> v = new Vector<Vector<Relation>>();
+		
+		for(int i = 0; i < subjects.size(); i++)
+		{
+			Vector<Relation> row = new Vector<Relation>();
+			for(int j = 0; j < predicates.size(); j++)
+				row.add(mask[i][j]);
+			v.add(row);
+		}
+		
+		return v;
+	}
+	
 	public HashMap<String, Integer> getRowMapping()
 	{
 		return subjects;
