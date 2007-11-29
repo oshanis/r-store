@@ -45,7 +45,6 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		HashSet<String> subjects = rdf.getSubjectTypes();
 		
 		//I'll want to be able to get the property table corresponding to a particular subject (row)
-		//Only add them if their count is nonzero :)  Otherwise they are never instantiated
 		HashMap<String, PropertyTable> ptables = new HashMap<String, PropertyTable>();
 		for(String s : subjects)
 		{
@@ -53,7 +52,8 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 			if(row_index == null)
 				throw new RuntimeException("Disaster");
 			
-			if(table.get(row_index).get(count_index) != 0)
+			//Put them there anyway, because its possible to reverse arcs into them
+			//if(table.get(row_index).get(count_index) != 0)
 				ptables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
 		}
 		
