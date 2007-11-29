@@ -37,7 +37,10 @@ public class TestStore
     	HashMap<String, Vector<LinkedList<String>>>  predicateTable= myStore.getPredicateTable();
     	//Store.PrintPredicateTable(predicateTable);
           
-    	myStore.PrintSubjectsAndTypes();
+    	//myStore.PrintSubjectsAndTypes();
+    	    	
+    	StmtIterator backIter= myStore.getBackwardsIterator();  	
+    	Store.PrintTriples(backIter);
     }
 }
 
