@@ -327,6 +327,61 @@ public class Store implements RDFStore
 		return orderedModel.listStatements();
 	}
 	
+	
+	
+	/**
+	 * Generates an Iterator on the model where the statements are grouped by namespace:subject 
+	 * return StmtIterator: Returns the statement iterator
+	 */
+	
+	public StmtIterator getBackwardsIterator()
+	{
+		Model backOrderedModel=ModelFactory.createDefaultModel();
+		Model tempModel=ModelFactory.createDefaultModel();
+		//List all different qualified subjects
+		LinkedList<Resource> qsubjects= new LinkedList<Resource>();
+		
+		StmtIterator iterOuter = this.rdfModel.listStatements();
+		
+		while(iterOuter.hasNext())
+		{
+			Statement stat= iterOuter.nextStatement();
+			
+			Resource subject= stat.getSubject();
+			Property predicate= stat.getPredicate();
+			RDFNode object= stat.getObject();
+									
+			Resource newResource= tempModel.createResource(object.toString()).addProperty(predicate, subject.toString());
+			
+		}
+		
+		
+		StmtIterator tempOuter = tempModel.listStatements();
+		
+		while(tempOuter.hasNext())
+		{
+			Statement stat= tempOuter.nextStatement();
+			if(!qsubjects.contains(stat.getSubject()))
+			{
+				qsubjects.add(stat.getSubject());
+								
+				StmtIterator tempInner = tempModel.listStatements();
+				while(tempInner.hasNext())
+				{
+					Statement statInner= tempInner.nextStatement();
+					if(statInner.getSubject().equals(stat.getSubject()))
+					{
+						backOrderedModel.add(statInner);
+					}
+				}
+			}
+		}
+		
+				
+		return backOrderedModel.listStatements();
+	}
+	
+	
 	/**
 	 * These are the subject types
 	 * 
@@ -465,6 +520,11 @@ public class Store implements RDFStore
 	}
 	
 	
+	/**
+	 * Prints subjects and their types
+	 * 
+	 * @return void
+	 */
 	
 	public void PrintSubjectsAndTypes ( )
 	{		
