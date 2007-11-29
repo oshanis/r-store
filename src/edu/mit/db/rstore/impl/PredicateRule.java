@@ -56,11 +56,6 @@ public class PredicateRule
 		direction = dir;
 	}
 	
-	public int hashCode()
-	{
-		return predicate.hashCode();
-	}
-	
 	/**
 	 * Does not take directionality of the arc into account, may change this later if necessary, I think not, since the primary
 	 * expected use is in the DBPopulator
