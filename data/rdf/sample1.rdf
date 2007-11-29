@@ -29,4 +29,32 @@ xml:base=  "http://www.persons.fake/Persons#">
             </rdf:Seq>
         </students>
      </Course>
+     <Course rdf:ID="MIT6.837">
+        <name>Graphics</name>
+        <teacher>
+            <Teacher rdf:ID="jp">
+               <name>Juan</name>
+	    </Teacher>
+        </teacher>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:about="am">
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:about="os">
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:about="sh">
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:about="mb">
+		   </Student>
+	        </rdf:li>
+            </rdf:Seq>
+        </students>
+     </Course>
    </rdf:RDF>
