@@ -39,13 +39,13 @@ import java.util.*;
 public class PropertyTable 
 {
 	//Identifier for the table
-	private String table_name;
+	protected String table_name;
 	//RDF type of the primary key
-	private String pkey;
+	protected String pkey;
 	//Identifier for the primary key
-	private String pkey_col_name;
+	protected String pkey_col_name;
 	//The formatted SQL command to create the table
-	private String create_table_command;
+	protected String create_table_command;
 	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
 	private HashMap<PredicateRule, String> predicates_to_columns;
 	
