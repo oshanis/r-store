@@ -32,6 +32,7 @@ package edu.mit.db.rstore.impl;
  * 
  * 11/24/07
  * Added the stub for SQL generation method, will complete as soon as external interfaces are satisfied
+ * 
  */
 
 import java.util.*;
@@ -46,7 +47,7 @@ public class PropertyTable
 	//The formatted SQL command to create the table
 	private String create_table_command;
 	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
-	private HashMap<String, String> predicates_to_columns;
+	private HashMap<PredicateRule, String> predicates_to_columns;
 	
 	/**
 	 * PropertyTable constructor.
@@ -61,7 +62,7 @@ public class PropertyTable
 		create_table_command = "";
 		pkey = primary_key;
 		pkey_col_name = primary_key_name;
-		predicates_to_columns = new HashMap<String, String>();
+		predicates_to_columns = new HashMap<PredicateRule, String>();
 	}
 	
 	/**
@@ -122,16 +123,23 @@ public class PropertyTable
 	
 	/**
 	 * Accessor for the other attributes as RDF Predicates.  Also rep exposure here.
+	 * 
+	 * This will automatically cull predicates with duplicate names, which may not be desirable
 	 */
 	public HashSet<String> getAttributes()
 	{
-		return new HashSet<String>(predicates_to_columns.keySet());
+		HashSet<String> ret = new HashSet<String>();
+		
+		for(PredicateRule p : predicates_to_columns.keySet())
+			ret.add(p.getPredicate());
+		
+		return ret;
 	}
 	
 	/**
 	 * Accessor for the attribute -> column name map
 	 */
-	public HashMap<String, String> getMap()
+	public HashMap<PredicateRule, String> getMap()
 	{
 		return predicates_to_columns;
 	}
@@ -149,7 +157,7 @@ public class PropertyTable
 	/**
 	 * Add an attribute.
 	 */
-	public void addAttribute(String pred, String col)
+	public void addAttribute(PredicateRule pred, String col)
 	{
 		predicates_to_columns.put(pred, col);
 	}
@@ -157,7 +165,7 @@ public class PropertyTable
 	/**
 	 * Remove an attribute.
 	 */
-	public void removeAttribute(String pred)
+	public void removeAttribute(PredicateRule pred)
 	{
 		predicates_to_columns.remove(pred);
 	}
