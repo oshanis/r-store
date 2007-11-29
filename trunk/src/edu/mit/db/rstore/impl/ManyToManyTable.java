@@ -51,4 +51,12 @@ public class ManyToManyTable extends PropertyTable
 		
 		return pkey_names;
 	}
+	
+	public void print()
+	{
+		System.out.println(table_name);
+		System.out.print(pkey_col_name + "  " + pkey2_col_name + " (pkey)  ");
+		System.out.println();
+		System.out.println();
+	}
 }
