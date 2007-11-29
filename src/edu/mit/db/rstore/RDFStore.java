@@ -16,6 +16,13 @@ public interface RDFStore
 	public StmtIterator getIterator();
 	
 	/**
+	 * This iterator switches subjects and objects and orders by new subjects.
+	 * 
+	 * @return A StmtIterator which can be used to iterate over all the triples
+	 */
+	public StmtIterator getBackwardsIterator();
+	
+	/**
 	 * These are the subject types
 	 * 
 	 * @return A HashSet of Strings which represent the types
