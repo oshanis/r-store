@@ -174,7 +174,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		if(predicate.contains("#"))
 		{
 			int index = predicate.indexOf("#");
-			return predicate.substring(index);
+			return predicate.substring(index + 1);
 		}
 		
 		return predicate;

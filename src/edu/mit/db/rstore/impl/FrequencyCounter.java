@@ -221,6 +221,12 @@ public class FrequencyCounter
 					aux_statistics.put(p, count + objs.get(obj));
 			}
 		}
+		
+		//TODO:
+		/*
+		 * I have not made any provision for the case where its really a many to many relation.  Either add it to this book keeping or do
+		 * a backwards pass
+		 */
 	}
 	
 	public Vector<Vector<Integer>> getFrequencyTable()
