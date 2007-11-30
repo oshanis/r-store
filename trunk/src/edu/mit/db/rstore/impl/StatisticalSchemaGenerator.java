@@ -96,20 +96,20 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 						else
 						{
 							PredicateRule new_pred = new PredicateRule(pred.getPredicate(), subject, object, PredicateRule.Direction.BACKWARD);
-							p.addAttribute(new_pred, "col_" + subject);
+							p.addAttribute(new_pred, "col_" + suffix(pred.getPredicate()));
 						}
 					}
 					if(rtype == FrequencyCounter.Relation.MANY_TO_ONE)
 					{
 						PropertyTable p = ptables.get(subject);
-						p.addAttribute(pred, "col_" + pred.getObject());
+						p.addAttribute(pred, "col_" + suffix(pred.getPredicate()));
 					}
 					if(rtype == FrequencyCounter.Relation.MANY_TO_MANY)
 					{
 						//TODO:
 						//This will make duplicates.  Fix the duplicates by modifying the mask or the frequency table
 						String object = pred.getObject();
-						ManyToManyTable m = new ManyToManyTable(subject + "_" + object, subject, "Pkey_" + subject, object, "Pkey_" + object);
+						ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object);
 						schema.add(m);
 					}
 					if(rtype == FrequencyCounter.Relation.ONE_TO_ONE)
@@ -121,7 +121,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 						if(o_index == null)
 						{
 							PropertyTable p = ptables.get(subject);
-							p.addAttribute(pred, "col_" + object);
+							p.addAttribute(pred, "col_" + suffix(pred.getPredicate()));
 						}
 						else
 						{
@@ -131,13 +131,13 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 							if(f_freq >= r_freq)
 							{
 								PropertyTable p = ptables.get(subject);
-								p.addAttribute(pred, "col_" + object);
+								p.addAttribute(pred, "col_" + suffix(pred.getPredicate()));
 							}
 							else
 							{
 								PredicateRule new_pred = new PredicateRule(pred.getPredicate(), subject, object, PredicateRule.Direction.BACKWARD);
 								PropertyTable p = ptables.get(object);
-								p.addAttribute(new_pred, "col_" + subject);
+								p.addAttribute(new_pred, "col_" + suffix(pred.getPredicate()));
 							}
 						}
 					}
@@ -167,5 +167,16 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 	public LinkedList<PropertyTable> getSchema()
 	{
 		return schema;
+	}
+	
+	private String suffix(String predicate)
+	{
+		if(predicate.contains("#"))
+		{
+			int index = predicate.indexOf("#");
+			return predicate.substring(index);
+		}
+		
+		return predicate;
 	}
 }
