@@ -149,8 +149,14 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	 */
 	private void sortPropertyFrequencyValues(){
 		
-		HashMap<Integer, String> predicates = frequencyCounter.getColumnMapping_1();
-		HashMap<Integer, String> subjects = frequencyCounter.getRowMapping_1();
+		//Beware of predicates which have the same name but different subject and object properties, as Sergio pointed out
+		//I have not fixed that bug here, merely manipulated types to cause things to compile  -AM
+		HashMap<Integer, PredicateRule> prules = frequencyCounter.getReverseColumnMapping();
+		HashMap<Integer, String> predicates = new HashMap<Integer, String>();
+		for(Integer i : prules.keySet())
+			predicates.put(i, prules.get(i).getPredicate());
+		
+		HashMap<Integer, String> subjects = frequencyCounter.getReverseRowMapping();
 		Vector<Vector<Integer>> frequencies = frequencyCounter.getFrequencyTable();
 		this.leftoversTable = new HashMap<String, HashMap<String,Integer>>();
 		
