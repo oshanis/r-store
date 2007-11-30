@@ -19,7 +19,13 @@ import java.util.LinkedList;
 
 public class Store implements RDFStore 
 {
-
+	/*
+	 * I put these things here so they could be referred to outside the class without introducing bugs such as capitalization.
+	 * I need to know when something is a Seq (blank node) or a Literal, and didn't want to rely on writing the string out everywhere
+	 * The String "Literal" occurred twice in your code.  I replaced it with the variable below.   -AM
+	 */
+	public static String LITERAL = "Literal";
+	public static String SEQ = "Seq";
     
 	private String directoryPath;
 	
@@ -598,7 +604,8 @@ public class Store implements RDFStore
 				}
 				else
 				{
-					subjectType="Literal";
+					//First line that I modified
+					subjectType=LITERAL;
 				}
 			}
 		
@@ -634,7 +641,8 @@ public class Store implements RDFStore
 				}
 				else
 				{
-					objectType="Literal";
+					//Second and last line that I modified
+					objectType=LITERAL;
 				}
 				
 				
