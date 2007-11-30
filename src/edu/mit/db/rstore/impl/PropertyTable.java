@@ -126,12 +126,12 @@ public class PropertyTable
 	 * 
 	 * This will automatically cull predicates with duplicate names, which may not be desirable
 	 */
-	public HashSet<String> getAttributes()
+	public HashSet<PredicateRule> getAttributes()
 	{
-		HashSet<String> ret = new HashSet<String>();
+		HashSet<PredicateRule> ret = new HashSet<PredicateRule>();
 		
 		for(PredicateRule p : predicates_to_columns.keySet())
-			ret.add(p.getPredicate());
+			ret.add(p);
 		
 		return ret;
 	}

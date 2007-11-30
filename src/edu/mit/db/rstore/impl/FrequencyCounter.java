@@ -75,13 +75,7 @@ public class FrequencyCounter
 		System.out.println("Predicates:  " + predicates.keySet().size());
 		System.out.println();
 		
-		dumpIndicies();
-		dumpAux();
-		
 		constructTable();
-		
-		System.out.println();
-		dumpTable();
 	}
 	
 	private void constructPredicates()
