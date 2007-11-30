@@ -66,5 +66,18 @@ public class PredicateRule
 			return ((PredicateRule)o).subject.equals(subject) && ((PredicateRule)o).object.equals(object) && ((PredicateRule)o).predicate.equals(predicate);
 		return false;
 	}
+	
+	/**
+	 * Ugh... HashMaps use hashCode!  I dont know anything about hash codes, so relying on a not ridiculous number of these things
+	 */
+	public int hashCode()
+	{
+		return (subject.hashCode() + predicate.hashCode() + object.hashCode()) % 37;
+	}
+	
+	public void print()
+	{
+		System.out.println("< " + subject + ", " + predicate + ", " + object + " >  " + direction.toString());
+	}
 
 }
