@@ -35,7 +35,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 	{
 		Vector<Vector<Integer>> table = ftable.getFrequencyTable();
 		HashMap<String, Integer> row_map = ftable.getRowMapping();
-		HashMap<String, Integer> col_map = ftable.getColumnMapping();
+		HashMap<PredicateRule, Integer> col_map = ftable.getColumnMapping();
 		
 		Integer row_index = new Integer(0);
 		Integer col_index = new Integer(0);
