@@ -615,6 +615,13 @@ public class FrequencyCounter
 			}
 			
 			frequencies[row_index][col_index] = frequencies[row_index][col_index] + count;
+			
+			Relation r = mask[row_index][col_index];
+			if(r == Relation.NONE)
+				mask[row_index][col_index] = Relation.ONE_TO_MANY;
+			else
+				if(r != Relation.ONE_TO_MANY)
+					mask[row_index][col_index] = Relation.MANY_TO_MANY;
 		}
 	}
 	
