@@ -181,14 +181,15 @@ public class Store implements RDFStore
             Property  predicate = stmt.getPredicate(); // get the predicate
             RDFNode   object    = stmt.getObject();    // get the object
             
-            System.out.print("Subject: " + subject.toString());
+           
+            
+            
+        	
+        	System.out.print("Subject: " + subject.toString());
+        	            
             System.out.print(" Predicate: " + predicate.toString() + " ");
-            if (object instanceof Resource) {
-                System.out.print("Object: " + object.toString());
-            } else {
-                // object is a literal
-                System.out.print(" \"" + object.toString() + "\"");
-            }
+            System.out.print("Object:" + object.toString() + "\"");
+           
             System.out.println(" .");
         }
 	}
@@ -402,10 +403,21 @@ public class Store implements RDFStore
 		while(stmtIter.hasNext())
 		{
 			Statement st= stmtIter.nextStatement();
-			if(!types.contains(st.getSubject().toString()))
+			RDFNode object= st.getObject();
+			if(object.isResource())
 			{
-				types.add(st.getSubject().getLocalName().toString());
+				Resource objectRes= (Resource)object;
+				String objectType= objectRes.getLocalName();
+				if(objectType.equals("Class"))
+				{
+					if(!types.contains(st.getSubject().toString()))
+					{
+						types.add(st.getSubject().getLocalName().toString());
+					}
+				}
 			}
+			
+			
 		}
 		
 		
