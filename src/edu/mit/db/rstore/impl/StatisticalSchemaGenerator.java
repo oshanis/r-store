@@ -89,9 +89,14 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 						
 						if(p == null)
 						{
-							//TODO:
-							//Fix this!
-							System.out.println("Must have found a one-to-many relation that points to a literal.  Oops");
+							/*
+							 * This means there is a one-to-many relation where the object is a literal.  I can't reverse this arc, so
+							 * I set up a many-to-many table keyed on the subject and the literal.  This can be optimized by some sort
+							 * of dictionary encoding, but that is beyond the scope of this project.
+							 */
+							ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object);
+							m.addAttribute(pred, "");
+							schema.add(m);
 						}
 						else
 						{
@@ -106,10 +111,16 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 					}
 					if(rtype == FrequencyCounter.Relation.MANY_TO_MANY)
 					{
-						//TODO:
-						//This will make duplicates.  Fix the duplicates by modifying the mask or the frequency table
+						/*
+						 * At first I thought this would make duplicate many to many tables, but now I think not because the many to many
+						 * relation will reflect only at one place in the mask; the forward direction of the arc.  Since backwardsPass does not
+						 * record any frequencies, the backwards direction of the arc will not be processed unless somebody defined a predicate
+						 * to essentially be bidirectional, which I hope they did not.
+						 */
 						String object = pred.getObject();
 						ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object);
+						//This needs to be here so the database populator knows how to populate the table
+						m.addAttribute(pred, "");
 						schema.add(m);
 					}
 					if(rtype == FrequencyCounter.Relation.ONE_TO_ONE)
