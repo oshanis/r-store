@@ -76,6 +76,9 @@ public class FrequencyCounter
 		System.out.println();
 		
 		constructTable();
+		
+		dumpIndicies();
+		dumpTable();
 	}
 	
 	private void constructPredicates()
@@ -229,6 +232,9 @@ public class FrequencyCounter
 		 */
 	}
 	
+	/**
+	 * This table is a copy, so you can alter the values without breaking the table
+	 */
 	public Vector<Vector<Integer>> getFrequencyTable()
 	{
 		Vector<Vector<Integer>> v = new Vector<Vector<Integer>>();
@@ -237,7 +243,7 @@ public class FrequencyCounter
 		{
 			Vector<Integer> row = new Vector<Integer>();
 			for(int j = 0; j <= predicates.size(); j++)
-				row.add(frequencies[i][j]);
+				row.add(new Integer(frequencies[i][j]));
 			v.add(row);
 		}
 		
@@ -342,7 +348,7 @@ public class FrequencyCounter
 	private void constructTable()
 	{
 		forwardPass();
-		//backwardPass();
+		backwardPass();
 		addAux();
 	}
 	
@@ -482,7 +488,7 @@ public class FrequencyCounter
 	 * Its very possible for subjects to now be literals.  I will discard these things, as they shouldn't be counted - the arc will go in the
 	 * forward direction anyway, and should never be reversed
 	 */
-	/*private void backwardPass()
+	private void backwardPass()
 	{
 		StmtIterator triples = rdf.getBackwardsIterator();
 		
@@ -512,8 +518,8 @@ public class FrequencyCounter
 			predicate = stmt.getPredicate();
             object = stmt.getObject();
             
-            if(!subject.isLiteral() /*&& !subject.isAnon() && !object.isAnon()*//*)
-            /*{
+            if(!subject.isLiteral() /*&& !subject.isAnon() && !object.isAnon()*/)
+            {
             	if(subject.isAnon())
             		System.out.println("Anon");
             	if(subject.isURIResource())
@@ -522,6 +528,7 @@ public class FrequencyCounter
             		System.out.println("Res");
             	
             	printStatement(subject, predicate, object);
+            	System.out.println();
             	
             /*	this_subject = subject.getLocalName();
     			this_subject_type = rdf.getTypeFromSubjects(this_subject);
@@ -586,7 +593,7 @@ public class FrequencyCounter
     					discarded_backward++;
     				}
     			}*/
-            /*}
+            }
             else
             {
             	if(subject.isLiteral())
@@ -597,7 +604,7 @@ public class FrequencyCounter
             	}
             }
 		}
-	}*/
+	}
 	
 	/*
 	 * Adds in the auxillary statistics in their proper cells
