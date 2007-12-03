@@ -49,7 +49,7 @@ public class PropertyTable
 	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
 	private HashMap<PredicateRule, String> predicates_to_columns;
 	
-	private HashMap<String, String> columns;
+	private HashMap<String, String> columns = new HashMap<String, String>();
 	
 	/**
 	 * PropertyTable constructor.
@@ -194,4 +194,25 @@ public class PropertyTable
 		System.out.println();
 		System.out.println();
 	}
+	
+	
+	/**
+	 * Prints out the state of the table
+	 * 
+	 * I had to duplicate the print method as I am not using the PredicateRule
+	 * (I tried to adopt it, but it would make the code too complicated for me) --Oshani
+	 */
+	public void print_table_wo_PR()
+	{
+		System.out.println(table_name);
+		System.out.print(pkey_col_name + " (pkey)  ");
+		Iterator i = columns.keySet().iterator();
+		while (i.hasNext()){
+			String col_type = (String)i.next();
+			System.out.println(col_type + "\t" + columns.get(col_type));
+		}
+		System.out.println();
+		System.out.println();
+	}
+
 }
