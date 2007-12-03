@@ -35,7 +35,7 @@ public class DataTypeIdentifier
 	}
 	
 	/**
-	 * This method maps the database types to strings that can be understood by posgres
+	 * This method maps the database types to strings that can be understood by postgres
 	 */
 	public String TypeToPostgres(DBType dbtype)
 	{
@@ -63,7 +63,7 @@ public class DataTypeIdentifier
 	}
 	
 	/**
-	 * This method maps types understood by posgres to database types
+	 * This method maps types understood by postgres to database types
 	 */
 	public DBType PostgresToType(String type)
 	{

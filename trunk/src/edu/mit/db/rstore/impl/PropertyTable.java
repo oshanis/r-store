@@ -49,6 +49,8 @@ public class PropertyTable
 	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
 	private HashMap<PredicateRule, String> predicates_to_columns;
 	
+	private HashMap<String, String> columns;
+	
 	/**
 	 * PropertyTable constructor.
 	 * 
@@ -160,6 +162,16 @@ public class PropertyTable
 	public void addAttribute(PredicateRule pred, String col)
 	{
 		predicates_to_columns.put(pred, col);
+	}
+	
+	/**
+	 * Add an attribute with the column name and the column data type.
+	 * I do not know how I could use PredicateRule hence the reason
+	 * for thie overloaded method --Oshani
+	 */
+	public void addAttribute(String col, String type)
+	{
+		columns.put(col, type);
 	}
 	
 	/**
