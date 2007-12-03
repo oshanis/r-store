@@ -19,6 +19,7 @@ public class TestStore
     	//Store.PrintTriples(dataModel.listStatements());
     	
     	Model schemaModel= myStore.CreateSchema();
+    	
     	//Store.PrintModel(schemaModel);  	
     	//Store.PrintTriples(schemaModel.listStatements());
     	
@@ -38,9 +39,6 @@ public class TestStore
     	//Store.PrintPredicateTable(predicateTable);
           
     	//myStore.PrintSubjectsAndTypes();
-    	    	
-    	StmtIterator backIter= myStore.getBackwardsIterator();  	
-    	Store.PrintTriples(backIter);
     }
 }
 

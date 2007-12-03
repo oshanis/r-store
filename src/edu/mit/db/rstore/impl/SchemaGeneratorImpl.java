@@ -111,8 +111,8 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	
 	private LinkedList<PropertyTable> schema; //The final schema the 'schema generating' algorithm produces
 	
-	private HashMap<String, Vector<String>> tables;
-	
+	HashMap<String, PropertyTable> tables = new HashMap<String, PropertyTable>();
+
 	/**
 	 * Constructor
 	 */
@@ -135,10 +135,6 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	
 	public HashMap<String, HashMap<String, Integer>> getLeftoversTable(){
 		return this.leftoversTable;
-	}
-	
-	public HashMap<String, Vector<String>> getTables(){
-		return this.tables;
 	}
 	
 	/**
@@ -276,7 +272,8 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     		Resource subClass = sc.nextResource();
     		if (!superSubjectSet.contains(subClass)){
     			subjectSet.add(subClass);
-    			tableNames.add(subClass.getLocalName());
+    			String s = subClass.getLocalName();
+				tables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
     		}
     	}
     	
@@ -308,7 +305,10 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 			if (domain.size() > 0 && range != null && !(range.getLocalName().equals("Literal")) 
 					&& !(range.getLocalName().equals("Seq"))){
 				for (int i=0; i< domain.size(); i++){
-					tableNames.add(domain.get(i).getLocalName()+range.getLocalName());
+					//This is the MANY-TO-MANY case
+					String s =domain.get(i).getLocalName()+range.getLocalName();
+					tableNames.add(s);
+					tables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
 	    		}				
 			}			
     	}

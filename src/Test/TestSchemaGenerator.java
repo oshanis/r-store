@@ -15,11 +15,9 @@ import edu.mit.db.rstore.impl.Store;
 public class TestSchemaGenerator {
 	
 	public static void main(String[] args){
-		
 
 		SchemaGeneratorImpl s = new SchemaGeneratorImpl();
 		s.createInitialSchema();
-		
 		
 	}
 }
