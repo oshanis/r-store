@@ -260,7 +260,8 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     	Model schemaModel= myStore.CreateSchema();
 
     	//Create the tables based on the subClass relationships
-
+    	//This is the ONE-TO-ONE case
+		
     	NodeIterator superNodes = schemaModel.listObjectsOfProperty(RDFS.subClassOf);
     	while (superNodes.hasNext()){
     		Resource superClass = (Resource)superNodes.next();
@@ -274,6 +275,8 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     			subjectSet.add(subClass);
     			String s = subClass.getLocalName();
 				tables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
+				tableNames.add(s);
+				//Remember to add the attributes later
     		}
     	}
     	
@@ -300,22 +303,51 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     				domain.add((Resource) st.getObject());
     			}
     		}
+    				
     		//FIXME Check this for statements which would have other RDF stuff which we are not
     		// interested in including in our schema structure
-			if (domain.size() > 0 && range != null && !(range.getLocalName().equals("Literal")) 
+			
+    		//This is the MANY-TO-MANY case
+
+    		if (domain.size() > 0 && range != null && !(range.getLocalName().equals("Literal")) 
 					&& !(range.getLocalName().equals("Seq"))){
 				for (int i=0; i< domain.size(); i++){
-					//This is the MANY-TO-MANY case
-					String s =domain.get(i).getLocalName()+range.getLocalName();
-					tableNames.add(s);
-					tables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
+					String d = domain.get(i).getLocalName();
+					String r = range.getLocalName();
+					String t = d+r;
+					tableNames.add(t);
+					PropertyTable p = new ManyToManyTable("Table_" +t,d, "Pkey_" +d, r, "Pkey_" + r );
+					tables.put(t, p);
 	    		}				
-			}			
+			}
+    		
+    		//Add the attributes in tables which are ONE-TO-ONE
+    		else if (domain.size() > 0 && range != null && ((range.getLocalName().equals("Literal")) 
+    				|| (range.getLocalName().equals("Seq")))){
+				for (int i=0; i< domain.size(); i++){
+					String t = domain.get(i).getLocalName();
+					PropertyTable p =  tables.get(t);
+					if (p != null){
+						p.addAttribute(domainSub.getLocalName(), "Pkey_"+domainSub.getLocalName());
+					}	
+					tables.put(t, p);	
+				}
+    		}
     	}
     	
-    	for ( String tn : tableNames){
-    		System.out.println(tn);
+//    	for ( String tn : tableNames){
+//    		System.out.println(tn);
+//    	}
+
+    	Iterator it = tables.keySet().iterator();
+    	while (it.hasNext()){
+    		String tableName = (String)it.next();
+    		System.out.println(tableName);
+    		PropertyTable p = tables.get(tableName);
+    		if (p!= null)
+    			p.print_table_wo_PR();
     	}
+    	
 	}
 	
 	/**
