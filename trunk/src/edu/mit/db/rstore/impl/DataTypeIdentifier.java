@@ -37,7 +37,7 @@ public class DataTypeIdentifier
 	/**
 	 * This method maps the database types to strings that can be understood by postgres
 	 */
-	public String TypeToPostgres(DBType dbtype)
+	private String TypeToPostgres(DBType dbtype)
 	{
 		String returnString="";
 		
@@ -65,7 +65,7 @@ public class DataTypeIdentifier
 	/**
 	 * This method maps types understood by postgres to database types
 	 */
-	public DBType PostgresToType(String type)
+	private DBType PostgresToType(String type)
 	{
 		DBType returnDBType= null;
 		
@@ -91,149 +91,212 @@ public class DataTypeIdentifier
 	}
 	
 	/**
-	 * This method returns a hashmap that maps predicates with data types
+	 * This method groups the statements with same predicate and same subject into Lists
 	 */
-	public HashMap<String, String> GetDataTypeMap ()
+	
+	private Vector<List<Statement>> GroupSubjectAndPredicates()
 	{
-		HashMap<String, String> dataTypeMap = new HashMap<String, String>();
-				
+		
+		Vector <List<Statement>> vector= new Vector<List<Statement>>();
+		HashMap <Statement, Boolean> progressMap= new HashMap <Statement, Boolean> ();  
+		
 		StmtIterator iter= this.rdfModel.listStatements();
 		
 		while(iter.hasNext())
-		{
-			Statement st= (Statement) iter.next();
+		{			
+			Statement st= iter.nextStatement();
 			
-			//Get predicate 
-			Property prop =st.getPredicate();
-			
-			//Get object type
-			RDFNode objectnode=(RDFNode) st.getObject();
-			
-			
-			boolean isInt=false;
-			boolean isFloat= false;
-			boolean isBoolean=false;
-			
-			
-			try
+			if (!progressMap.containsKey(st))
 			{
-				int objectint= Integer.parseInt(objectnode.toString());
-				isInt=true;
-			}
-			catch(Exception ex)
-			{
-				isInt=false;
-			
-			}
-			
-			try
-			{
-				float objectfloat= Float.parseFloat(objectnode.toString());
-				isFloat=true;
-			}
-			catch(Exception ex)
-			{
-				isFloat=false;
-			
-			}
-			if(objectnode.toString().equals("true")||objectnode.toString().equals("false") )
-			{
-				isBoolean= true;
-			}
-			else
-			{
-				isBoolean= false;
-			}
-			
-					
-			String parsedTypeString="";
-			
-			if(isBoolean)
-			{
-				parsedTypeString= TypeToPostgres(DBType.bool);
-			}
-			else if(isInt)
-			{
-				parsedTypeString=  TypeToPostgres(DBType.integer);
-			}
-			else if(isFloat)
-			{
-				parsedTypeString=  TypeToPostgres(DBType.real);
-			}
-			else
-			{
-				parsedTypeString=  TypeToPostgres(DBType.varchar_n);
-			}
-			
-			
-			if(dataTypeMap.containsKey(prop.toString()))
-			{
-				//Compare data types
-				DBType oldDataType = PostgresToType(dataTypeMap.get(prop.toString()));
-				DBType parsedType = PostgresToType(parsedTypeString);
+				List<Statement> sameSubjectPred= new LinkedList<Statement>();
 				
-				if(oldDataType.equals(DBType.integer) && !parsedType.equals(DBType.integer))
+				Resource subject = st.getSubject();
+				Property predicate = st.getPredicate();
+				
+						
+				StmtIterator innerIter= this.rdfModel.listStatements();
+				
+				while (innerIter.hasNext())
 				{
-					if(parsedType.equals(DBType.real))
-					{
-						// Upgrade data type to float
-						dataTypeMap.put(prop.toString(), parsedTypeString);
-					}
-					else 
-					{
-						// Upgrade data type to string
-						dataTypeMap.put(prop.toString(), TypeToPostgres(DBType.varchar_n));
-					}
-				}
-				else if (oldDataType.equals(DBType.real)&& !parsedType.equals(DBType.real))
-				{
-					if(parsedType.equals(DBType.integer))
-					{
-						// Keep upgraded type
-						dataTypeMap.put(prop.toString(),dataTypeMap.get(prop.toString()));
-					}
-					else 
-					{
-						// Upgrade data type to string
-						dataTypeMap.put(prop.toString(),TypeToPostgres (DBType.varchar_n));
-					}
-				}
-				else if (oldDataType.equals(DBType.bool)&& !parsedType.equals(DBType.bool))
-				{
+					Statement innerSt= innerIter.nextStatement();
 					
+					Resource innerSubject = st.getSubject();
+					Property innerPredicate = st.getPredicate();
 					
-					// Upgrade data type to string
-					dataTypeMap.put(prop.toString(),TypeToPostgres (DBType.varchar_n));
+					if (subject.equals(innerSubject) && predicate.equals(innerPredicate))
+					{
+						sameSubjectPred.add(innerSt);
+						progressMap.put(innerSt, true);
+					}
 					
 				}
 				
-				
+				vector.add(sameSubjectPred);
 			}
-			else
-			{
-				// Add property and data type
-				dataTypeMap.put(prop.toString(), parsedTypeString);
-				
-			}
-				
+			
+			
 		}
+		
+		return vector;
+	}
+	
+	/**
+	 * This method returns a hashmap that maps predicates with data types
+	 */
+	public HashMap<Statement, String> GetDataTypeMap ()
+	{
+				
+		
+		HashMap<Statement, String> dataTypeMap = new HashMap<Statement,String>();
+		
+		Vector<List<Statement>> vector = GroupSubjectAndPredicates();
+		
+		for (int i=0; i<vector.size(); i++)
+		{
+		
+			List<Statement> list = vector.get(i);
+			DBType parsedType= DBType.integer;
+			String selectedType="";;
+			
+			for (int j=0; j< list.size(); j++)
+			{
+				Statement innerSt= list.get(j);
+				
+				//Get object type
+				RDFNode objectnode=(RDFNode) innerSt.getObject();
+				
+				
+				boolean isInt=false;
+				boolean isFloat= false;
+				boolean isBoolean=false;
+				
+				
+				try
+				{
+					int objectint= Integer.parseInt(objectnode.toString());
+					isInt=true;
+				}
+				catch(Exception ex)
+				{
+					isInt=false;
+				
+				}
+				
+				try
+				{
+					float objectfloat= Float.parseFloat(objectnode.toString());
+					isFloat=true;
+				}
+				catch(Exception ex)
+				{
+					isFloat=false;
+				
+				}
+				if(objectnode.toString().equals("true")||objectnode.toString().equals("false") )
+				{
+					isBoolean= true;
+				}
+				else
+				{
+					isBoolean= false;
+				}
+				
+						
+				String parsedTypeString="";
+				
+				if(isBoolean)
+				{
+					parsedTypeString= TypeToPostgres(DBType.bool);
+				}
+				else if(isInt)
+				{
+					parsedTypeString=  TypeToPostgres(DBType.integer);
+				}
+				else if(isFloat)
+				{
+					parsedTypeString=  TypeToPostgres(DBType.real);
+				}
+				else
+				{
+					parsedTypeString=  TypeToPostgres(DBType.varchar_n);
+				}
+				
+				
+				DBType oldDataType = parsedType;
+				parsedType = PostgresToType(parsedTypeString);
+				
+				
+					if(oldDataType.equals(DBType.integer) && !parsedType.equals(DBType.integer))
+					{
+						if(parsedType.equals(DBType.real))
+						{
+							// Upgrade data type to float
+							selectedType=parsedTypeString;
+						}
+						else 
+						{
+							// Upgrade data type to string
+							selectedType= TypeToPostgres(DBType.varchar_n);
+						}
+					}
+					else if (oldDataType.equals(DBType.real)&& !parsedType.equals(DBType.real))
+					{
+						if(parsedType.equals(DBType.integer))
+						{
+							// Keep upgraded type
+							selectedType= TypeToPostgres(DBType.real);
+						}
+						else 
+						{
+							// Upgrade data type to string
+							selectedType= TypeToPostgres (DBType.varchar_n);
+						}
+					}
+					else if (oldDataType.equals(DBType.bool)&& !parsedType.equals(DBType.bool))
+					{
+						
+						
+						// Upgrade data type to string
+						selectedType= TypeToPostgres (DBType.varchar_n);
+						
+					}
+				}
+			
+			
+			
+			for (int j=0; j< list.size(); j++)
+			{
+				dataTypeMap.put(list.get(j), selectedType);
+			}
+		}
+				
 		
 		
 		return dataTypeMap;
 	}
 	
+	
+	
 	/**
 	 * Print type for each predicate
 	 */
 	
-	public static void PrintTypes(HashMap<String, String> dataTypeMap)
+	public static void PrintTypes(HashMap<Statement, String> dataTypeMap)
 	{
 		
-		Set<String> keySet = dataTypeMap.keySet();
-		Iterator<String> iter = keySet.iterator();
+		Set<Statement> keySet = dataTypeMap.keySet();
+		Iterator<Statement> iter = keySet.iterator();
+		
 		while(iter.hasNext())
 		{
-			System.out.println(dataTypeMap.get(iter.next()));
+			Statement st= iter.next();
+			
+			System.out.println("Subject: "+ st.getSubject().toString());
+			System.out.println("Predicate: "+ st.getPredicate().toString());
+			System.out.println("Object: "+ st.getObject().toString());
+			
+			System.out.println("Database type: " + dataTypeMap.get(st)+ "\n");
+			
 		}
 	}
 	
