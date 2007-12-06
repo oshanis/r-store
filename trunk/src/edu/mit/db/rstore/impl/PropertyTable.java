@@ -98,6 +98,8 @@ public class PropertyTable
 	/**
 	 * Pass the property table the database type mappings and the predicate's object type mappings, both of which should be available
 	 * from the RDFStore, so the Schema Generator has access to them, and the PropertyTable will generate the SQL for you
+	 * 
+	 * 12.5.2007 - I think we do not need any parameters for this --Oshani
 	 */
 	public void constructSQL(/*TODO:  Decide on parameter data structures*/)
 	{
@@ -106,6 +108,23 @@ public class PropertyTable
 		 * Write the generation code.  Will be quick once the parameter data structures are decided
 		 */
 		
+		String columnSQLString = "";
+		if (predicates_to_columns.size() > 0){
+			for(String s : predicates_to_columns.values())
+				columnSQLString += s + "  varchar, ";
+		}
+		else{
+			Iterator i = columns.keySet().iterator();
+			while (i.hasNext()){
+				String col_type = (String)i.next();
+				columnSQLString += columns.get(col_type) + "  varchar, ";
+			}
+		}
+		create_table_command = "CREATE TABLE " + table_name +
+								"( " + pkey_col_name + " varchar, " +
+								       columnSQLString +
+								 " PRIMARY KEY( " + pkey_col_name +
+								 "))";
 	}
 	
 	/**
