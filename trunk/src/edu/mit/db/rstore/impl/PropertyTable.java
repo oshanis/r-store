@@ -47,9 +47,9 @@ public class PropertyTable
 	//The formatted SQL command to create the table
 	protected String create_table_command;
 	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
-	private HashMap<PredicateRule, String> predicates_to_columns;
+	protected HashMap<PredicateRule, String> predicates_to_columns;
 	
-	private HashMap<String, String> columns = new HashMap<String, String>();
+	public HashMap<String, String> columns = new HashMap<String, String>();
 	
 	/**
 	 * PropertyTable constructor.
@@ -105,6 +105,7 @@ public class PropertyTable
 		/*
 		 * Write the generation code.  Will be quick once the parameter data structures are decided
 		 */
+		
 	}
 	
 	/**
@@ -184,32 +185,25 @@ public class PropertyTable
 	
 	/**
 	 * Prints out the state of the table
+	 * 
+	 * 12.5.2007 - Changed the method by including a condition to print the column names
+	 * obtained from both algorithms
 	 */
 	public void print()
 	{
 		System.out.println(table_name);
 		System.out.print(pkey_col_name + " (pkey)  ");
-		for(String s : predicates_to_columns.values())
-			System.out.print(s + "  ");
-		System.out.println();
-		System.out.println();
-	}
-	
-	
-	/**
-	 * Prints out the state of the table
-	 * 
-	 * I had to duplicate the print method as I am not using the PredicateRule
-	 * (I tried to adopt it, but it would make the code too complicated for me) --Oshani
-	 */
-	public void print_table_wo_PR()
-	{
-		System.out.println(table_name);
-		System.out.print(pkey_col_name + " (pkey)  ");
-		Iterator i = columns.keySet().iterator();
-		while (i.hasNext()){
-			String col_type = (String)i.next();
-			System.out.println(col_type + "\t" + columns.get(col_type));
+		//This condition is to facilitate the 
+		if (predicates_to_columns.size() > 0){
+			for(String s : predicates_to_columns.values())
+				System.out.print(s + "  ");
+		}
+		else{
+			Iterator i = columns.keySet().iterator();
+			while (i.hasNext()){
+				String col_type = (String)i.next();
+				System.out.print(columns.get(col_type) + "  ");
+			}
 		}
 		System.out.println();
 		System.out.println();

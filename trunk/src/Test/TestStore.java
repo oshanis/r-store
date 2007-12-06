@@ -28,6 +28,12 @@ public class TestStore
     	
     	StmtIterator iter= myStore.getIterator();  	
     	//Store.PrintTriples(iter);
+
+    	//Just Testing --Oshani
+//    	HashSet<String> hs = myStore.getSubjectsFromType("Teacher");
+//    	Iterator i = hs.iterator();
+//    	while (i.hasNext())
+//    		System.out.println((String)i.next());
     	
     	HashSet<String> typeSet= myStore.getSubjectTypes();
     	//Store.PrintTypes(typeSet);

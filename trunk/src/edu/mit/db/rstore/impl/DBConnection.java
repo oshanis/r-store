@@ -25,15 +25,14 @@ public class DBConnection {
 		Connection conn = DriverManager.getConnection(url, username, password);
 		
 		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("CREATE TABLE base (subject varchar(40)," +
-														 " predicate varchar(40)," +
-														 " object varchar(40))");
-		while (rs.next()) {
-		    System.out.print("Column 1 returned ");
-		    System.out.println(rs.getString(1));
-		}
-		rs.close();
-		st.close();
+//		ResultSet rs = st.executeQuery("CREATE TABLE base (subject varchar(40)," +
+//														 " predicate varchar(40)," +
+//														 " object varchar(40))");
+		
+//		ResultSet rs = st.executeQuery("INSERT INTO TABLE base (subject varchar(40)," +
+//				 " predicate varchar(40)," +
+//				 " object varchar(40))");
+
 
 	}
 
