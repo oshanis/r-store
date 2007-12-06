@@ -26,8 +26,9 @@ public class TestStore
     	InfModel infModel= myStore.CreateInferenceModel();
     	//Store.PrintModel(infModel);
     	
-    	StmtIterator iter= myStore.getIterator();  	
-    	//Store.PrintTriples(iter);
+    	//StmtIterator iter= myStore.getIterator();
+    	StmtIterator iter= myStore.getBackwardsIterator();
+    	Store.PrintTriples(iter);
 
     	//Just Testing --Oshani
 //    	HashSet<String> hs = myStore.getSubjectsFromType("Teacher");

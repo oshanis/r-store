@@ -185,12 +185,11 @@ public class Store implements RDFStore
             
             
         	
-        	System.out.print("Subject: " + subject.toString());
-        	            
+        	System.out.print("Subject: " + subject.toString());          
             System.out.print(" Predicate: " + predicate.toString() + " ");
-            System.out.print("Object:" + object.toString() + "\"");
+            System.out.print("Object:" + object.toString() + "\n");
            
-            System.out.println(" .");
+            
         }
 	}
 	
