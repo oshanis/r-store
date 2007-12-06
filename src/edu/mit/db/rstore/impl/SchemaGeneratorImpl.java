@@ -2,6 +2,8 @@ package edu.mit.db.rstore.impl;
 
 import java.util.*;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -322,13 +324,18 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 			}
     		
     		//Add the attributes in tables which are ONE-TO-ONE
-    		else if (domain.size() > 0 && range != null && ((range.getLocalName().equals("Literal")) 
+    		
+    		//FIXME I would be wise to add support for subClass relationships here
+    		//For eg: <rdfs:domain rdf:resource="#Person"/> instead of having 2 	      
+    	    // separate domains for Student and Teacher
+    		
+    		else if (domain.size() > 0  && ((range.getLocalName().equals("Literal")) 
     				|| (range.getLocalName().equals("Seq")))){
 				for (int i=0; i< domain.size(); i++){
 					String t = domain.get(i).getLocalName();
 					PropertyTable p =  tables.get(t);
 					if (p != null){
-						p.addAttribute(domainSub.getLocalName(), "Pkey_"+domainSub.getLocalName());
+						p.addAttribute(domainSub.getLocalName(), "col_"+domainSub.getLocalName());
 					}	
 					tables.put(t, p);	
 				}
@@ -342,10 +349,16 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     	Iterator it = tables.keySet().iterator();
     	while (it.hasNext()){
     		String tableName = (String)it.next();
-    		System.out.println(tableName);
     		PropertyTable p = tables.get(tableName);
-    		if (p!= null)
-    			p.print_table_wo_PR();
+    		if (p!= null){
+    			if (p instanceof ManyToManyTable) {
+    				ManyToManyTable mmt = (ManyToManyTable)p;
+    				mmt.print();
+    			}
+    			else{
+    				p.print();
+    			}
+    		}
     	}
     	
 	}
@@ -362,9 +375,14 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	 * the RDFBrowser would understand
 	 */
 	private void constructSchema(){
+    	Iterator it = tables.keySet().iterator();
+    	while (it.hasNext()){
+    		String tableName = (String)it.next();
+    		PropertyTable p = tables.get(tableName);
+    		if (p!= null)
+	    		schema.add(p);
+    	}
 		
 	}
-	
-
 }
 

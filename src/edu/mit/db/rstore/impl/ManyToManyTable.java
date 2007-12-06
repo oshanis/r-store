@@ -1,5 +1,6 @@
 package edu.mit.db.rstore.impl;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -54,9 +55,29 @@ public class ManyToManyTable extends PropertyTable
 	
 	public void print()
 	{
+
 		System.out.println(table_name);
-		System.out.print(pkey_col_name + "  " + pkey2_col_name + " (pkey)  ");
+		System.out.println(pkey_col_name + "  " + pkey2_col_name + " (pkey)  ");
+
+		if (predicates_to_columns.size() > 0){
+			for(String s : predicates_to_columns.values())
+				System.out.print(s + "  ");
+		}
+		else{
+			Iterator i = columns.keySet().iterator();
+			while (i.hasNext()){
+				String col_type = (String)i.next();
+				System.out.print(columns.get(col_type) + "  ");
+			}
+		}
 		System.out.println();
 		System.out.println();
+//		Iterator i = super.columns.keySet().iterator();
+//		while (i.hasNext()){
+//			String col_type = (String)i.next();
+//			System.out.println(col_type + "\t" + super.columns.get(col_type));
+//		}
+//		System.out.println();
+//		System.out.println();
 	}
 }
