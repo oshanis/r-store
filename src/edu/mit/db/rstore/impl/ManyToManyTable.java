@@ -32,6 +32,26 @@ public class ManyToManyTable extends PropertyTable
 		/*
 		 * Write the generation code.  Will be quick once the parameter data structures are decided
 		 */
+		
+		String columnSQLString = "";
+		if (predicates_to_columns.size() > 0){
+			for(String s : predicates_to_columns.values())
+				columnSQLString += s + "  varchar, ";
+		}
+		else{
+			Iterator i = columns.keySet().iterator();
+			while (i.hasNext()){
+				String col_type = (String)i.next();
+				columnSQLString += columns.get(col_type) + "  varchar, ";
+			}
+		}
+		create_table_command = "CREATE TABLE " + table_name +
+								"( " + pkey_col_name + " varchar, " +
+									   pkey2_col_name  + " varchar, " +
+								       columnSQLString +
+								 " PRIMARY KEY( " + pkey_col_name + " " + pkey2_col_name +								 
+								 "))";
+
 	}
 	
 	public LinkedList<String> getPrimaryKeys()
@@ -72,12 +92,5 @@ public class ManyToManyTable extends PropertyTable
 		}
 		System.out.println();
 		System.out.println();
-//		Iterator i = super.columns.keySet().iterator();
-//		while (i.hasNext()){
-//			String col_type = (String)i.next();
-//			System.out.println(col_type + "\t" + super.columns.get(col_type));
-//		}
-//		System.out.println();
-//		System.out.println();
 	}
 }
