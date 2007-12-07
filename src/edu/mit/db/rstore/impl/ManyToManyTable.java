@@ -49,7 +49,7 @@ public class ManyToManyTable extends PropertyTable
 								"( " + pkey_col_name + " varchar, " +
 									   pkey2_col_name  + " varchar, " +
 								       columnSQLString +
-								 " PRIMARY KEY( " + pkey_col_name + " " + pkey2_col_name +								 
+								 " PRIMARY KEY( " + pkey_col_name + " , " + pkey2_col_name +								 
 								 "))";
 
 	}

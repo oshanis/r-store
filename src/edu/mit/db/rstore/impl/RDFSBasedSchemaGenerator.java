@@ -105,7 +105,7 @@ import edu.mit.db.rstore.SchemaGenerator;
  * @author oshani
  *
  */
-public class SchemaGeneratorImpl implements SchemaGenerator {
+public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 
 	private FrequencyCounter frequencyCounter;
 	
@@ -118,16 +118,17 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
 	/**
 	 * Constructor
 	 */
-	public SchemaGeneratorImpl(FrequencyCounter fc){
+	public RDFSBasedSchemaGenerator(FrequencyCounter fc){
 		this.frequencyCounter = fc;
 		this.sortPropertyFrequencyValues();
+		this.schema = new LinkedList<PropertyTable>();
 	}
 	
 	/**
 	 * The new constructor which will be used when refactoring the code
 	 */
-	public SchemaGeneratorImpl() {
-		// TODO Auto-generated constructor stub
+	public RDFSBasedSchemaGenerator() {
+		this.schema = new LinkedList<PropertyTable>();
 	}
 
 	//Modified return type and set return value to null for now  -AM
@@ -342,10 +343,6 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     		}
     	}
     	
-//    	for ( String tn : tableNames){
-//    		System.out.println(tn);
-//    	}
-
     	Iterator it = tables.keySet().iterator();
     	while (it.hasNext()){
     		String tableName = (String)it.next();
@@ -363,18 +360,12 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     	
 	}
 	
-	/**
-	 * Pass3
-	 */
-	private void eliminateLeftoverTable(Vector<Vector<Integer>> leftoversTable){
-		
-	}
 	
 	/**
 	 * Iterate over all the Table objects in the tables vector and output the 'schema' in a format
 	 * the RDFBrowser would understand
 	 */
-	private void constructSchema(){
+	public void constructSchema(){
     	Iterator it = tables.keySet().iterator();
     	while (it.hasNext()){
     		String tableName = (String)it.next();
@@ -382,7 +373,6 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     		if (p!= null)
 	    		schema.add(p);
     	}
-		
 	}
 }
 

@@ -27,14 +27,14 @@ public class TestStore
     	//Store.PrintModel(infModel);
     	
     	//StmtIterator iter= myStore.getIterator();
-    	StmtIterator iter= myStore.getBackwardsIterator();
-    	Store.PrintTriples(iter);
+//    	StmtIterator iter= myStore.getBackwardsIterator();
+//    	Store.PrintTriples(iter);
 
     	//Just Testing --Oshani
-//    	HashSet<String> hs = myStore.getSubjectsFromType("Teacher");
-//    	Iterator i = hs.iterator();
-//    	while (i.hasNext())
-//    		System.out.println((String)i.next());
+    	HashSet<String> hs = myStore.getSubjectsFromType("name");
+    	Iterator i = hs.iterator();
+    	while (i.hasNext())
+    		System.out.println((String)i.next());
     	
     	HashSet<String> typeSet= myStore.getSubjectTypes();
     	//Store.PrintTypes(typeSet);
