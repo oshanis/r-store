@@ -12,7 +12,8 @@ import com.hp.hpl.jena.vocabulary.DB;
  */
 public class DBConnection {
 	
-	private Connection conn;
+	public Connection conn;
+	public Statement st;
 	
 	public void connect() throws ClassNotFoundException, SQLException{
 		
@@ -26,26 +27,25 @@ public class DBConnection {
 		
 		conn = DriverManager.getConnection(url, username, password);
 		
-		Statement st = conn.createStatement();
+		st = conn.createStatement();
 		
 		String tableName = "base";
 		
-		//First Check if the table exists in the Database
-		//If it exists drop the table
-		if (tableExists(tableName)){
-			st.execute("DROP TABLE base");
-		}
+//		//First Check if the table exists in the Database
+//		//If it exists drop the table
+//		if (tableExists(tableName)){
+//			st.execute("DROP TABLE base");
+//		}
+//		
+//		st.execute( "CREATE TABLE base ("  +
+//         "Entry      INTEGER      NOT NULL, "    +
+//         "Customer   VARCHAR (20) NOT NULL, "    +
+//         "DOW        VARCHAR (3)  NOT NULL, "    +
+//         "Cups       INTEGER      NOT NULL, "    +
+//         "Type       VARCHAR (10) NOT NULL,"     +
+//         "PRIMARY KEY( Entry )"                  +
+//                                            ")" );
 		
-		//Create the new table
-		st.execute("CREATE TABLE base ((subject varchar," +
-									 " predicate varchar," +
-									 " object varchar," +
-									 "PRIMARY KEY( subject, object ))");
-		
-//		ResultSet rs = st.executeQuery("INSERT INTO TABLE base (subject varchar(40)," +
-//				 " predicate varchar(40)," +
-//				 " object varchar(40))");
-
 
 	}
 	

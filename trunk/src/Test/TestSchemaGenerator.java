@@ -10,7 +10,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 import edu.mit.db.rstore.SchemaGenerator;
 import edu.mit.db.rstore.impl.FrequencyCounter;
-import edu.mit.db.rstore.impl.SchemaGeneratorImpl;
+import edu.mit.db.rstore.impl.RDFSBasedSchemaGenerator;
 import edu.mit.db.rstore.impl.StatisticalSchemaGenerator;
 import edu.mit.db.rstore.impl.Store;
 
@@ -20,16 +20,15 @@ public class TestSchemaGenerator {
 
     	String path= "data/";
         
+    	Store myStore = new Store (path);
+    	Model dataModel= myStore.CreateModel();
+    	Model schemaModel= myStore.CreateSchema();
+    	InfModel infModel= myStore.CreateInferenceModel();
+
+    	StatisticalSchemaGenerator s = new StatisticalSchemaGenerator(myStore);
 		
-//    	Store myStore = new Store (path);
-//    	Model dataModel= myStore.CreateModel();
-//    	Model schemaModel= myStore.CreateSchema();
-//    	InfModel infModel= myStore.CreateInferenceModel();
-//
-//    	StatisticalSchemaGenerator s = new StatisticalSchemaGenerator(myStore);
-		
-		SchemaGeneratorImpl s = new SchemaGeneratorImpl();
-		s.createInitialSchema();
+//		SchemaGeneratorImpl s = new SchemaGeneratorImpl();
+//		s.createInitialSchema();
 		
 	}
 }

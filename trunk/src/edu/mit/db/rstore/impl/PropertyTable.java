@@ -81,6 +81,7 @@ public class PropertyTable
 	 */
 	public String getSQL()
 	{
+		constructSQL();
 		return create_table_command;
 	}
 	
@@ -121,11 +122,12 @@ public class PropertyTable
 			}
 		}
 		create_table_command = "CREATE TABLE " + table_name +
-								"( " + pkey_col_name + " varchar, " +
+								"( " + pkey_col_name + " varchar , " +
 								       columnSQLString +
 								 " PRIMARY KEY( " + pkey_col_name +
 								 "))";
 	}
+	
 	
 	/**
 	 * Accessor for primary keys as RDF Subject.
@@ -174,6 +176,20 @@ public class PropertyTable
 		HashSet<String> ids = new HashSet<String>(predicates_to_columns.values());
 		ids.add(new String(pkey_col_name));
 		return ids;
+	}
+	
+	/**
+	 * Accessor for the column types, when the PredicateRules are not used
+	 * --oshani
+	 */
+	public LinkedList<String> getColTypes()
+	{
+		LinkedList<String> l = new LinkedList<String>();
+		Iterator i = columns.keySet().iterator();
+		while (i.hasNext()){
+			l.add((String)i.next());
+		}
+		return l;
 	}
 	
 	/**
