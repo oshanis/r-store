@@ -39,7 +39,7 @@ public class TestDBPopulator {
 		DBPopulator populator = new StatisticalDbPopulator(schemas, myStore);
 		populator.createTables();
 		
-//		populator.insertValues();
+		populator.insertValues();
 		
 	}
 
