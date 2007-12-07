@@ -1,5 +1,6 @@
 package Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import com.hp.hpl.jena.rdf.model.*;
 
 public class TestDataTypeIdentifier 
 {
-	public static void main (String args[]) {
+	public static void main (String args[]) throws IOException {
     	
     	String path= "data/";
         

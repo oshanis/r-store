@@ -1,5 +1,6 @@
 package Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ import edu.mit.db.rstore.impl.Store;
 
 public class TestDBPopulator {
 	
-	public static void main(String args[]) throws ClassNotFoundException, SQLException{
+	public static void main(String args[]) throws ClassNotFoundException, SQLException, IOException{
 	
     	String path= "data/";
 		

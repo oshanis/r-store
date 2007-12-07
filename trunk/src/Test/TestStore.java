@@ -31,10 +31,10 @@ public class TestStore
 //    	Store.PrintTriples(iter);
 
     	//Just Testing --Oshani
-    	HashSet<String> hs = myStore.getSubjectsFromType("name");
-    	Iterator i = hs.iterator();
-    	while (i.hasNext())
-    		System.out.println((String)i.next());
+//    	HashSet<String> hs = myStore.getSubjectsFromType("name");
+//    	Iterator i = hs.iterator();
+//    	while (i.hasNext())
+//    		System.out.println((String)i.next());
     	
     	HashSet<String> typeSet= myStore.getSubjectTypes();
     	//Store.PrintTypes(typeSet);

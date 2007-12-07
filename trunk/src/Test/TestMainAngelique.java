@@ -1,5 +1,6 @@
 package Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -14,7 +15,7 @@ import edu.mit.db.rstore.impl.Store;
 public class TestMainAngelique 
 {
 	//Dumps a frequency generator
-	public static void main(String[] args) 
+	public static void main(String[] args) throws IOException 
 	{
 		
 		//Let's always try to use relative paths. (I changed the path variable here) 
