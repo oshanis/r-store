@@ -76,7 +76,6 @@ public class StatisticalDbPopulator implements DBPopulator {
 	 */
 
 	public void insertValues() {
-		// TODO Auto-generated method stub
 		
 		StmtIterator iter = store.getIterator();
 		
@@ -98,11 +97,16 @@ public class StatisticalDbPopulator implements DBPopulator {
 //					System.out.println("Found an object that was neither a literal or a URI");
 //					objectType = "";
 //				}
-
-			if (!predicate.getLocalName().equals(null) && !subject.getLocalName().equals(null) && !object.toString().equals(null)){
-	            PredicateRule p = new PredicateRule(predicate.getLocalName(), subject.getLocalName(), object.toString(), PredicateRule.Direction.FORWARD);
+            
+//!predicate.getLocalName().equals(null) && !subject.getLocalName().equals(null) && !object.toString().equals(null)
+            
+			if (!subject.equals(null) && !predicate.equals(null) && !object.equals(null) ){
+	            PredicateRule p = new PredicateRule(predicate.getLocalName(), 
+	            					store.getTypeFromSubjects(subject.getLocalName()), 
+	            					object.toString(), 
+	            					PredicateRule.Direction.FORWARD);
 				
-				String tableName = store.getTypeFromSubjects(subject.getLocalName());
+	            String tableName = store.getTypeFromSubjects(subject.getLocalName());
 				
 				//Need to get the column mapping for this predicate rule
 				StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
@@ -110,7 +114,6 @@ public class StatisticalDbPopulator implements DBPopulator {
 				LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
 				
 				for (int i = 0; i<propertyTables.size(); i++){
-
 					PropertyTable propTable = propertyTables.get(i);				
 					HashMap<PredicateRule, String> cols = propTable.getMap();
 					if (cols.containsKey(p)){
