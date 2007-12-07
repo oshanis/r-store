@@ -98,8 +98,6 @@ public class StatisticalDbPopulator implements DBPopulator {
 //					objectType = "";
 //				}
             
-//!predicate.getLocalName().equals(null) && !subject.getLocalName().equals(null) && !object.toString().equals(null)
-            
 			if (!subject.equals(null) && !predicate.equals(null) && !object.equals(null) ){
 	            PredicateRule p = new PredicateRule(predicate.getLocalName(), 
 	            					store.getTypeFromSubjects(subject.getLocalName()), 
@@ -121,7 +119,7 @@ public class StatisticalDbPopulator implements DBPopulator {
 						System.out.println(cols.get(p));
 					}
 					else{
-						System.out.println("NOT FOUND");
+						System.out.println("----NOT FOUND----");
 					}
 				}
 			}
