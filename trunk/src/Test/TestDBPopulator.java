@@ -11,6 +11,8 @@ import edu.mit.db.rstore.DBPopulator;
 import edu.mit.db.rstore.impl.RDFSBasedDBPopulator;
 import edu.mit.db.rstore.impl.PropertyTable;
 import edu.mit.db.rstore.impl.RDFSBasedSchemaGenerator;
+import edu.mit.db.rstore.impl.StatisticalDbPopulator;
+import edu.mit.db.rstore.impl.StatisticalSchemaGenerator;
 import edu.mit.db.rstore.impl.Store;
 
 public class TestDBPopulator {
@@ -24,16 +26,20 @@ public class TestDBPopulator {
     	Model schemaModel= myStore.CreateSchema();
     	InfModel infModel= myStore.CreateInferenceModel();
 
-//    	StatisticalSchemaGenerator s = new StatisticalSchemaGenerator(myStore);
+    	StatisticalSchemaGenerator schemaGenerator = new StatisticalSchemaGenerator(myStore);
 
-		RDFSBasedSchemaGenerator schemaGenerator = new RDFSBasedSchemaGenerator();
-		schemaGenerator.createInitialSchema();
-		schemaGenerator.constructSchema();
-		LinkedList<PropertyTable> schemas = schemaGenerator.getSchema();
+//		RDFSBasedSchemaGenerator schemaGenerator = new RDFSBasedSchemaGenerator();
+//		schemaGenerator.createInitialSchema();
+//		schemaGenerator.constructSchema();
+
+    	LinkedList<PropertyTable> schemas = schemaGenerator.getSchema();
 		
-		DBPopulator populator = new RDFSBasedDBPopulator(schemas, myStore);
+//		DBPopulator populator = new RDFSBasedDBPopulator(schemas, myStore);
+		
+		DBPopulator populator = new StatisticalDbPopulator(schemas, myStore);
 		populator.createTables();
-		populator.insertValues();
+		
+//		populator.insertValues();
 		
 	}
 
