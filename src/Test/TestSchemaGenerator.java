@@ -1,5 +1,6 @@
 package Test;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -16,7 +17,7 @@ import edu.mit.db.rstore.impl.Store;
 
 public class TestSchemaGenerator {
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 
     	String path= "data/";
         

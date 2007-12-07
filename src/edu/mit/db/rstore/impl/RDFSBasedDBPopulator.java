@@ -11,7 +11,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	private LinkedList<PropertyTable> schemas;
 	private RDFStore store;
 	
-	private HashMap<PropertyTable, String> insertStatements = new HashMap<PropertyTable, String>();
+	private HashMap<PropertyTable, LinkedList<String>> insertStatements = new HashMap<PropertyTable, LinkedList<String>>();
 	
 	public RDFSBasedDBPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore)
 	{
@@ -57,31 +57,49 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	 */
 	public void insertValues(){
 
+		//Do the inserts for each table
 		for (PropertyTable p: this.schemas){
-			String statement = "INSERT INTO " + p.table_name + " VALUES ( ";
 //			System.out.println(p.table_name);
 			if (p instanceof ManyToManyTable) {
 				ManyToManyTable m = (ManyToManyTable) p;
 				LinkedList<String> l = m.getPrimaryKeys();
+				//Each primary key value will have one insert statement each in the respective table
 				for (int i=0; i<l.size(); i++){
-					statement += "'" + l.get(i) + "'" + " , ";
-//					System.out.print(l.get(i) + " ");
-				}
+					HashSet<String> primaryKeys = store.getSubjectsFromType(l.get(i));
+			    	Iterator primaryKeyIterator = primaryKeys.iterator();
+			    	while (primaryKeyIterator.hasNext()){
+						String statement = "INSERT INTO " + p.table_name + " VALUES ( ";
+						statement += "'" + (String)primaryKeyIterator.next() + "'" + " , ";
+						LinkedList<String> colTypes = m.getColTypes();
+						for (int j=0; j<colTypes.size(); j++){
+							HashSet<String> colVals = store.getSubjectsFromType(colTypes.get(j));
+					    	if (colVals.size()>0){
+						    	Iterator colIterator = primaryKeys.iterator();
+						    	while (colIterator.hasNext()){
+									statement += "'" + (String)colIterator.next() + "'" + " ,";
+						    	}
+
+					    	}
+					    	//TODO Do the getSubjectsFromPredicate
+					    	
+							
+						}
+						statement = statement.substring(0, statement.lastIndexOf(','));
+						statement += ")";
+						System.out.println(statement);
+					}
+		    	}
 			}
 			else{
-				statement += "'" +  p.getPrimaryKey() + "'" +  " , ";
-//				System.out.print(p.getPrimaryKey() + " ");
+//				statement += "'" +  p.getPrimaryKey() + "'" +  " , ";
 			}
 			
-			LinkedList<String> l = p.getColTypes();
+//			LinkedList<String> l = p.getColTypes();
+//			
+//			for (int i=0; i<l.size(); i++){
+//				statement += "'" + l.get(i) + "'" + " ,";
+//			}
 			
-			for (int i=0; i<l.size(); i++){
-				statement += "'" + l.get(i) + "'" + " ,";
-			}
-			
-			statement = statement.substring(0, statement.lastIndexOf(','));
-			statement += ")";
-			System.out.println(statement);
 		}
 
 	}
