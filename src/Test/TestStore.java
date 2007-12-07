@@ -15,8 +15,8 @@ public class TestStore
 		
     	Store myStore = new Store (path);
     	Model dataModel= myStore.CreateModel();
-    	//Store.PrintModel(dataModel);
-    	//Store.PrintTriples(dataModel.listStatements());
+//    	Store.PrintModel(dataModel);
+//    	Store.PrintTriples(dataModel.listStatements());
     	
     	Model schemaModel= myStore.CreateSchema();
     	
