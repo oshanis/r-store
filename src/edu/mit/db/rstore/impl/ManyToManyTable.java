@@ -26,20 +26,15 @@ public class ManyToManyTable extends PropertyTable
 	/**
 	 * Needs to be overridden in this class.  Should be simpler than the superclass
 	 */
-	public void constructSQL(/*TODO:  Decide on parameter data structures*/)
-	{
-		//TODO:
-		/*
-		 * Write the generation code.  Will be quick once the parameter data structures are decided
-		 */
-		
+	public void constructSQL()
+	{	
 		String columnSQLString = "";
 		if (predicates_to_columns.size() > 0){
 			for(String s : predicates_to_columns.values())
 				columnSQLString += s + "  varchar, ";
 		}
 		else{
-			Iterator i = columns.keySet().iterator();
+			Iterator<String> i = columns.keySet().iterator();
 			while (i.hasNext()){
 				String col_type = (String)i.next();
 				columnSQLString += columns.get(col_type) + "  varchar, ";
