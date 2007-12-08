@@ -49,6 +49,7 @@ public class PropertyTable
 	//Maps each RDF entity, a predicate, to the string representation of its column name within the table
 	protected HashMap<PredicateRule, String> predicates_to_columns;
 	
+	//I have no idea what this thing is
 	public HashMap<String, String> columns = new HashMap<String, String>();
 	
 	/**
@@ -81,6 +82,7 @@ public class PropertyTable
 	 */
 	public String getSQL()
 	{
+		constructSQL();
 		return create_table_command;
 	}
 	
@@ -114,7 +116,7 @@ public class PropertyTable
 				columnSQLString += s + "  varchar, ";
 		}
 		else{
-			Iterator i = columns.keySet().iterator();
+			Iterator<String> i = columns.keySet().iterator();
 			while (i.hasNext()){
 				String col_type = (String)i.next();
 				columnSQLString += columns.get(col_type) + "  varchar, ";
@@ -186,7 +188,7 @@ public class PropertyTable
 	public LinkedList<String> getColTypes()
 	{
 		LinkedList<String> l = new LinkedList<String>();
-		Iterator i = columns.keySet().iterator();
+		Iterator<String> i = columns.keySet().iterator();
 		while (i.hasNext()){
 			l.add((String)i.next());
 		}
@@ -235,7 +237,7 @@ public class PropertyTable
 				System.out.print(s + "  ");
 		}
 		else{
-			Iterator i = columns.keySet().iterator();
+			Iterator<String> i = columns.keySet().iterator();
 			while (i.hasNext()){
 				String col_type = (String)i.next();
 				System.out.print(columns.get(col_type) + "  ");

@@ -601,7 +601,8 @@ public class FrequencyCounter
     				row_index = subjects.get(this_object_type);
     				col_index = predicates.get(p);
     				
-    				//Finally, this will filter blank nodes because one of the indicies will have returned null
+    				//Finally, this will filter blank nodes because one of the indicies will have returned null, but only because in real RDF,
+    				//a literal is always a leaf.  Therefore the predicate rule <Literal, X, X> will always return null.
     				if(row_index != null && col_index != null)
     				{
 	    				if(!prev_subject.equals(this_subject))
