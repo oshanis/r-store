@@ -71,14 +71,14 @@ public class FrequencyCounter
 			for(int j = 0; j < predicates.size(); j++)
 				mask[i][j] = Relation.NONE;
 	
-		/*System.out.println("Subjects:  " + subjects.keySet().size());
+		System.out.println("Subjects:  " + subjects.keySet().size());
 		System.out.println("Predicates:  " + predicates.keySet().size());
-		System.out.println();*/
+		System.out.println();
 		
 		constructTable();
 		
-		/*dumpIndicies();
-		dumpTable();*/
+		dumpIndicies();
+		dumpTable();
 	}
 	
 	private void constructPredicates()
@@ -229,6 +229,8 @@ public class FrequencyCounter
 		/*
 		 * I have not made any provision for the case where its really a many to many relation.  Either add it to this book keeping or do
 		 * a backwards pass
+		 * 
+		 * Can set one-to-many for all blank nodes, if not already done
 		 */
 	}
 	
@@ -348,7 +350,7 @@ public class FrequencyCounter
 	private void constructTable()
 	{
 		forwardPass();
-		//backwardPass();
+		backwardPass();
 		addAux();
 	}
 	
@@ -558,12 +560,10 @@ public class FrequencyCounter
 	    				//This needs to be after the previous block due to clearing the outgoing set
 	    				if(outgoing.contains(p))
 	    				{
-	    					System.out.println("Marking in backward pass");
-	    					p.print();
-	    					if(mask[row_index][col_index] == Relation.NONE)
-	    						mask[row_index][col_index] = Relation.MANY_TO_ONE;
-	    					else
+	    					if(mask[row_index][col_index] == Relation.ONE_TO_MANY)
 	    						mask[row_index][col_index] = Relation.MANY_TO_MANY;
+	    					else
+	    						mask[row_index][col_index] = Relation.MANY_TO_ONE;
 	    				}
 	    				else
 	    				{
