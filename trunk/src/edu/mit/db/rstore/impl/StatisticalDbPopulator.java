@@ -21,10 +21,9 @@ public class StatisticalDbPopulator implements DBPopulator {
 	//Needs at least the schemas from the schema generator and the RDFStore to get the triples from
 	private LinkedList<PropertyTable> schemas;
 	private RDFStore store;
+	private DBConnection dbConnection;
 	
-	private HashMap<PropertyTable, LinkedList<String>> insertStatements = new HashMap<PropertyTable, LinkedList<String>>();
-	
-	public StatisticalDbPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore)
+	public StatisticalDbPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore) throws ClassNotFoundException, SQLException
 	{
 		schemas = db_schemas;
 		store = rdfstore;
@@ -33,11 +32,9 @@ public class StatisticalDbPopulator implements DBPopulator {
 	public void createTables() throws ClassNotFoundException, SQLException {
 
 		DBConnection dbConnection = new DBConnection();
-		
 		dbConnection.connect();
-		
+
 		for (PropertyTable p: this.schemas){
-			
 			String tableName = p.table_name;
 			
 			//First Check if the table exists in the Database
@@ -72,11 +69,16 @@ public class StatisticalDbPopulator implements DBPopulator {
 	 * else
 	 * 		do the same thing, but reversing the subject and the object
 	 * @throws SQLException 
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 * @throws ClassNotFoundException 
 	 */
 
-	public void insertValues() {
-		
+	public void insertValues() throws SQLException, ClassNotFoundException {
+
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
+
 		StmtIterator iter = store.getIterator();
 		
         while (iter.hasNext()) {
@@ -85,19 +87,6 @@ public class StatisticalDbPopulator implements DBPopulator {
             Property  predicate = stmt.getPredicate(); // get the predicate
             RDFNode   object    = stmt.getObject();    // get the object
         
-//			String objectType = "";
-//			
-//			if(object.isLiteral())
-//				objectType = Store.LITERAL;
-//			else
-//				if(object.isURIResource())
-//					objectType = store.getTypeFromSubjects(((Resource)object).getLocalName());
-//				else
-//				{
-//					System.out.println("Found an object that was neither a literal or a URI");
-//					objectType = "";
-//				}
-            
 			if (!subject.equals(null) && !predicate.equals(null) && !object.equals(null) )
 			{
 				/*
@@ -114,8 +103,6 @@ public class StatisticalDbPopulator implements DBPopulator {
 				//Filter blank nodes out
 				if(!subject.isAnon() && !object.isAnon())
 				{
-					String tableName = store.getTypeFromSubjects(subject.getLocalName());
-					
 					String object_type;
 					if(object.isLiteral())
 						object_type = Store.LITERAL;
@@ -141,12 +128,24 @@ public class StatisticalDbPopulator implements DBPopulator {
 							HashMap<PredicateRule, String> cols = propTable.getMap();
 							if (cols.containsKey(p))
 							{
-								System.out.println("*****FOUND*****");
-								System.out.println(cols.get(p));
-							}
-							else
-							{
-								System.out.println("----NOT FOUND----");
+								
+								String tableName = propTable.table_name;
+								String pkeyCol = propTable.getPrimaryKeyColumn();
+								String pkeyVal = subject.getLocalName();
+								String attrCol = cols.get(p);
+								String attrVal = object.toString();
+								
+								String updateStatement = " UPDATE " + tableName+
+												" SET " + attrCol + " = '" + attrVal + "' " +
+												" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
+								
+								int success = dbConnection.st.executeUpdate(updateStatement);
+								if (success == 0){
+									String insertStatement = " INSERT INTO " + tableName +
+									" ("+ pkeyCol + " , " + attrCol + ")" +
+									" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
+									success = dbConnection.st.executeUpdate(insertStatement);
+								}
 							}
 						}
 					}
