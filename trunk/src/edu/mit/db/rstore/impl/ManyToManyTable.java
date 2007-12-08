@@ -14,13 +14,20 @@ public class ManyToManyTable extends PropertyTable
 {
 	private String pkey2;
 	private String pkey2_col_name;
+	private String predicate_name;
 	
-	public ManyToManyTable(String tname, String primary_key, String primary_key_name, String primary_key2, String primary_key2_name)
+	public ManyToManyTable(String tname, String primary_key, String primary_key_name, String primary_key2, String primary_key2_name, String pred)
 	{
 		super(tname, primary_key, primary_key_name);
 		
 		pkey2 = primary_key2;
 		pkey2_col_name = primary_key2_name;
+		predicate_name = pred;
+	}
+	
+	public PredicateRule getPredicateRule()
+	{
+		return new PredicateRule(predicate_name, pkey, pkey2, PredicateRule.Direction.FORWARD);
 	}
 	
 	/**

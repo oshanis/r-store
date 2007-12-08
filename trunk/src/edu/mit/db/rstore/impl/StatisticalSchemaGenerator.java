@@ -21,15 +21,22 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		
 		makeSchema();
 		
-//		for(PropertyTable p : schema)
-//			p.print();
+		/*for(PropertyTable p : schema)
+		{
+			p.print();
+			HashMap<PredicateRule, String> prules = p.getMap();
+			if(!prules.isEmpty())
+				for(PredicateRule pr : prules.keySet())
+					pr.print();
+			else
+				
+		}*/
 	}
 	
 	/*
 	 * 1.  Put all distinct subject types in property tables
 	 * 2.  For each nonzero entry in the frequency table, choose an arc direction based on the cost function in my notebook
 	 * 3.  All those property tables which at the end of this pass have nothing in them should be discarded
-	 * 4.  Format the SQL commands based on the types gotten from the RDF.  Maybe the PropertyTables can do this for me
 	 * 
 	 * Cost function:
 	 * 	if(one to many)
@@ -91,7 +98,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 							 * I set up a many-to-many table keyed on the subject and the literal.  This can be optimized by some sort
 							 * of dictionary encoding, but that is beyond the scope of this project.
 							 */
-							ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object);
+							ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object, pred.getPredicate());
 							m.addAttribute(pred, "");
 							schema.add(m);
 						}
@@ -115,7 +122,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 						 * to essentially be bidirectional, which I hope they did not.
 						 */
 						String object = pred.getObject();
-						ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object);
+						ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object, pred.getPredicate());
 						//This needs to be here so the database populator knows how to populate the table
 						schema.add(m);
 					}
@@ -158,13 +165,6 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		for(PropertyTable p : ptables.values())
 			if(p.getAttributes().size() > 0)
 				schema.add(p);
-		
-		
-		//Step 4
-		//TODO:
-		/*
-		 * Add the call to the method that is not yet written
-		 */
 	}
 	
 	
