@@ -154,10 +154,74 @@ public class StatisticalDBPopulator implements DBPopulator {
 				else
 				{
 					System.out.println("This statement has a blank node in it");
+					HashMap<String, String> bnode_to_subject = new HashMap<String, String>();
+					HashMap<String, String> bnode_to_subj_pred = new HashMap<String, String>();
+					HashMap<String, HashMap<String, Integer>> bnode_obj_ct = new HashMap<String, HashMap<String, Integer>>();
+
+					//Case:  S -P- [blank]
+					if(object.isAnon())
+					{
+						bnode_to_subject.put(object.toString(), store.getTypeFromSubjects(subject.getLocalName()));
+						bnode_to_subj_pred.put(object.toString(), predicate.toString());
+					}
+					//Case:  [blank] -P- O
+					if(subject.isAnon())
+					{
+						HashMap<String, Integer> objs = bnode_obj_ct.get(subject.toString());
+						if(objs == null)
+						{
+							objs = new HashMap<String, Integer>();
+							bnode_obj_ct.put(subject.toString(), objs);
+						}
+						
+						String key;
+						
+						if(object.isLiteral())
+							key = Store.LITERAL;
+						else
+							if(object.isURIResource())
+								key = store.getTypeFromSubjects(((Resource)object).getLocalName());
+							else
+							{
+								System.out.println("Found a statement in a blank node whose object was not literal or uri:  ");
+								printStatement(subject, predicate, object);
+								key = "";
+							}
+						
+						//Bug check
+						if(key == null)
+						{
+							//Note that I should be discarding those statements which define the blank nodes to be Seq for now
+							System.out.println("^^^^^^^^^^Failed to retrieve object type");
+							printStatement(subject, predicate, object);
+						}
+						else
+						{
+							Integer count = objs.get(key);
+							if(count == null)
+								objs.put(key, 1);
+							else
+								objs.put(key, count + 1);
+						}
+					}
+
+					
+					
 				}
 				
 			}
         }     
 	}
+	
+	public static void printStatement(Resource subject, Property predicate, RDFNode object)
+	{
+		if(subject.getLocalName() != null)
+			System.out.print(subject.getLocalName());
+		else
+			System.out.print(subject.toString());
+		System.out.print("  " + predicate.toString() + "  ");
+        System.out.println(object.toString());
+	}
+
 
 }

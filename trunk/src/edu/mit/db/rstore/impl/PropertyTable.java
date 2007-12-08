@@ -127,7 +127,7 @@ public class PropertyTable
 								       columnSQLString +
 								 " PRIMARY KEY( " + pkey_col_name +
 								 "))";
-		System.out.println(create_table_command);
+//		System.out.println(create_table_command);
 		
 	}
 	
