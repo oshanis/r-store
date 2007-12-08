@@ -319,7 +319,9 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					String r = range.getLocalName();
 					String t = d+r;
 					tableNames.add(t);
-					PropertyTable p = new ManyToManyTable("Table_" +t,d, "Pkey_" +d, r, "Pkey_" + r );
+					//TODO Figure out how to handle predicates here
+					String pred = "";
+					PropertyTable p = new ManyToManyTable("Table_" +t,d, "Pkey_" +d, r, "Pkey_" + r, pred );
 					tables.put(t, p);
 	    		}				
 			}

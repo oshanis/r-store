@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -172,18 +174,20 @@ public class StatisticalDBPopulator implements DBPopulator {
         		LinkedList<RDFNode> objNodeList = objects.get(s);
         		for (int i=0; i<objList.size(); i++){
 
-        			String subject = store.getTypeFromSubjects(subjects.get(s).getLocalName());
+        			String subject = subjects.get(s).getLocalName();
             		RDFNode object = objNodeList.get(i);
-
-        			PredicateRule p = new PredicateRule(bnode_to_subj_pred.get(s).toString(), 
-							bnode_to_subject.get(s), 
-							objList.get(i), 
-							PredicateRule.Direction.FORWARD);
-    				p.print();
-    				System.out.println("**** START ****");
-    				System.out.println(subject+"  "+object.toString());
-       				System.out.println("**** END ****");
-       				constructSql(p, subject, object);       			
+            		if (objList.get(i).toString() != null){
+               			PredicateRule p = new PredicateRule(bnode_to_subj_pred.get(s).toString(), 
+    							bnode_to_subject.get(s), 
+    							objList.get(i).toString(), 
+    							PredicateRule.Direction.FORWARD);
+//              			p.print();
+//              			System.out.println(object.toString());
+           				constructSql(p, subject, object);       			
+            		}
+//    				System.out.println("**** START ****");
+//    				System.out.println(subject+"  "+object.toString());
+//       				System.out.println("**** END ****");
         		}
         	}
         }
@@ -199,36 +203,39 @@ public class StatisticalDBPopulator implements DBPopulator {
 		StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
 		
 		LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
-		
+	
 		for (int i = 0; i<propertyTables.size(); i++)
 		{
-			PropertyTable propTable = propertyTables.get(i);				
-			HashMap<PredicateRule, String> cols = propTable.getMap();
-			if (cols.containsKey(p))
-			{
-				
-				String tableName = propTable.table_name;
-				String pkeyCol = propTable.getPrimaryKeyColumn();
-				String pkeyVal = subject;
-				String attrCol = cols.get(p);
-				String attrVal = object.toString();
-				
-				String updateStatement = " UPDATE " + tableName+
-								" SET " + attrCol + " = '" + attrVal + "' " +
-								" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
-				
-				System.out.println(updateStatement);
-				
-				int success = dbConnection.st.executeUpdate(updateStatement);
-				if (success == 0){
+			
+			ManyToManyTable propTable = null;
+			
+			if (propertyTables.get(i) instanceof ManyToManyTable){
+
+				propTable = (ManyToManyTable)propertyTables.get(i);
+				PredicateRule ptFromSchema = propTable.getPredicateRule();
+				if (ptFromSchema.equals(p)){
+					
+					String tableName = propTable.table_name;
+					LinkedList<String> pkCols =	propTable.getPrimaryKeyColumns();
+					
+					String pkeyVal1 = subject;
+					String pkeyVal2 = object.toString();
+					String pkeyCol1 = pkCols.getFirst();
+					String pkeyCol2 = pkCols.getLast();
+
+					System.out.println("tableName = "+tableName);
+					
 					String insertStatement = " INSERT INTO " + tableName +
-					" ("+ pkeyCol + " , " + attrCol + ")" +
-					" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
-					success = dbConnection.st.executeUpdate(insertStatement);
+					" ("+ pkeyCol1 + " , " + pkeyCol2 + ")" +
+					" VALUES ( '" + pkeyVal1 +"' , '"+ pkeyVal2 + "' ) ";
+
 					System.out.println(insertStatement);
+
+					int success = dbConnection.st.executeUpdate(insertStatement);
 					
 				}
 			}
+			
 		}
 	}
 
@@ -246,20 +253,20 @@ public class StatisticalDBPopulator implements DBPopulator {
 		{
 			PropertyTable propTable = propertyTables.get(i);				
 			HashMap<PredicateRule, String> cols = propTable.getMap();
+			Iterator keyIterator = cols.keySet().iterator();
 			if (cols.containsKey(p))
 			{
-				
 				String tableName = propTable.table_name;
 				String pkeyCol = propTable.getPrimaryKeyColumn();
 				String pkeyVal = subject.getLocalName();
 				String attrCol = cols.get(p);
 				String attrVal = object.toString();
-				
+
 				String updateStatement = " UPDATE " + tableName+
 								" SET " + attrCol + " = '" + attrVal + "' " +
 								" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
 				
-				System.out.println(updateStatement);
+//				System.out.println(updateStatement);
 				
 				int success = dbConnection.st.executeUpdate(updateStatement);
 				if (success == 0){
@@ -267,7 +274,7 @@ public class StatisticalDBPopulator implements DBPopulator {
 					" ("+ pkeyCol + " , " + attrCol + ")" +
 					" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
 					success = dbConnection.st.executeUpdate(insertStatement);
-					System.out.println(insertStatement);
+//					System.out.println(insertStatement);
 					
 				}
 			}
