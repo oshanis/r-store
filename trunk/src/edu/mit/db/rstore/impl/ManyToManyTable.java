@@ -79,7 +79,8 @@ public class ManyToManyTable extends PropertyTable
 		System.out.println(table_name);
 		System.out.println(pkey_col_name + "  " + pkey2_col_name + " (pkey)  ");
 
-		if (predicates_to_columns.size() > 0){
+		//Predicates to columns is not used in this class
+		/*if (predicates_to_columns.size() > 0){
 			for(String s : predicates_to_columns.values())
 				System.out.print(s + "  ");
 		}
@@ -89,7 +90,8 @@ public class ManyToManyTable extends PropertyTable
 				String col_type = (String)i.next();
 				System.out.print(columns.get(col_type) + "  ");
 			}
-		}
+		}*/
+		
 		System.out.println();
 		System.out.println();
 	}

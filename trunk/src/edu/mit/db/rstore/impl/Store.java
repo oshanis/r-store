@@ -356,9 +356,18 @@ public class Store implements RDFStore
 			Resource subject= stat.getSubject();
 			Property predicate= stat.getPredicate();
 			RDFNode object= stat.getObject();
-									
-			Resource newResource= tempModel.createResource(object.toString()).addProperty(predicate, subject.toString());
 			
+			//I changed this thing to differentiate between blank nodes and everything else, so the only remaining ambiguity is for Literals
+			//My test will be if a subject.toString() contains "://", then its a URI.  Otherwise its a literal
+			//Resource newResource= tempModel.createResource(object.toString()).addProperty(predicate, subject.toString());
+			
+			Resource newResource;
+			if(object.isAnon())
+				newResource = tempModel.createResource(((Resource)object).getId());
+			else
+				newResource = tempModel.createResource(object.toString());
+			
+			newResource.addProperty(predicate, subject.toString());
 		}
 		
 		
@@ -386,7 +395,6 @@ public class Store implements RDFStore
 				
 		return backOrderedModel.listStatements();
 	}
-	
 	
 	/**
 	 * These are the subject types
