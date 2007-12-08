@@ -35,10 +35,10 @@
         </students>
      </Course>
      <Course rdf:about="MIT6.837">
-        <name>Graphics</name>
+        <name>Computer Graphics </name>
         <teacher>
             <Teacher rdf:about="jp">
-               <name>Juan</name>
+               <name>Jovan Popovic</name>
                <isFrom><Location rdf:about="CSAIL"/></isFrom>
 	    </Teacher>
         </teacher>
@@ -57,12 +57,28 @@
 		   </Student>
 	        </rdf:li>
 	        <rdf:li>
-           <Student rdf:about="mb">
+           		<Student rdf:about="mb">
 		      <name>Mary Blue</name>
-               <isFrom><Location rdf:about="CSAIL"/></isFrom>
+               	<isFrom><Location rdf:about="CSAIL"/></isFrom>
+		   	</Student>
+	        </rdf:li>
+            </rdf:Seq>
+        </students>
+     </Course>
+	<Course rdf:about="MIT6.839">
+        <name>Advanced Computer Graphics </name>
+        <teacher>
+            <Teacher rdf:about="jp">
+    	    </Teacher>
+        </teacher>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:about="am">
 		   </Student>
 	        </rdf:li>
             </rdf:Seq>
         </students>
      </Course>
+
    </rdf:RDF>
