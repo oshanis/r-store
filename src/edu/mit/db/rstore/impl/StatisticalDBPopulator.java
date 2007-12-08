@@ -125,8 +125,6 @@ public class StatisticalDBPopulator implements DBPopulator {
 				}
 				else
 				{
-//					System.out.println("This statement has a blank node in it");
-
 					//Case:  S -P- [blank]
 					if(object.isAnon())
 					{
@@ -142,9 +140,10 @@ public class StatisticalDBPopulator implements DBPopulator {
 							object_type = Store.LITERAL;
 						else
 							object_type = store.getTypeFromSubjects(((Resource)object).getLocalName());
-
-						bnode_to_object.put(subject.toString(), object_type);
-						objects.put(subject.toString(),	object);
+						if(object_type != null){
+							bnode_to_object.put(subject.toString(), object_type);
+							objects.put(subject.toString(),	object);
+						}
 					}
 				}
 			}				
@@ -165,10 +164,12 @@ public class StatisticalDBPopulator implements DBPopulator {
     							bnode_to_subject.get(s), 
     							bnode_to_object.get(s), 
     							PredicateRule.Direction.FORWARD);
-				System.out.println(bnode_to_subj_pred.get(s).toString()+ " " + 
-						bnode_to_subject.get(s)+ " " +
-						bnode_to_object.get(s));
-//				constructSql(p, subject, object);
+//				System.out.println(bnode_to_subj_pred.get(s).toString()+ " " + 
+//						bnode_to_subject.get(s)+ " " +
+//						bnode_to_object.get(s));
+				p.print();
+				
+				constructSql(p, subject, object);
         	}
         }
        
@@ -201,12 +202,16 @@ public class StatisticalDBPopulator implements DBPopulator {
 								" SET " + attrCol + " = '" + attrVal + "' " +
 								" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
 				
+				System.out.println(updateStatement);
+				
 				int success = dbConnection.st.executeUpdate(updateStatement);
 				if (success == 0){
 					String insertStatement = " INSERT INTO " + tableName +
 					" ("+ pkeyCol + " , " + attrCol + ")" +
 					" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
 					success = dbConnection.st.executeUpdate(insertStatement);
+					System.out.println(insertStatement);
+					
 				}
 			}
 		}
