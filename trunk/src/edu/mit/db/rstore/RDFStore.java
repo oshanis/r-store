@@ -45,6 +45,13 @@ public interface RDFStore
 	public HashSet<String> getSubjectsFromType(String type );
 	
 	/**
+	 * Given a type, returns a set of qualified subjects that belong to this type
+	 * 
+	 * @return A set of qualified subjects
+	 */
+	public HashSet<String> getQualifiedSubjectsFromType(String type );
+	
+	/**
 	 * Given a subject, returns its type
 	 * 
 	 * @return a string that indicates the type
