@@ -37,8 +37,8 @@ public class TestDBPopulator {
 //		DBPopulator populator = new RDFSBasedDBPopulator(schemas, myStore);
 		
 		DBPopulator populator = new StatisticalDbPopulator(schemas, myStore);
+
 		populator.createTables();
-		
 		populator.insertValues();
 		
 	}

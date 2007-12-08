@@ -8,7 +8,7 @@
         <teacher>
             <Teacher rdf:about="sm">
                <name>Sam Madden</name>
-               <isFrom><Location rdf:ID="CSAIL"/></isFrom>
+               <isFrom><Location rdf:about="CSAIL"/></isFrom>
 	    </Teacher>
         </teacher>
         <students>

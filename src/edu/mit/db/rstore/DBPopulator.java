@@ -28,6 +28,6 @@ public interface DBPopulator {
 	public abstract void createTables() throws ClassNotFoundException,
 			SQLException;
 
-	public abstract void insertValues();
+	public abstract void insertValues() throws SQLException, ClassNotFoundException;
 
 }
