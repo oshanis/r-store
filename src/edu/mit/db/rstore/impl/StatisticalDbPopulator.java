@@ -32,9 +32,9 @@ public class StatisticalDbPopulator implements DBPopulator {
 
 	public void createTables() throws ClassNotFoundException, SQLException {
 
-		DBConnection dbConnection = new DBConnection();
+		/*DBConnection dbConnection = new DBConnection();
 		
-		dbConnection.connect();
+		dbConnection.connect();*/
 		
 		for (PropertyTable p: this.schemas){
 			
@@ -42,14 +42,14 @@ public class StatisticalDbPopulator implements DBPopulator {
 			
 			//First Check if the table exists in the Database
 			//If it exists drop the table
-			if (dbConnection.tableExists(tableName)){
+			/*if (dbConnection.tableExists(tableName)){
 				dbConnection.st.execute("DROP TABLE "+ tableName);
-			}
+			}*/
 			
 			//Then create the new table
 			String createTableStatement = "";
 			createTableStatement = p.getSQL() ;				
-			dbConnection.st.execute(createTableStatement);
+			/*dbConnection.st.execute(createTableStatement);*/
 		}
 
 	}
@@ -98,30 +98,65 @@ public class StatisticalDbPopulator implements DBPopulator {
 //					objectType = "";
 //				}
             
-			if (!subject.equals(null) && !predicate.equals(null) && !object.equals(null) ){
-	            PredicateRule p = new PredicateRule(predicate.getLocalName(), 
-	            					store.getTypeFromSubjects(subject.getLocalName()), 
-	            					object.toString(), 
-	            					PredicateRule.Direction.FORWARD);
+			if (!subject.equals(null) && !predicate.equals(null) && !object.equals(null) )
+			{
+				/*
+				 * The subject could be a blank node.  These statements need to be treated specially.
+				 * The object could be a literal, a blank node, or a URI.  
+				 * The predicate needs toString().  Sorry, I thought you were talking about the subject on the phone.
+				 * 
+				 * Statements that need special treatment:  Ones with blank nodes
+				 * Statements thats should be ignored:  Ones with #type predicate
+				 * 
+				 * Note modifications:
+				 */
 				
-	            String tableName = store.getTypeFromSubjects(subject.getLocalName());
-				
-				//Need to get the column mapping for this predicate rule
-				StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
-				
-				LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
-				
-				for (int i = 0; i<propertyTables.size(); i++){
-					PropertyTable propTable = propertyTables.get(i);				
-					HashMap<PredicateRule, String> cols = propTable.getMap();
-					if (cols.containsKey(p)){
-						System.out.println("*****FOUND*****");
-						System.out.println(cols.get(p));
+				//Filter blank nodes out
+				if(!subject.isAnon() && !object.isAnon())
+				{
+					String tableName = store.getTypeFromSubjects(subject.getLocalName());
+					
+					String object_type;
+					if(object.isLiteral())
+						object_type = Store.LITERAL;
+					else
+						object_type = store.getTypeFromSubjects(((Resource)object).getLocalName());
+					
+					//Kill off the type predicate
+					if(object_type != null)
+					{
+						PredicateRule p = new PredicateRule(predicate.toString(), 
+	        					store.getTypeFromSubjects(subject.getLocalName()), 
+	        					object_type, 
+	        					PredicateRule.Direction.FORWARD);
+						
+						//Need to get the column mapping for this predicate rule
+						StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
+						
+						LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
+						
+						for (int i = 0; i<propertyTables.size(); i++)
+						{
+							PropertyTable propTable = propertyTables.get(i);				
+							HashMap<PredicateRule, String> cols = propTable.getMap();
+							if (cols.containsKey(p))
+							{
+								System.out.println("*****FOUND*****");
+								System.out.println(cols.get(p));
+							}
+							else
+							{
+								System.out.println("----NOT FOUND----");
+							}
+						}
 					}
-					else{
-						System.out.println("----NOT FOUND----");
-					}
+					
 				}
+				else
+				{
+					System.out.println("This statement has a blank node in it");
+				}
+				
 			}
         }     
 	}

@@ -43,7 +43,7 @@ public class FrequencyCounter
 	//diagnostics...
 	private int discarded_forward;
 	private int discarded_backward;
-	private int literal_subject;
+	private int backward_anon;
 	private int null_obj_forward;
 	private int anon_subject;
 	private int anon_object;
@@ -71,14 +71,14 @@ public class FrequencyCounter
 			for(int j = 0; j < predicates.size(); j++)
 				mask[i][j] = Relation.NONE;
 	
-		System.out.println("Subjects:  " + subjects.keySet().size());
+		/*System.out.println("Subjects:  " + subjects.keySet().size());
 		System.out.println("Predicates:  " + predicates.keySet().size());
-		System.out.println();
+		System.out.println();*/
 		
 		constructTable();
 		
-		dumpIndicies();
-		dumpTable();
+		/*dumpIndicies();
+		dumpTable();*/
 	}
 	
 	private void constructPredicates()
@@ -348,7 +348,7 @@ public class FrequencyCounter
 	private void constructTable()
 	{
 		forwardPass();
-		backwardPass();
+		//backwardPass();
 		addAux();
 	}
 	
@@ -487,6 +487,9 @@ public class FrequencyCounter
 	 * 
 	 * Its very possible for subjects to now be literals.  I will discard these things, as they shouldn't be counted - the arc will go in the
 	 * forward direction anyway, and should never be reversed
+	 * 
+	 * It seems that none of the type tests are working correctly after reversal, but I think I can get around it.  Note that this will probably
+	 * not generalize to arbitrary RDF syntax.  The correct solution would be to extend the Jena library to support statement reversal.
 	 */
 	private void backwardPass()
 	{
@@ -507,7 +510,7 @@ public class FrequencyCounter
 		
 		//Diagnostics
 		discarded_backward = 0;
-		literal_subject = 0;
+		backward_anon = 0;
 
 		HashSet<PredicateRule> outgoing = new HashSet<PredicateRule>();
 		
@@ -516,54 +519,47 @@ public class FrequencyCounter
 			stmt = triples.nextStatement();
 			subject = stmt.getSubject();
 			predicate = stmt.getPredicate();
-            object = stmt.getObject();
-            
-            if(!subject.isLiteral() /*&& !subject.isAnon() && !object.isAnon()*/)
-            {
-            	if(subject.isAnon())
-            		System.out.println("Anon");
-            	if(subject.isURIResource())
-            		System.out.println("URI");
-            	if(subject.isResource())
-            		System.out.println("Res");
-            	
-            	printStatement(subject, predicate, object);
-            	System.out.println();
-            	
-            /*	this_subject = subject.getLocalName();
-    			this_subject_type = rdf.getTypeFromSubjects(this_subject);
-    			if(object.isLiteral())
-    				this_object_type = Store.LITERAL;
-    			else
-    				if(object.isURIResource())
-    					this_object_type = rdf.getTypeFromSubjects(((Resource)object).getLocalName());
-    				else
-    				{
-    					System.out.println("Found an object that was neither a literal or a URI");
-    					this_object_type = "";
-    				}
-    			
-    			//Need to check now subjects being null, not objects, due to rdftype
-    			//Objects may be null for other reasons
-    			if(this_subject_type != null && this_object_type != null)
-    			{
-    				//Note the reversal here.  Its because I want the *original* arc
-    				PredicateRule p = new PredicateRule(predicate.toString(), this_object_type, this_subject_type, PredicateRule.Direction.FORWARD);
-    				
+			object = stmt.getObject();
+			
+			if(!subject.isAnon() && ! object.isAnon())
+			{
+				if(isLiteral(subject.toString()))
+				{
+					this_subject = subject.toString();
+					this_subject_type = Store.LITERAL;
+				}
+				else
+				{
+					this_subject = subject.getLocalName();
+					this_subject_type = rdf.getTypeFromSubjects(subject.getLocalName());
+				}
+				
+				if(isLiteral(object.toString()))
+					this_object_type = Store.LITERAL;
+				else
+					this_object_type = rdf.getTypeFromSubjects(suffix(object.toString()));
+				
+				//At this point is possible that blank nodes and type predicates have slipped through.  The null check filters the type predicate
+				if(this_subject_type != null && this_object_type != null)
+				{
+					//Retrieve the original arc
+					PredicateRule p = new PredicateRule(predicate.toString(), this_object_type, this_subject_type, PredicateRule.Direction.FORWARD);
     				row_index = subjects.get(this_object_type);
-    				col_index = subjects.get(p);
+    				col_index = predicates.get(p);
     				
-	    			if(row_index != null && col_index != null)
-	    			{
+    				//Finally, this will filter blank nodes because one of the indicies will have returned null
+    				if(row_index != null && col_index != null)
+    				{
 	    				if(!prev_subject.equals(this_subject))
 	    				{
 	    					prev_subject = this_subject;
 	    					outgoing.clear();
 	    				}
-	    				
 	    				//This needs to be after the previous block due to clearing the outgoing set
 	    				if(outgoing.contains(p))
 	    				{
+	    					System.out.println("Marking in backward pass");
+	    					p.print();
 	    					if(mask[row_index][col_index] == Relation.NONE)
 	    						mask[row_index][col_index] = Relation.MANY_TO_ONE;
 	    					else
@@ -574,36 +570,26 @@ public class FrequencyCounter
 	    					//Don't mark anything as one to one, that was already done in the forward pass
 	    					outgoing.add(p);
 	    				}
-	    			}
+    				}
     				else
     				{
-    					//Disaster
-    					System.out.println("(Backwards) Discarded statement:  ");
-    					if(subject.isAnon() || object.isAnon())
-    						System.out.println("Blank passed");
-    					if(subject.isLiteral())
-    						System.out.println("Lit passed");
-    					else
-    						System.out.println(this_subject_type);
-    					if(col_index == null)
-    						System.out.println("no arc");
-    					printStatement(subject, predicate, object);
-    					//p.print();
-    					System.out.println();
-    					discarded_backward++;
+    					backward_anon++;
     				}
-    			}*/
-            }
-            else
-            {
-            	if(subject.isLiteral())
-            	{
-            		literal_subject++;
-            		System.out.println("(Backwards) Found a literal subject:  ");
-            		printStatement(subject, predicate, object);
-            	}
-            }
+				}
+				else
+				{
+					discarded_backward++;
+				}
+				
+
+			}
+			else
+			{
+				backward_anon++;
+			}
 		}
+		
+
 	}
 	
 	/*
@@ -638,6 +624,14 @@ public class FrequencyCounter
 		}
 	}
 	
+	/*
+	 * Since Jena forbids me to convert a Literal into a Resource, I use the test that something is literal if it does not contain "://" in it
+	 */
+	private boolean isLiteral(String s)
+	{
+		return !s.contains("://");
+	}
+	
 	//For now just the number format
 	public void dumpTable()
 	{
@@ -665,12 +659,13 @@ public class FrequencyCounter
 		System.out.println("Statements with null object types:  " + null_obj_forward);
 		System.out.println("Discarded in forward pass:  " + discarded_forward);
 		System.out.println();
-		System.out.println("Discarded in backward pass due to literal subject:  " + literal_subject);
+		System.out.println("Discarded in bacward pass due to blank node:  " + backward_anon);
 		System.out.println("Discarded in backward pass for other reasons:  " + discarded_backward);
+		System.out.println();
 		System.out.println("Total statements processed:  " + total_statements);
 	}
 	
-	private static void printStatement(Resource subject, Property predicate, RDFNode object)
+	public static void printStatement(Resource subject, Property predicate, RDFNode object)
 	{
 		if(subject.getLocalName() != null)
 			System.out.print(subject.getLocalName());
@@ -678,5 +673,21 @@ public class FrequencyCounter
 			System.out.print(subject.toString());
 		System.out.print("  " + predicate.toString() + "  ");
         System.out.println(object.toString());
+	}
+	
+	private static String suffix(String s)
+	{
+		if(s.contains("/"))
+		{
+			StringTokenizer st = new StringTokenizer(s, "/");
+			String local_name = "";
+			
+			while(st.hasMoreElements())
+				local_name = st.nextToken();
+			
+			return local_name;
+		}
+		
+		return s;
 	}
 }
