@@ -79,8 +79,8 @@ public class FrequencyCounter
 		
 		constructTable();
 		
-		dumpIndicies();
-		dumpTable();
+		/*dumpIndicies();
+		dumpTable();*/
 	}
 	
 	private void constructPredicates()

@@ -29,6 +29,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 				for(PredicateRule pr : prules.keySet())
 					pr.print();
 			else
+				((ManyToManyTable)p).getPredicateRule().print();
 				
 		}*/
 	}
@@ -139,10 +140,12 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 						}
 						else
 						{
-							Integer f_freq = row.get(col_index);
-							Integer r_freq = table.get(o_index).get(col_index);
+							//Choose the one with the smaller count!  Ugh!
+							Integer f_count = row.get(row.size() - 1);
+							Vector<Integer> r_row = table.get(o_index);
+							Integer r_count = r_row.get(r_row.size() - 1);
 							
-							if(f_freq >= r_freq)
+							if(f_count <= r_count)
 							{
 								PropertyTable p = ptables.get(subject);
 								p.addAttribute(pred, "col_" + suffix(pred.getPredicate()));
