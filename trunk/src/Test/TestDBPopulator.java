@@ -11,7 +11,7 @@ import edu.mit.db.rstore.DBPopulator;
 import edu.mit.db.rstore.impl.RDFSBasedDBPopulator;
 import edu.mit.db.rstore.impl.PropertyTable;
 import edu.mit.db.rstore.impl.RDFSBasedSchemaGenerator;
-import edu.mit.db.rstore.impl.StatisticalDbPopulator;
+import edu.mit.db.rstore.impl.StatisticalDBPopulator;
 import edu.mit.db.rstore.impl.StatisticalSchemaGenerator;
 import edu.mit.db.rstore.impl.Store;
 
@@ -36,7 +36,7 @@ public class TestDBPopulator {
 		
 //		DBPopulator populator = new RDFSBasedDBPopulator(schemas, myStore);
 		
-		DBPopulator populator = new StatisticalDbPopulator(schemas, myStore);
+		DBPopulator populator = new StatisticalDBPopulator(schemas, myStore);
 
 		populator.createTables();
 		populator.insertValues();
