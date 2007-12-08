@@ -426,8 +426,6 @@ public class Store implements RDFStore
 			
 			
 		}
-		
-		
 		return types;
 	}
 	
@@ -473,9 +471,6 @@ public class Store implements RDFStore
 				{
 					Resource objectResource= (Resource)object;
 					String objectString= objectResource.getLocalName().toString();
-					
-					
-				
 				
 					if(!typeMap.containsKey(subjectString) && propertyString.equals("type"))
 					{
@@ -827,11 +822,7 @@ public class Store implements RDFStore
 			
 			
 		}
-		
-		
-	
-		
-				
+
 		return predicateTable;
 	}
 	
