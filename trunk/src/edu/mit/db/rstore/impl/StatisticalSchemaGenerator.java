@@ -21,8 +21,8 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		
 		makeSchema();
 		
-		/*for(PropertyTable p : schema)
-			p.print();*/
+		for(PropertyTable p : schema)
+			p.print();
 	}
 	
 	/*
