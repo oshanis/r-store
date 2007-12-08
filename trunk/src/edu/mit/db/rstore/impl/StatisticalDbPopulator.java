@@ -32,9 +32,9 @@ public class StatisticalDbPopulator implements DBPopulator {
 
 	public void createTables() throws ClassNotFoundException, SQLException {
 
-		/*DBConnection dbConnection = new DBConnection();
+		DBConnection dbConnection = new DBConnection();
 		
-		dbConnection.connect();*/
+		dbConnection.connect();
 		
 		for (PropertyTable p: this.schemas){
 			
@@ -42,14 +42,14 @@ public class StatisticalDbPopulator implements DBPopulator {
 			
 			//First Check if the table exists in the Database
 			//If it exists drop the table
-			/*if (dbConnection.tableExists(tableName)){
+			if (dbConnection.tableExists(tableName)){
 				dbConnection.st.execute("DROP TABLE "+ tableName);
-			}*/
+			}
 			
 			//Then create the new table
 			String createTableStatement = "";
 			createTableStatement = p.getSQL() ;				
-			/*dbConnection.st.execute(createTableStatement);*/
+			dbConnection.st.execute(createTableStatement);
 		}
 
 	}
