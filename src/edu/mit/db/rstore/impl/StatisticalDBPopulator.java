@@ -16,14 +16,14 @@ import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import edu.mit.db.rstore.DBPopulator;
 import edu.mit.db.rstore.RDFStore;
 
-public class StatisticalDbPopulator implements DBPopulator {
+public class StatisticalDBPopulator implements DBPopulator {
 	
 	//Needs at least the schemas from the schema generator and the RDFStore to get the triples from
 	private LinkedList<PropertyTable> schemas;
 	private RDFStore store;
 	private DBConnection dbConnection;
 	
-	public StatisticalDbPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore) throws ClassNotFoundException, SQLException
+	public StatisticalDBPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore) throws ClassNotFoundException, SQLException
 	{
 		schemas = db_schemas;
 		store = rdfstore;
