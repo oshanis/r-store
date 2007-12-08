@@ -145,7 +145,7 @@ public class FrequencyCounter
 			if(subject.isAnon() && object.isAnon())
 			{
 				System.out.print("Found a chain of sequences:  ");
-				printStatement(subject, predicate, object);
+//				printStatement(subject, predicate, object);
 			}
 			else
 			{
@@ -174,8 +174,8 @@ public class FrequencyCounter
 							key = rdf.getTypeFromSubjects(((Resource)object).getLocalName());
 						else
 						{
-							System.out.println("Found a statement in a blank node whose object was not literal or uri:  ");
-							printStatement(subject, predicate, object);
+//							System.out.println("Found a statement in a blank node whose object was not literal or uri:  ");
+//							printStatement(subject, predicate, object);
 							key = "";
 						}
 					
@@ -183,8 +183,8 @@ public class FrequencyCounter
 					if(key == null)
 					{
 						//Note that I should be discarding those statements which define the blank nodes to be Seq for now
-						System.out.println("Failed to retrieve object type");
-						printStatement(subject, predicate, object);
+//						System.out.println("Failed to retrieve object type");
+//						printStatement(subject, predicate, object);
 					}
 					else
 					{
