@@ -121,7 +121,7 @@ public class StatisticalDBPopulator implements DBPopulator {
 	        					object_type, 
 	        					PredicateRule.Direction.FORWARD);
 
-						constructSql(p, subject, object);
+						constructSqlForManyToManyTable(p, subject, object);
 					}
 					
 				}
@@ -181,20 +181,15 @@ public class StatisticalDBPopulator implements DBPopulator {
     							bnode_to_subject.get(s), 
     							objList.get(i).toString(), 
     							PredicateRule.Direction.FORWARD);
-//              			p.print();
-//              			System.out.println(object.toString());
-           				constructSql(p, subject, object);       			
+           				constructSqlForOneToOneTable(p, subject, object);       			
             		}
-//    				System.out.println("**** START ****");
-//    				System.out.println(subject+"  "+object.toString());
-//       				System.out.println("**** END ****");
         		}
         	}
         }
        
 	}
 	
-	private void constructSql(PredicateRule p, String subject, RDFNode object) throws ClassNotFoundException, SQLException {
+	private void constructSqlForOneToOneTable(PredicateRule p, String subject, RDFNode object) throws ClassNotFoundException, SQLException {
 
 		DBConnection dbConnection = new DBConnection();
 		dbConnection.connect();
@@ -232,14 +227,12 @@ public class StatisticalDBPopulator implements DBPopulator {
 					System.out.println(insertStatement);
 
 					int success = dbConnection.st.executeUpdate(insertStatement);
-					
 				}
 			}
-			
 		}
 	}
 
-	private void constructSql(PredicateRule p, Resource subject, RDFNode object) throws SQLException, ClassNotFoundException {
+	private void constructSqlForManyToManyTable(PredicateRule p, Resource subject, RDFNode object) throws SQLException, ClassNotFoundException {
 
 		DBConnection dbConnection = new DBConnection();
 		dbConnection.connect();
@@ -266,30 +259,15 @@ public class StatisticalDBPopulator implements DBPopulator {
 								" SET " + attrCol + " = '" + attrVal + "' " +
 								" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
 				
-//				System.out.println(updateStatement);
-				
 				int success = dbConnection.st.executeUpdate(updateStatement);
 				if (success == 0){
 					String insertStatement = " INSERT INTO " + tableName +
 					" ("+ pkeyCol + " , " + attrCol + ")" +
 					" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
 					success = dbConnection.st.executeUpdate(insertStatement);
-//					System.out.println(insertStatement);
-					
 				}
 			}
 		}
 	}
-
-	public static void printStatement(Resource subject, Property predicate, RDFNode object)
-	{
-		if(subject.getLocalName() != null)
-			System.out.print(subject.getLocalName());
-		else
-			System.out.print(subject.toString());
-		System.out.print("  " + predicate.toString() + "  ");
-        System.out.println(object.toString());
-	}
-
 
 }
