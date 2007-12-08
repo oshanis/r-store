@@ -103,13 +103,8 @@ public class PropertyTable
 	 * 
 	 * 12.5.2007 - I think we do not need any parameters for this --Oshani
 	 */
-	public void constructSQL(/*TODO:  Decide on parameter data structures*/)
-	{
-		//TODO:
-		/*
-		 * Write the generation code.  Will be quick once the parameter data structures are decided
-		 */
-		
+	public void constructSQL()
+	{	
 		String columnSQLString = "";
 		if (predicates_to_columns.size() > 0){
 			for(String s : predicates_to_columns.values())
@@ -127,8 +122,6 @@ public class PropertyTable
 								       columnSQLString +
 								 " PRIMARY KEY( " + pkey_col_name +
 								 "))";
-//		System.out.println(create_table_command);
-		
 	}
 	
 	
