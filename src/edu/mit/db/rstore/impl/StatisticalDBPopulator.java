@@ -76,9 +76,9 @@ public class StatisticalDBPopulator implements DBPopulator {
 	public void insertValues() throws SQLException, ClassNotFoundException {
 
 		HashMap<String, String> bnode_to_subject = new HashMap<String, String>();
-		HashMap<String, String> bnode_to_object = new HashMap<String, String>();
+		HashMap<String, LinkedList<String>> bnode_to_object = new HashMap<String, LinkedList<String>>();
 		HashMap<String, Resource> subjects = new HashMap<String, Resource>();
-		HashMap<String, RDFNode> objects = new HashMap<String, RDFNode>();
+		HashMap<String, LinkedList<RDFNode>> objects = new HashMap<String, LinkedList<RDFNode>>();
 		HashMap<String, String> bnode_to_subj_pred = new HashMap<String, String>();
 		
 		StmtIterator iter = store.getIterator();
@@ -141,8 +141,16 @@ public class StatisticalDBPopulator implements DBPopulator {
 						else
 							object_type = store.getTypeFromSubjects(((Resource)object).getLocalName());
 						if(object_type != null){
-							bnode_to_object.put(subject.toString(), object_type);
-							objects.put(subject.toString(),	object);
+							LinkedList<String> objList = new LinkedList<String>();
+							LinkedList<RDFNode> objNodeList = new LinkedList<RDFNode>();
+							if (bnode_to_object.containsKey(subject.toString())){
+								objList = bnode_to_object.get(subject.toString());
+								objNodeList = objects.get(subject.toString());
+							}
+							objList.add(object_type);
+							objNodeList.add(object);
+							bnode_to_object.put(subject.toString(), objList);
+							objects.put(subject.toString(),	objNodeList);
 						}
 					}
 				}
@@ -154,27 +162,76 @@ public class StatisticalDBPopulator implements DBPopulator {
         while(bnodeToSubjectIter.hasNext()){
         	String s = (String)bnodeToSubjectIter.next();
         	if (bnode_to_object.containsKey(s)){
+        		
         		//Create a new Predicate Rule based on the following
         		// S - P1 - []
         		//         [] - P2 - O
         		//==> S - P1 - O
-        		Resource subject = subjects.get(s);
-        		RDFNode object = objects.get(s);
-				PredicateRule p = new PredicateRule(bnode_to_subj_pred.get(s).toString(), 
-    							bnode_to_subject.get(s), 
-    							bnode_to_object.get(s), 
-    							PredicateRule.Direction.FORWARD);
-//				System.out.println(bnode_to_subj_pred.get(s).toString()+ " " + 
-//						bnode_to_subject.get(s)+ " " +
-//						bnode_to_object.get(s));
-				p.print();
-				
-				constructSql(p, subject, object);
+        		
+        		LinkedList<String> objList = bnode_to_object.get(s);
+        		LinkedList<RDFNode> objNodeList = objects.get(s);
+        		for (int i=0; i<objList.size(); i++){
+
+        			String subject = store.getTypeFromSubjects(subjects.get(s).getLocalName());
+            		RDFNode object = objNodeList.get(i);
+
+        			PredicateRule p = new PredicateRule(bnode_to_subj_pred.get(s).toString(), 
+							bnode_to_subject.get(s), 
+							objList.get(i), 
+							PredicateRule.Direction.FORWARD);
+    				p.print();
+    				System.out.println("**** START ****");
+    				System.out.println(subject+"  "+object.toString());
+       				System.out.println("**** END ****");
+       				constructSql(p, subject, object);       			
+        		}
         	}
         }
        
 	}
 	
+	private void constructSql(PredicateRule p, String subject, RDFNode object) throws ClassNotFoundException, SQLException {
+
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
+		
+		//Need to get the column mapping for this predicate rule
+		StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
+		
+		LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
+		
+		for (int i = 0; i<propertyTables.size(); i++)
+		{
+			PropertyTable propTable = propertyTables.get(i);				
+			HashMap<PredicateRule, String> cols = propTable.getMap();
+			if (cols.containsKey(p))
+			{
+				
+				String tableName = propTable.table_name;
+				String pkeyCol = propTable.getPrimaryKeyColumn();
+				String pkeyVal = subject;
+				String attrCol = cols.get(p);
+				String attrVal = object.toString();
+				
+				String updateStatement = " UPDATE " + tableName+
+								" SET " + attrCol + " = '" + attrVal + "' " +
+								" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
+				
+				System.out.println(updateStatement);
+				
+				int success = dbConnection.st.executeUpdate(updateStatement);
+				if (success == 0){
+					String insertStatement = " INSERT INTO " + tableName +
+					" ("+ pkeyCol + " , " + attrCol + ")" +
+					" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
+					success = dbConnection.st.executeUpdate(insertStatement);
+					System.out.println(insertStatement);
+					
+				}
+			}
+		}
+	}
+
 	private void constructSql(PredicateRule p, Resource subject, RDFNode object) throws SQLException, ClassNotFoundException {
 
 		DBConnection dbConnection = new DBConnection();
