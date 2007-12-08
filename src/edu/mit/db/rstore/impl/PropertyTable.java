@@ -81,7 +81,6 @@ public class PropertyTable
 	 */
 	public String getSQL()
 	{
-		constructSQL();
 		return create_table_command;
 	}
 	
