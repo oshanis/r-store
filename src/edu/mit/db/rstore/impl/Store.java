@@ -531,6 +531,94 @@ public class Store implements RDFStore
 	}
 	
 	/**
+	 * Maps qualified subjects to their types
+	 * 
+	 * @return A map from qualified subjects to types
+	 */
+	public HashMap<String, String> getQualifiedSubjectTypeMap()
+	{
+		HashMap<String, String> typeMap= new HashMap<String, String>();
+		
+		StmtIterator stmtIter= this.rdfModel.listStatements();
+			
+		
+		while(stmtIter.hasNext())
+		{
+			Statement st= stmtIter.nextStatement();
+			Resource subject= st.getSubject();
+			
+			if(subject!=null)
+			{
+				String subjectString="";
+								
+				subjectString= subject.toString();
+					
+				
+				
+				String propertyString= st.getPredicate().getLocalName().toString();
+							
+				RDFNode object= st.getObject();
+				
+				if(object.isURIResource())
+				{
+					Resource objectResource= (Resource)object;
+					String objectString= objectResource.getLocalName().toString();
+					
+					
+				
+				
+					if(!typeMap.containsKey(subjectString) && propertyString.equals("type"))
+					{
+						typeMap.put(subjectString, objectString );
+					}
+				}
+				else
+				{
+					String objectString= object.toString();
+					
+					if(!typeMap.containsKey(subjectString) && propertyString.equals("type"))
+					{
+						typeMap.put(subjectString, objectString );
+					}
+				}
+			}
+		}
+		
+		
+		return typeMap;
+	}
+	
+	/**
+	 * Given a type, returns a set of qualified subjects that belong to this type
+	 * 
+	 * @return A set of qualified subjects
+	 */
+	public HashSet<String> getQualifiedSubjectsFromType( String type )
+	{
+		HashMap<String,String> typeMap= getQualifiedSubjectTypeMap();
+		
+		HashSet<String> subjects = new HashSet<String>();
+		
+		Set <String> keySet=typeMap.keySet();
+		
+		Iterator<String> keyIterator= keySet.iterator();
+    	
+        while ( keyIterator.hasNext())
+        {
+        	String key= keyIterator.next();
+			String keyType= typeMap.get(key);
+			
+			if(keyType.equals(type))
+			{
+				subjects.add(key);
+			}
+			
+		}
+		
+		return subjects;
+	}
+	
+	/**
 	 * Given a subject, returns its type
 	 * 
 	 * @return a string that indicates the type
