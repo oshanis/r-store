@@ -39,6 +39,7 @@ public class FrequencyCounter
 	
 	//blank node book keeping
 	private HashMap<PredicateRule, Integer> aux_statistics;
+	private HashSet<PredicateRule> aux_mask;
 
 	//diagnostics...
 	private int discarded_forward;
@@ -71,14 +72,15 @@ public class FrequencyCounter
 			for(int j = 0; j < predicates.size(); j++)
 				mask[i][j] = Relation.NONE;
 	
+		/*System.out.println();
 		System.out.println("Subjects:  " + subjects.keySet().size());
 		System.out.println("Predicates:  " + predicates.keySet().size());
-		System.out.println();
+		System.out.println();*/
 		
 		constructTable();
 		
-		dumpIndicies();
-		dumpTable();
+		/*dumpIndicies();
+		dumpTable();*/
 	}
 	
 	private void constructPredicates()
@@ -112,6 +114,9 @@ public class FrequencyCounter
 		
 		//Also assuming that precisely ONE subject initially points to any given blank node.  In RDF this is probably not a constraint, but RDF
 		//is an unconstrained standard
+		
+		//Requires memory on the order of the number of statements involving blank nodes.  This is a serious violation of the not-everything-in-
+		//memory constraint.  I have not yet thought of a fix for it
 		
 		//Also assuming that no literals point to blank nodes.  This I believe is a standard
 		HashMap<String, String> bnode_to_subject = new HashMap<String, String>();
@@ -193,8 +198,6 @@ public class FrequencyCounter
 			}
 		}
 		
-		//System.out.println("Iterated over " + statements + " statements in Aux");
-		
 		//Now aggregate over the blank nodes to find the new predicate rules
 		aux_statistics = new HashMap<PredicateRule, Integer>();
 		
@@ -225,13 +228,62 @@ public class FrequencyCounter
 			}
 		}
 		
-		//TODO:
 		/*
-		 * I have not made any provision for the case where its really a many to many relation.  Either add it to this book keeping or do
-		 * a backwards pass
+		 * A final step is to look for blank node statements that are really many to many relations
 		 * 
-		 * Can set one-to-many for all blank nodes, if not already done
+		 * I need to group blank nodes by predicate rule, and then I need to use the iterator to check if any of their object sets intersect
+		 * 
+		 * Thinking about it, these operations are a lot like SQL queries.  I wonder, could we have saved ourselves the trouble by putting the
+		 * whole damn thing into a modified triple store in Postgres, and using the DB to do the work, then generating the schema, and then recreating?
+		 * 
+		 * This is a slow step.  It requires as many passes over the iterator as there are distinct predicate rules involving blank nodes
 		 */
+		aux_mask = new HashSet<PredicateRule>();
+		HashMap<PredicateRule, HashSet<String>> prule_to_bnode_ids = new HashMap<PredicateRule, HashSet<String>>();
+		
+		for(String bnode : bnode_obj_ct.keySet())
+		{
+			String subj = bnode_to_subject.get(bnode);
+			String pred = bnode_to_subj_pred.get(bnode);
+			Set<String> bnode_objs = bnode_obj_ct.get(bnode).keySet();
+			for(String obj : bnode_objs)
+			{
+				PredicateRule p = new PredicateRule(pred, subj, obj, PredicateRule.Direction.FORWARD);
+				HashSet<String> ids_so_far = prule_to_bnode_ids.get(p);
+				if(ids_so_far == null)
+				{
+					ids_so_far = new HashSet<String>();
+					prule_to_bnode_ids.put(p, ids_so_far);
+				}
+				ids_so_far.add(bnode);
+			}
+		}
+		
+		for(PredicateRule p : prule_to_bnode_ids.keySet())
+		{
+			HashSet<String> bnodes = prule_to_bnode_ids.get(p);
+			HashSet<String> object_set = new HashSet<String>();
+			boolean decided = false;
+			StmtIterator stmts = rdf.getIterator();
+			
+			while(stmts.hasNext() && !decided)
+			{
+				Statement statement = stmts.nextStatement();
+				
+				Resource sub = statement.getSubject();
+				if(sub.isAnon() && bnodes.contains(sub.toString()))
+				{
+					RDFNode obj = statement.getObject();
+					if(object_set.contains(obj.toString()))
+					{
+						decided = true;
+						aux_mask.add(p);
+					}
+					else
+						object_set.add(obj.toString());
+				}
+			}
+		}
 	}
 	
 	/**
@@ -621,6 +673,14 @@ public class FrequencyCounter
 			else
 				if(r != Relation.ONE_TO_MANY)
 					mask[row_index][col_index] = Relation.MANY_TO_MANY;
+		}
+		
+		for(PredicateRule p : aux_mask)
+		{
+			row_index = subjects.get(p.getSubject());
+			col_index = predicates.get(p);
+			
+			mask[row_index][col_index] = Relation.MANY_TO_MANY;
 		}
 	}
 	

@@ -50,7 +50,6 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		
 		Integer row_index = new Integer(0);
 		Integer col_index = new Integer(0);
-		Integer count_index = new Integer(table.get(0).size() - 1);
 		
 		//Step 1
 		HashSet<String> subjects = rdf.getSubjectTypes();
@@ -63,9 +62,7 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 			if(row_index == null)
 				throw new RuntimeException("Disaster");
 			
-			//Put them there anyway, because its possible to reverse arcs into them
-			//if(table.get(row_index).get(count_index) != 0)
-				ptables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
+			ptables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
 		}
 		
 		//Step 2
@@ -120,7 +117,6 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 						String object = pred.getObject();
 						ManyToManyTable m = new ManyToManyTable("Table_" + suffix(pred.getPredicate()), subject, "Pkey_" + subject, object, "Pkey_" + object);
 						//This needs to be here so the database populator knows how to populate the table
-						m.addAttribute(pred, "");
 						schema.add(m);
 					}
 					if(rtype == FrequencyCounter.Relation.ONE_TO_ONE)
