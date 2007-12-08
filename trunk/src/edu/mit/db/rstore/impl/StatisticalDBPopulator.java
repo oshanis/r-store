@@ -48,7 +48,6 @@ public class StatisticalDBPopulator implements DBPopulator {
 			createTableStatement = p.getSQL() ;				
 			dbConnection.st.execute(createTableStatement);
 		}
-
 	}
 
 	/**
@@ -76,9 +75,12 @@ public class StatisticalDBPopulator implements DBPopulator {
 
 	public void insertValues() throws SQLException, ClassNotFoundException {
 
-		DBConnection dbConnection = new DBConnection();
-		dbConnection.connect();
-
+		HashMap<String, String> bnode_to_subject = new HashMap<String, String>();
+		HashMap<String, String> bnode_to_object = new HashMap<String, String>();
+		HashMap<String, Resource> subjects = new HashMap<String, Resource>();
+		HashMap<String, RDFNode> objects = new HashMap<String, RDFNode>();
+		HashMap<String, String> bnode_to_subj_pred = new HashMap<String, String>();
+		
 		StmtIterator iter = store.getIterator();
 		
         while (iter.hasNext()) {
@@ -116,103 +118,100 @@ public class StatisticalDBPopulator implements DBPopulator {
 	        					store.getTypeFromSubjects(subject.getLocalName()), 
 	        					object_type, 
 	        					PredicateRule.Direction.FORWARD);
-						
-						//Need to get the column mapping for this predicate rule
-						StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
-						
-						LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
-						
-						for (int i = 0; i<propertyTables.size(); i++)
-						{
-							PropertyTable propTable = propertyTables.get(i);				
-							HashMap<PredicateRule, String> cols = propTable.getMap();
-							if (cols.containsKey(p))
-							{
-								
-								String tableName = propTable.table_name;
-								String pkeyCol = propTable.getPrimaryKeyColumn();
-								String pkeyVal = subject.getLocalName();
-								String attrCol = cols.get(p);
-								String attrVal = object.toString();
-								
-								String updateStatement = " UPDATE " + tableName+
-												" SET " + attrCol + " = '" + attrVal + "' " +
-												" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
-								
-								int success = dbConnection.st.executeUpdate(updateStatement);
-								if (success == 0){
-									String insertStatement = " INSERT INTO " + tableName +
-									" ("+ pkeyCol + " , " + attrCol + ")" +
-									" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
-									success = dbConnection.st.executeUpdate(insertStatement);
-								}
-							}
-						}
+
+						constructSql(p, subject, object);
 					}
 					
 				}
 				else
 				{
-					System.out.println("This statement has a blank node in it");
-					HashMap<String, String> bnode_to_subject = new HashMap<String, String>();
-					HashMap<String, String> bnode_to_subj_pred = new HashMap<String, String>();
-					HashMap<String, HashMap<String, Integer>> bnode_obj_ct = new HashMap<String, HashMap<String, Integer>>();
+//					System.out.println("This statement has a blank node in it");
 
 					//Case:  S -P- [blank]
 					if(object.isAnon())
 					{
 						bnode_to_subject.put(object.toString(), store.getTypeFromSubjects(subject.getLocalName()));
 						bnode_to_subj_pred.put(object.toString(), predicate.toString());
+						subjects.put(object.toString(), subject);
 					}
 					//Case:  [blank] -P- O
 					if(subject.isAnon())
 					{
-						HashMap<String, Integer> objs = bnode_obj_ct.get(subject.toString());
-						if(objs == null)
-						{
-							objs = new HashMap<String, Integer>();
-							bnode_obj_ct.put(subject.toString(), objs);
-						}
-						
-						String key;
-						
+						String object_type;
 						if(object.isLiteral())
-							key = Store.LITERAL;
+							object_type = Store.LITERAL;
 						else
-							if(object.isURIResource())
-								key = store.getTypeFromSubjects(((Resource)object).getLocalName());
-							else
-							{
-								System.out.println("Found a statement in a blank node whose object was not literal or uri:  ");
-								printStatement(subject, predicate, object);
-								key = "";
-							}
-						
-						//Bug check
-						if(key == null)
-						{
-							//Note that I should be discarding those statements which define the blank nodes to be Seq for now
-							System.out.println("^^^^^^^^^^Failed to retrieve object type");
-							printStatement(subject, predicate, object);
-						}
-						else
-						{
-							Integer count = objs.get(key);
-							if(count == null)
-								objs.put(key, 1);
-							else
-								objs.put(key, count + 1);
-						}
-					}
+							object_type = store.getTypeFromSubjects(((Resource)object).getLocalName());
 
-					
-					
+						bnode_to_object.put(subject.toString(), object_type);
+						objects.put(subject.toString(),	object);
+					}
 				}
-				
-			}
-        }     
+			}				
+        }    
+        
+        //Deal with the blank nodes separately
+        Iterator<String> bnodeToSubjectIter = bnode_to_subject.keySet().iterator();
+        while(bnodeToSubjectIter.hasNext()){
+        	String s = (String)bnodeToSubjectIter.next();
+        	if (bnode_to_object.containsKey(s)){
+        		//Create a new Predicate Rule based on the following
+        		// S - P1 - []
+        		//         [] - P2 - O
+        		//==> S - P1 - O
+        		Resource subject = subjects.get(s);
+        		RDFNode object = objects.get(s);
+				PredicateRule p = new PredicateRule(bnode_to_subj_pred.get(s).toString(), 
+    							bnode_to_subject.get(s), 
+    							bnode_to_object.get(s), 
+    							PredicateRule.Direction.FORWARD);
+				System.out.println(bnode_to_subj_pred.get(s).toString()+ " " + 
+						bnode_to_subject.get(s)+ " " +
+						bnode_to_object.get(s));
+//				constructSql(p, subject, object);
+        	}
+        }
+       
 	}
 	
+	private void constructSql(PredicateRule p, Resource subject, RDFNode object) throws SQLException, ClassNotFoundException {
+
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
+		
+		//Need to get the column mapping for this predicate rule
+		StatisticalSchemaGenerator schemaGen = new StatisticalSchemaGenerator(store);
+		
+		LinkedList<PropertyTable> propertyTables = schemaGen.getSchema();
+		
+		for (int i = 0; i<propertyTables.size(); i++)
+		{
+			PropertyTable propTable = propertyTables.get(i);				
+			HashMap<PredicateRule, String> cols = propTable.getMap();
+			if (cols.containsKey(p))
+			{
+				
+				String tableName = propTable.table_name;
+				String pkeyCol = propTable.getPrimaryKeyColumn();
+				String pkeyVal = subject.getLocalName();
+				String attrCol = cols.get(p);
+				String attrVal = object.toString();
+				
+				String updateStatement = " UPDATE " + tableName+
+								" SET " + attrCol + " = '" + attrVal + "' " +
+								" WHERE "+ pkeyCol +" = '" + pkeyVal + "' ";
+				
+				int success = dbConnection.st.executeUpdate(updateStatement);
+				if (success == 0){
+					String insertStatement = " INSERT INTO " + tableName +
+					" ("+ pkeyCol + " , " + attrCol + ")" +
+					" VALUES ( '" + pkeyVal +"' , '"+ attrVal + "' ) ";
+					success = dbConnection.st.executeUpdate(insertStatement);
+				}
+			}
+		}
+	}
+
 	public static void printStatement(Resource subject, Property predicate, RDFNode object)
 	{
 		if(subject.getLocalName() != null)

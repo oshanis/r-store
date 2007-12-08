@@ -93,4 +93,35 @@
         </students>
      </Course>
 
+
+	<Course rdf:about="MIT6.898">
+        <name>Transparency and Accountability in WWW</name>
+        <teachers>
+            <rdf:Seq>
+	        <rdf:li>
+            <Teacher rdf:about="wh"></Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="dw">
+               <name>Daniel Weitzner</name>
+               <isFrom><Location rdf:about="CSAIL"/></isFrom>
+	        </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="ha">
+               <name>Hal Abelson</name>
+               <isFrom><Location rdf:about="CSAIL"/></isFrom>
+	        </Teacher>
+	        </rdf:li>
+            </rdf:Seq>
+        </teachers>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:about="am">
+		   </Student>
+	        </rdf:li>
+            </rdf:Seq>
+        </students>
+     </Course>
    </rdf:RDF>
