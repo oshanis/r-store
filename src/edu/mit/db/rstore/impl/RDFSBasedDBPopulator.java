@@ -13,6 +13,10 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.NsIterator;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 
 /**
@@ -76,7 +80,6 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	 */
 	public void insertValues(){
 
-		System.out.println("**** Inside insertValues ****");
 		for (PropertyTable p: this.schemas){
 			if (p instanceof ManyToManyTable){
 				
@@ -85,16 +88,19 @@ public class RDFSBasedDBPopulator implements DBPopulator
 				String pkeyCol = p.getPrimaryKeyColumn();
 				String pkeyVal = p.getPrimaryKey();
 				String pkeyValLocalName = pkeyVal.substring(pkeyVal.indexOf('#')+1);
-				HashSet<String> pkeys = store.getSubjectsFromType(pkeyValLocalName);
+				HashSet<String> pkeys = store.getQualifiedSubjectsFromType(pkeyValLocalName);
 				for (String s: pkeys){
-					System.out.println(s);
 					//For each of these primary keys Query over the RDF store for each of the columns
 					HashMap<String, String> cols = p.columns;
 					Iterator<String> i = cols.keySet().iterator();
 					while (i.hasNext()){
-						String colName = (String)i.next();
-						String colVal = cols.get(colName);
-						System.out.println( colName+ "   "+ colVal);
+						String colVal = (String)i.next();
+						String colName = cols.get(colVal);
+						System.out.println(s+ "  " + colName+ "   "+ colVal);
+						String attrVal = getOneToOneAttributeValue(colVal, s);
+						if (attrVal != null){
+							System.out.println(attrVal);
+						}
 					}
 				}
 				
@@ -149,34 +155,51 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	}
 	
 	public String getOneToOneAttributeValue(String pred, String sub){
-		String queryString = 
-			"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
-			"PREFIX c: <http://www.db.csail.mit.edu/6.830/>" +
-			"PREFIX : <http://www.db.csail.mit.edu/6.830/course_schema.rdf#>" +
-			"SELECT ?variable " +
-			"WHERE {" +
-			"      c:MIT6.830 :students ?v ." +
-			"	  ?v  ?x ?variable ." +
-			"      }";
-
-
 		
-		Query query = QueryFactory.create(queryString);
+		//Using the SPARQL template
+//		"SELECT ?variable " +
+//		"WHERE {" +
+//		"      c:MIT6.830 :students ?v ." +
+//		"	  ?v  ?x ?variable ." +
+//		"      }";
 
-		// Execute the query and obtain results
-		QueryExecution qe = QueryExecutionFactory.create(query, store.getRDFModel());
-		ResultSet results = qe.execSelect();
+		//A temporary hack to the problem in the the fully qualified name
+		//for the predicate
+    	NsIterator i = store.getRDFModel().listNameSpaces();
+    	while (i.hasNext()){
+    		String newPred = (String)i.next() + pred;
 
-		// Output query results	
-		ResultSetFormatter.out(System.out, results, query);
+    		String queryString = 
+    			"SELECT ?variable " +
+    			"WHERE {" +
+    			"<" +sub + "> <" + newPred + "> "+ " ?variable .}";
+    		
+    		Query query = QueryFactory.create(queryString);
 
-		// Important - free up resources used running the query
-		qe.close();
+    		// Execute the query and obtain results
+    		QueryExecution qe = QueryExecutionFactory.create(query, store.getRDFModel());
+    		ResultSet results = qe.execSelect();
 
-		String ret = "";
-		
-		return ret;
-		
+    		Model resultModel =	ResultSetFormatter.toModel(results);
+    		
+    		StmtIterator iter = resultModel.listStatements();
+    		while (iter.hasNext()){
+    			Statement statement = iter.nextStatement();
+    			//I believe this should be the standard way the final value will be encoded
+    			String valueExpected = "http://www.w3.org/2001/sw/DataAccess/tests/result-set#value";
+    			if (statement.getPredicate().toString().equals(valueExpected)){
+    				System.out.println(statement.getObject().toString());
+    			}
+    		}
+    		// Output query results	
+ //   		ResultSetFormatter.out(System.out, results, query);
+
+    		// Important - free up resources used running the query
+    		qe.close();
+
+    	}
+
+		return null;
 	}
 	
 }
