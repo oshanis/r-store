@@ -79,6 +79,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
     	HashSet<String> tableNames = new HashSet<String>();
     	
     	//Create the tables based on the subClass relationships
+
     	//This is the ONE-TO-ONE case
 		
     	NodeIterator superNodes = schemaModel.listObjectsOfProperty(RDFS.subClassOf);
@@ -93,9 +94,9 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
     		if (!superSubjectSet.contains(subClass)){
     			subjectSet.add(subClass);
     			String s = subClass.getLocalName();
-				tables.put(s, new PropertyTable("Table_" + s, s, "PKey_" + s));
+				tables.put(s, new PropertyTable("Table_" + s, subClass.getURI(), "PKey_" + s));
 				tableNames.add(s);
-				//Remember to add the attributes later
+				//Attributes are added later as and when they are determined by the RDF ranges
     		}
     	}
     	
@@ -105,6 +106,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
     	while (domainSubs.hasNext()){
 
     		Resource domainSub = domainSubs.nextResource();
+    		
     		StmtIterator iter = domainSub.listProperties();
     		
     		//There can be multiple domains for a single statement, hence the vector
@@ -132,33 +134,53 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					&& !(range.getLocalName().equals("Seq"))){
 				for (int i=0; i< domain.size(); i++){
 					String d = domain.get(i).getLocalName();
+					String dType = domain.get(i).getURI();
 					String r = range.getLocalName();
-					String t = d+r;
+					String rType = range.getURI();
+					String t = d+"_"+r;
 					tableNames.add(t);
 					//TODO Figure out how to handle predicates here
 					String pred = "";
-					PropertyTable p = new ManyToManyTable("Table_" +t,d, "Pkey_" +d, r, "Pkey_" + r, pred );
+					PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
 					tables.put(t, p);
 	    		}				
 			}
     		
-    		//Add the attributes in tables which are ONE-TO-ONE
     		
-    		//FIXME I would be wise to add support for subClass relationships here
+    		//FIXME It would be wise to add support for subClass relationships here
     		//For eg: <rdfs:domain rdf:resource="#Person"/> instead of having 2 	      
     	    // separate domains for Student and Teacher
-    		
-    		else if (domain.size() > 0  && ((range.getLocalName().equals("Literal")) 
-    				|| (range.getLocalName().equals("Seq")))){
+
+    		//Add the attributes in tables which are ONE-TO-ONE
+    		else if (domain.size() > 0  && (range.getLocalName().equals("Literal"))){
 				for (int i=0; i< domain.size(); i++){
 					String t = domain.get(i).getLocalName();
 					PropertyTable p =  tables.get(t);
 					if (p != null){
-						p.addAttribute(domainSub.getLocalName(), "col_"+domainSub.getLocalName());
+						p.addAttribute(domainSub.getURI(), "col_"+domainSub.getLocalName());
 					}	
 					tables.put(t, p);	
 				}
     		}
+    		
+    		//This is the ONE-TO-MANY case
+    		
+    		else if (domain.size() > 0  &&  (range.getLocalName().equals("Seq"))){
+				for (int i=0; i< domain.size(); i++){
+					String d = domain.get(i).getLocalName();
+					String dType = domain.get(i).getURI();
+					String r = domainSub.getLocalName();
+					String rType = domainSub.getURI();
+					String t = d+"_"+r;
+					tableNames.add(t);
+					//TODO Figure out how to handle predicates here
+					//I think no need for those, because I am not using PredicateRule anyway!
+					String pred = "";
+					PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
+					tables.put(t, p);
+				}
+    		}
+
     	}
     	
     	Iterator it = tables.keySet().iterator();
@@ -175,7 +197,6 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
     			}
     		}
     	}
-    	
 	}
 	
 	
