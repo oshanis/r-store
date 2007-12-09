@@ -50,11 +50,16 @@ import edu.mit.db.rstore.SchemaGenerator;
  */
 public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 
-	private LinkedList<PropertyTable> schema; //The final schema the 'schema generating' algorithm produces
+	//The final schema the 'schema generating' algorithm produces
+	private LinkedList<PropertyTable> schema; 
 	
 	private Model schemaModel;
 	
-	HashMap<String, PropertyTable> tables = new HashMap<String, PropertyTable>();
+	// Contains all the tables identified
+	private HashMap<String, PropertyTable> tables = new HashMap<String, PropertyTable>();
+	
+	//Contains the table and a list of Foreign key string which would be useful in creating the schema
+	private HashMap<String, String> foreignKeys = new HashMap<String, String>();
 
 	/**
 	 * Constructor
@@ -134,16 +139,20 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					&& !(range.getLocalName().equals("Seq"))){
 				for (int i=0; i< domain.size(); i++){
 					String d = domain.get(i).getLocalName();
-					String dType = domain.get(i).getURI();
 					String r = range.getLocalName();
-					String rType = range.getURI();
-					String t = d+"_"+r;
-					tableNames.add(t);
-					//TODO Figure out how to handle predicates here
-					String pred = "";
-					PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
-					tables.put(t, p);
-	    		}				
+					if (tableNames.contains(d) && tableNames.contains(r)){
+						//Have to account for foreign keys!
+						String dType = domain.get(i).getURI();
+						String rType = range.getURI();
+						String t = d+"_"+r;
+						tableNames.add(t);
+						//TODO Figure out how to handle predicates here
+						String pred = "";
+						PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
+						tables.put(t, p);
+		    		
+					}
+				}				
 			}
     		
     		

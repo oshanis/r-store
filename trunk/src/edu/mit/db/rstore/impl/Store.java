@@ -825,6 +825,10 @@ public class Store implements RDFStore
 
 		return predicateTable;
 	}
+
+	public Model getRDFModel() {
+		return this.rdfModel;
+	}
 	
     
 }
