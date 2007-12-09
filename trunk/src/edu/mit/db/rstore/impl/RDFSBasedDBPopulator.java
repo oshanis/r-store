@@ -12,9 +12,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.NsIterator;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
@@ -49,7 +47,6 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	public void createTables() throws ClassNotFoundException, SQLException{
 		
 		DBConnection dbConnection = new DBConnection();
-		
 		dbConnection.connect();
 		
 		for (PropertyTable p: this.schemas){
@@ -78,7 +75,10 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	/* (non-Javadoc)
 	 * @see edu.mit.db.rstore.impl.DBPopulaterInt#insertValues()
 	 */
-	public void insertValues(){
+	public void insertValues() throws ClassNotFoundException, SQLException{
+
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
 
 		for (PropertyTable p: this.schemas){
 			if (p instanceof ManyToManyTable){
@@ -91,67 +91,31 @@ public class RDFSBasedDBPopulator implements DBPopulator
 				HashSet<String> pkeys = store.getQualifiedSubjectsFromType(pkeyValLocalName);
 				for (String s: pkeys){
 					//For each of these primary keys Query over the RDF store for each of the columns
+					String insertStatement = " INSERT INTO "+p.table_name+ " VALUES ( '" + s + "' , '";
 					HashMap<String, String> cols = p.columns;
 					Iterator<String> i = cols.keySet().iterator();
 					while (i.hasNext()){
 						String colVal = (String)i.next();
 						String colName = cols.get(colVal);
-						System.out.println(s+ "  " + colName+ "   "+ colVal);
+//						System.out.println(s+ "  " + colName+ "   "+ colVal);
 						String attrVal = getOneToOneAttributeValue(colVal, s);
 						if (attrVal != null){
-							System.out.println(attrVal);
+							insertStatement += attrVal + "' , '";
+						}
+						else{
+							insertStatement += "null" + "' , '";
 						}
 					}
+					//Strip off the final ',' and add the ')'
+					insertStatement = insertStatement.substring(0, insertStatement.lastIndexOf(','));
+					insertStatement += ")";
+					System.out.println(insertStatement);
+					dbConnection.st.execute(insertStatement);
 				}
 				
 			}
 		}
 		
-		//Do the inserts for each table
-		for (PropertyTable p: this.schemas){
-//			System.out.println(p.table_name);
-			if (p instanceof ManyToManyTable) {
-				ManyToManyTable m = (ManyToManyTable) p;
-				LinkedList<String> l = m.getPrimaryKeys();
-				//Each primary key value will have one insert statement each in the respective table
-				for (int i=0; i<l.size(); i++){
-					HashSet<String> primaryKeys = store.getSubjectsFromType(l.get(i));
-			    	Iterator primaryKeyIterator = primaryKeys.iterator();
-			    	while (primaryKeyIterator.hasNext()){
-						String statement = "INSERT INTO " + p.table_name + " VALUES ( ";
-						statement += "'" + (String)primaryKeyIterator.next() + "'" + " , ";
-						LinkedList<String> colTypes = m.getColTypes();
-						for (int j=0; j<colTypes.size(); j++){
-							HashSet<String> colVals = store.getSubjectsFromType(colTypes.get(j));
-					    	if (colVals.size()>0){
-						    	Iterator colIterator = primaryKeys.iterator();
-						    	while (colIterator.hasNext()){
-									statement += "'" + (String)colIterator.next() + "'" + " ,";
-						    	}
-
-					    	}
-					    	//TODO Do the getSubjectsFromPredicate
-					    	
-							
-						}
-						statement = statement.substring(0, statement.lastIndexOf(','));
-						statement += ")";
-						System.out.println(statement);
-					}
-		    	}
-			}
-			else{
-//				statement += "'" +  p.getPrimaryKey() + "'" +  " , ";
-			}
-			
-//			LinkedList<String> l = p.getColTypes();
-//			
-//			for (int i=0; i<l.size(); i++){
-//				statement += "'" + l.get(i) + "'" + " ,";
-//			}
-			
-		}
-
 	}
 	
 	public String getOneToOneAttributeValue(String pred, String sub){
@@ -188,14 +152,10 @@ public class RDFSBasedDBPopulator implements DBPopulator
     			//I believe this should be the standard way the final value will be encoded
     			String valueExpected = "http://www.w3.org/2001/sw/DataAccess/tests/result-set#value";
     			if (statement.getPredicate().toString().equals(valueExpected)){
-    				System.out.println(statement.getObject().toString());
+    				return statement.getObject().toString();
     			}
     		}
-    		// Output query results	
- //   		ResultSetFormatter.out(System.out, results, query);
-
-    		// Important - free up resources used running the query
-    		qe.close();
+     		qe.close();
 
     	}
 
