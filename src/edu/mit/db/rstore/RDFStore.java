@@ -2,6 +2,7 @@ package edu.mit.db.rstore;
 
 import java.util.*;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public interface RDFStore 
@@ -68,5 +69,11 @@ public interface RDFStore
 	 * @return A mapping from predicate type to subject and object type in the form of a HashMap.
 	 */
 	public HashMap<String, Vector<LinkedList<String>>> getPredicateTable();
+	
+	/**
+	 * 
+	 * @return the RDF Data model that is created by this store
+	 */
+	public Model getRDFModel();
 	
 }
