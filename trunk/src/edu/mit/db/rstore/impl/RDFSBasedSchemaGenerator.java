@@ -16,119 +16,54 @@ import com.hp.hpl.jena.vocabulary.*;
 import edu.mit.db.rstore.SchemaGenerator;
 
 /**
- * Class which generates the schema out of the RDF store
-
- * FIXME: The following algorithm suffers from severe lack of optimization!
+ * Class which generates the RDB schema out of the RDF schema
  * 
- * It assumes a table of the following form being passed into the method:
+ * This class bases the decision about what relational schema should be represented
+ * in the database based on the RDF Schema associated with the RDF data
  * 
- * (Please note that the numbers used in the table are arbitrary and is only used for the
- * purpose of visualizing the algorithm only.)
+ * Step 1:
+ * Consider all the Classes. Filter the classes which are the leaf classes (i.e the Classes which are 
+ * not subclassed from any other Class). The algorithm assumes that these classes are likely to be 
+ * relations.
  * 
- * 	Angelika's Frequency Table: (have ignored the last column for the count)
+ * Step 2:
+ * Consider all the Properties. If a property has a range and a domain (or even multiple ranges and domains),
+ * the algorithm deduces that this property could represent a cardinality relationship in the RDB Schema
+ * The distinction as to ONE-TO-ONE, ONE-TO-MANY and MANY-TO-MANY is made based on the following criteria:
  * 
- *  			|Properties							   	|
- * ------------------------------------------------------
- *  Subjects	|P1		|P2		|P3		|P4		|P5		|
- * ------------------------------------------------------
- *  A			|10		|20		|30		|10		|0		|
- *  B			|0		|0		|0		|20		|25		|
- *  C			|0		|10		|20		|10		|10		|
- * ------------------------------------------------------
- *  
- *  The idea is that each of the tables could end up being a table and each of the properties
- *  will be the columns in any of the tables constructed.
- *  
- *  Pass 1 (sort the property table based on the frequencies):
- *  ==========================================================
- *  For each of the subjects sort the properties in the descending order
- *  and ignore the properties which has 0 in the property table.
- *  Let's call this the 'Leftovers' table
- *  
- *  Leftovers
- *  A		P3:30 	P2:20	P1:10	P4:10
- *  B		P5:25	P4:20
- *  C		P3:20	P1:10	P4:10	P5:10
- *  
- *  Pass2 (Generate the initial schema):
- *  ===================================
- *  Create a table for each of the Subjects/Objects
- *  Start grouping each of the tables with pairs of the highest occurring predicates
- *  Update the Leftovers with, well, leftover predicates
- *  
- *  Now we would have something like this:
- *  
- *  Table A
- *  P3 	P2
- *  
- *  Table B
- *  P4	P4
- *  
- *  Table C
- *  P3	P1
- *  
- *  Leftovers
- *  A		P1:10	P4:10
- *  B		
- *  C		P4:10	P5:10
- *
- *  Pass3 (Iterate over the Leftover properties until there are no more):
- *  =====================================================================
- *  For each of the leftover properties pick the one with the highest frequency and stick it in the
- *  corresponding table.
- *  If there is a tie, check which schema has the highest frequency for any property already entered,
- *  and stick the new property in the table which has the least difference. (So, in this situation P4
- *  would go in Schema C instead of in Schema A)
- *  
- *  TODO: Figure out a better way of minimizing NULLs! 
- *  
- *  So, now the above schema would be:
- *  
- *  Table A
- *  P3 	P2	P1
- *  
- *  Table B
- *  P4	P4
- *  
- *  Table C
- *  P3	P1	P4	P5
- *  
- *  Leftovers
- *  A		
- *  B		
- *  C	
- *  
- *  Afterthought: May be we could run some other optimization algorithm on this schema?
- *  But what would be the criteria?
- *  And the cost metrics?
- *  
+ * ONE-TO-ONE: 
+ * Basically, all the subclasses identified in step 1 falls in to this category. 
+ * If the range of the property is an RDF literal (or any similar category), the algorithm determines that
+ * this property could very well fit as an attribute in the the class(es) given in the domain(s). 
+ * 
+ * ONE-TO-MANY: 
+ * If the range of the property matches an RDF collection attribute such as rdf:seq, the algorithm assumes that 
+ * there is a ONE-TO-MANY relationship, based on the property considered. Therefore, another relation is added 
+ * which takes the form of {DOMAIN CLASS}{propertyName}. 
+ * 
+ * MANY-TO-MANY:
+ * If both the range and the domain of the property matches to classes which are already identified as a relation
+ * in the RDF, create a MANY-TO-MANY relations such as {DOMAIN CLASS}{RANGE CLASS}
+ * 
  * @author oshani
  *
  */
 public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 
-	private FrequencyCounter frequencyCounter;
-	
-	private HashMap<String, HashMap<String, Integer>> leftoversTable;
-	
 	private LinkedList<PropertyTable> schema; //The final schema the 'schema generating' algorithm produces
+	
+	private Model schemaModel;
 	
 	HashMap<String, PropertyTable> tables = new HashMap<String, PropertyTable>();
 
 	/**
 	 * Constructor
 	 */
-	public RDFSBasedSchemaGenerator(FrequencyCounter fc){
-		this.frequencyCounter = fc;
-		this.sortPropertyFrequencyValues();
+	public RDFSBasedSchemaGenerator(Store store) {
 		this.schema = new LinkedList<PropertyTable>();
-	}
-	
-	/**
-	 * The new constructor which will be used when refactoring the code
-	 */
-	public RDFSBasedSchemaGenerator() {
-		this.schema = new LinkedList<PropertyTable>();
+		schemaModel= store.CreateSchema();
+		makeSchema();
+
 	}
 
 	//Modified return type and set return value to null for now  -AM
@@ -136,132 +71,13 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 		return schema;
 	}
 	
-	public HashMap<String, HashMap<String, Integer>> getLeftoversTable(){
-		return this.leftoversTable;
-	}
 	
-	/**
-	 * Pass 1:
-	 * For each of the subjects this method should sort the property values by their frequency
-	 * 
-	 * @return sorted frequency values per each subject
-	 */
-	private void sortPropertyFrequencyValues(){
+	public void makeSchema(){
 		
-		//Beware of predicates which have the same name but different subject and object properties, as Sergio pointed out
-		//I have not fixed that bug here, merely manipulated types to cause things to compile  -AM
-		HashMap<Integer, PredicateRule> prules = frequencyCounter.getReverseColumnMapping();
-		HashMap<Integer, String> predicates = new HashMap<Integer, String>();
-		for(Integer i : prules.keySet())
-			predicates.put(i, prules.get(i).getPredicate());
-		
-		HashMap<Integer, String> subjects = frequencyCounter.getReverseRowMapping();
-		Vector<Vector<Integer>> frequencies = frequencyCounter.getFrequencyTable();
-		this.leftoversTable = new HashMap<String, HashMap<String,Integer>>();
-		
-		//Get the property strings into an array
-		String [] propertyLabelArray = new String[predicates.size()];
-		for (int i=0; i<predicates.size(); i++){
-			propertyLabelArray[i] = predicates.get(i);
-		}
-		
-		for(int i = 0; i < subjects.size(); i++){
-			
-			Vector<Integer> frequenciesPerSubject = frequencies.get(i);
-			int[] propertyFrequencyArray = new int[predicates.size()];
-			
-			for(int j = 0; j < predicates.size(); j++){
-				//Add the frequencies in a row to an array
-				propertyFrequencyArray[j] = frequenciesPerSubject.get(j); 
-			}
-			
-			//Arrays.sort(propertyFrequencyArray);
-			//Do the sorting explicitly, as we need the property associated with the frequency
-			quickSort(propertyFrequencyArray, propertyLabelArray, propertyFrequencyArray.length);
-			
-			HashMap<String, Integer> propertiesAndFrequencies = new HashMap<String, Integer>();
-			
-			//Add the properties and frequencies in sorted order ignoring the 0s
-			for(int j = predicates.size()-1 ; j >= 0 ; j--){
-				if (propertyFrequencyArray[j] != 0){
-					propertiesAndFrequencies.put(propertyLabelArray[j], propertyFrequencyArray[j]);
-				}
-			}
-
-			//Add the subject and the corresponding HashMap to the leftovers table if we have good properties
-			if (!(propertiesAndFrequencies.keySet().equals(null)))
-				leftoversTable.put(subjects.get(i), propertiesAndFrequencies);
-		}
-	}
-	
-	/**
-	 * Quick sort algorithm copied and modified from http://linux.wku.edu/~lamonml/algor/sort/quick.html
-	 * @param numbers
-	 * @param array_size
-	 */
-	private void quickSort(int numbers[], String[] labels, int array_size)
-	{
-	  q_sort(numbers, labels, 0, array_size - 1);
-	}
-
-
-	private void q_sort(int numbers[], String[] labels, int left, int right)
-	{
-	  int pivot, l_hold, r_hold;
-	  String pivotStr;
-	  
-	  l_hold = left;
-	  r_hold = right;
-	  pivot = numbers[left];
-	  pivotStr = labels[left];
-	  
-	  while (left < right)
-	  {
-	    while ((numbers[right] >= pivot) && (left < right))
-	      right--;
-	    if (left != right)
-	    {
-	      numbers[left] = numbers[right];
-	      labels[left] = labels[right];
-	      left++;
-	    }
-	    while ((numbers[left] <= pivot) && (left < right))
-	      left++;
-	    if (left != right)
-	    {
-	      numbers[right] = numbers[left];
-	      labels[right] = labels[left];
-	      right--;
-	    }
-	  }
-	  numbers[left] = pivot;
-	  labels[left] = pivotStr;
-	  pivot = left;
-	  left = l_hold;
-	  right = r_hold;
-	  if (left < pivot)
-	    q_sort(numbers, labels, left, pivot-1);
-	  if (right > pivot)
-	    q_sort(numbers, labels, pivot+1, right);
-	}
-	
-	//End of the customized QuickSort Algorithm
-	
-	
-	/**
-	 * Pass2
-	 */
-	public void createInitialSchema(){
-		
-    	String path= "data/";
-		
-    	Store myStore = new Store (path);
-    	HashSet<Resource> superSubjectSet = new HashSet<Resource>();
+     	HashSet<Resource> superSubjectSet = new HashSet<Resource>();
     	HashSet<Resource> subjectSet = new HashSet<Resource>();
     	HashSet<String> tableNames = new HashSet<String>();
     	
-    	Model schemaModel= myStore.CreateSchema();
-
     	//Create the tables based on the subClass relationships
     	//This is the ONE-TO-ONE case
 		

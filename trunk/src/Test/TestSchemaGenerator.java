@@ -22,14 +22,9 @@ public class TestSchemaGenerator {
     	String path= "data/";
         
     	Store myStore = new Store (path);
-    	Model dataModel= myStore.CreateModel();
-    	Model schemaModel= myStore.CreateSchema();
-    	InfModel infModel= myStore.CreateInferenceModel();
 
-    	StatisticalSchemaGenerator s = new StatisticalSchemaGenerator(myStore);
-		
-//		SchemaGeneratorImpl s = new SchemaGeneratorImpl();
-//		s.createInitialSchema();
+   // 	StatisticalSchemaGenerator s = new StatisticalSchemaGenerator(myStore);
+		RDFSBasedSchemaGenerator s = new RDFSBasedSchemaGenerator(myStore);
 		
 	}
 }
