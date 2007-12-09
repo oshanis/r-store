@@ -166,7 +166,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					String t = domain.get(i).getLocalName();
 					PropertyTable p =  tables.get(t);
 					if (p != null){
-						p.addAttribute(domainSub.getURI(), "col_"+domainSub.getLocalName());
+						p.addAttribute(domainSub.getLocalName(), "col_"+domainSub.getLocalName());
 					}	
 					tables.put(t, p);	
 				}
