@@ -140,14 +140,21 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 				for (int i=0; i< domain.size(); i++){
 					String d = domain.get(i).getLocalName();
 					String r = range.getLocalName();
-					if (tableNames.contains(d) && tableNames.contains(r)){
-						//Have to account for foreign keys!
+					if (tables.containsKey(d) && tables.containsKey(r)){
+						String fkeyTable1 = tables.get(d).table_name;
+						String fkeyTable2 = tables.get(r).table_name;
+						String fkeyCol1 = tables.get(d).getPrimaryKeyColumn();
+						String fkeyCol2 = tables.get(r).getPrimaryKeyColumn();
 						String dType = domain.get(i).getLocalName();
 						String rType = range.getLocalName();
 						String t = d+"_"+r;
 						tableNames.add(t);
 						String pred = domainSub.getLocalName();
-						PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
+						PropertyTable p = new ManyToManyTable("Table_" +t, pred, 
+								dType, "Pkey_" +d, 
+								rType, "Pkey_" + r,
+								fkeyTable1, fkeyCol1,
+								fkeyTable2, fkeyCol2);
 						tables.put(t, p);
 		    		
 					}
@@ -179,29 +186,37 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					String r = domainSub.getLocalName();
 					String rType = domainSub.getLocalName();
 					String t = d+"_"+r;
-					tableNames.add(t);
-					String pred = domainSub.getLocalName();
-					PropertyTable p = new OneToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
-					tables.put(t, p);
+					if (tables.containsKey(d) && tables.containsKey(r)){
+						String fkeyTable = tables.get(d).table_name;
+						String fkeyCol = tables.get(d).getPrimaryKeyColumn();
+						tableNames.add(t);
+						String pred = domainSub.getLocalName();
+						PropertyTable p = new OneToManyTable("Table_" +t, pred,
+								dType, "Pkey_" +d, rType, "Pkey_" + r,
+								fkeyTable, fkeyCol);
+						tables.put(t, p);
+					}
 				}
     		}
 
     	}
+
+// Debugging code
     	
-    	Iterator it = tables.keySet().iterator();
-    	while (it.hasNext()){
-    		String tableName = (String)it.next();
-    		PropertyTable p = tables.get(tableName);
-    		if (p!= null){
-    			if (p instanceof ManyToManyTable) {
-    				ManyToManyTable mmt = (ManyToManyTable)p;
-    				mmt.print();
-    			}
-    			else{
-    				p.print();
-    			}
-    		}
-    	}
+//    	Iterator it = tables.keySet().iterator();
+//    	while (it.hasNext()){
+//    		String tableName = (String)it.next();
+//    		PropertyTable p = tables.get(tableName);
+//    		if (p!= null){
+//    			if (p instanceof ManyToManyTable) {
+//    				ManyToManyTable mmt = (ManyToManyTable)p;
+//    				mmt.print();
+//    			}
+//    			else{
+//    				p.print();
+//    			}
+//    		}
+//    	}
 	}
 	
 	
@@ -210,13 +225,37 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 	 * the RDFBrowser would understand
 	 */
 	public void constructSchema(){
-    	Iterator it = tables.keySet().iterator();
-    	while (it.hasNext()){
-    		String tableName = (String)it.next();
-    		PropertyTable p = tables.get(tableName);
-    		if (p!= null)
-	    		schema.add(p);
+		LinkedList<String> sortedList = sortTables(tables);
+		for (int i=0; i<sortedList.size(); i++){
+			PropertyTable p = tables.get(sortedList.get(i));
+			if (p != null){
+	    		schema.add(p);		    			
+			}
+		}
+	}
+	
+	//Need a small hack here to make sure that all the tables that are referenced through foreign keys are created first
+	private LinkedList<String> sortTables(HashMap<String, PropertyTable> original){
+		HashMap<String, PropertyTable> sorted = new HashMap<String, PropertyTable>();
+	  	Iterator it1 = original.keySet().iterator();
+	  	LinkedList<String> sortedList = new LinkedList<String>();
+	  	LinkedList<String> leftOvers = new LinkedList<String>();
+	  	//First filter and add the ONE-TO-ONE tables
+    	while (it1.hasNext()){
+    		String tableName = (String)it1.next();
+    		if (tableName.lastIndexOf('_') == -1){
+        		sortedList.add(tableName);
+    		}
+    		else{
+    			leftOvers.add(tableName);
+    		}
     	}
+ 
+    	for (String s: leftOvers){
+    		sortedList.add(s);
+    	}
+
+ 		return sortedList;
 	}
 }
 

@@ -38,12 +38,6 @@ xml:base=  "http://www.persons.fake/Persons#">
       <rdfs:range rdf:resource="#Location"/>	      
    </rdf:Property>
 
-<rdf:Property rdf:ID="teacher">
-      <rdfs:comment>Teacher of a course</rdfs:comment>
-      <rdfs:domain rdf:resource="#Course"/>	      
-      <rdfs:range rdf:resource="#Teacher"/>	      
-   </rdf:Property>
-
 <rdf:Property rdf:ID="teachers">
       <rdfs:comment>List of Teachers of a course</rdfs:comment>
       <rdfs:domain rdf:resource="#Course"/>	      
