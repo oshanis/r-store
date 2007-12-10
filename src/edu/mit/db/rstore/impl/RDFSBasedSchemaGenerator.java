@@ -142,19 +142,17 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					String r = range.getLocalName();
 					if (tableNames.contains(d) && tableNames.contains(r)){
 						//Have to account for foreign keys!
-						String dType = domain.get(i).getURI();
-						String rType = range.getURI();
+						String dType = domain.get(i).getLocalName();
+						String rType = range.getLocalName();
 						String t = d+"_"+r;
 						tableNames.add(t);
-						//TODO Figure out how to handle predicates here
-						String pred = "";
+						String pred = domainSub.getLocalName();
 						PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
 						tables.put(t, p);
 		    		
 					}
 				}				
 			}
-    		
     		
     		//FIXME It would be wise to add support for subClass relationships here
     		//For eg: <rdfs:domain rdf:resource="#Person"/> instead of having 2 	      
@@ -177,14 +175,12 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
     		else if (domain.size() > 0  &&  (range.getLocalName().equals("Seq"))){
 				for (int i=0; i< domain.size(); i++){
 					String d = domain.get(i).getLocalName();
-					String dType = domain.get(i).getURI();
+					String dType = domain.get(i).getLocalName();
 					String r = domainSub.getLocalName();
-					String rType = domainSub.getURI();
+					String rType = domainSub.getLocalName();
 					String t = d+"_"+r;
 					tableNames.add(t);
-					//TODO Figure out how to handle predicates here
-					//I think no need for those, because I am not using PredicateRule anyway!
-					String pred = "";
+					String pred = domainSub.getLocalName();
 					PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
 					tables.put(t, p);
 				}
