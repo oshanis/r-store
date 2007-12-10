@@ -230,7 +230,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 		for (int i=0; i<sortedList.size(); i++){
 			PropertyTable p = tables.get(sortedList.get(i));
 			if (p != null){
-	    		schema.add(p);		    			
+	    		schema.add(p);	
 			}
 		}
 	}
