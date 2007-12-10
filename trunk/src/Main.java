@@ -32,7 +32,7 @@ import edu.mit.db.rstore.impl.Store;
  */
 public class Main {
 
-	public static String path= "data/";
+	public static String path= "demo/";
 	public static Store store = new Store (path);
 	public static SchemaGenerator schemaGenerator;
 	public static LinkedList<PropertyTable> schemas;
