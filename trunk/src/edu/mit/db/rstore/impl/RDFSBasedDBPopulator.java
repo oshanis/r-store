@@ -67,7 +67,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 			//First Check if the table exists in the Database
 			//If it exists drop the table
 			if (dbConnection.tableExists(tableName)){
-				dbConnection.st.execute("DROP TABLE "+ tableName);
+				dbConnection.st.execute("DROP TABLE "+ tableName +" CASCADE ");
 			}
 			
 			//Then create the new table
@@ -76,11 +76,16 @@ public class RDFSBasedDBPopulator implements DBPopulator
 			if (p instanceof ManyToManyTable) {
 				createTableStatement = ((ManyToManyTable) p).getSQL();				
 			}
-			else {
+			else if (p instanceof OneToManyTable){
+				createTableStatement = ((OneToManyTable) p).getSQL();	
+				System.out.println(createTableStatement);
+			}
+			else{
 				createTableStatement = p.getSQL() ;				
 			}
 			dbConnection.st.execute(createTableStatement);
 		}
+		dbConnection.close();
 	}
 	
 	/* (non-Javadoc)
@@ -172,7 +177,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 						insertStatement += "')";
 						dbConnection.st.execute(insertStatement);
 						
-						System.out.println(o.table_name+"  "+ s +" "+insertStatement);
+//						System.out.println(o.table_name+"  "+ s +" "+insertStatement);
 					}
 				}		
 			}
@@ -207,6 +212,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 				
 			}
 		}
+		dbConnection.close();
 		
 	}
 	
@@ -304,7 +310,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 			String tableName = p.table_name;
 			
 			if (dbConnection.tableExists(tableName) && dbConnection.tableHasNoRows(tableName)){
-				dbConnection.st.execute("DROP TABLE "+ tableName);
+				dbConnection.st.execute("DROP TABLE "+ tableName + " CASCADE ");
 			}
 		}
 		dbConnection.close();

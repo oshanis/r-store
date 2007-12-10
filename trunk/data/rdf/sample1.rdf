@@ -5,12 +5,16 @@
 
      <Course rdf:about="MIT6.830">
         <name>Database Systems</name>
-        <teacher>
+        <teachers>
+            <rdf:Seq>
+	        <rdf:li>
             <Teacher rdf:about="sm">
                <name>Sam Madden</name>
                <isFrom><Location rdf:about="CSAIL"/></isFrom>
-	    </Teacher>
-        </teacher>
+		    </Teacher>
+	        </rdf:li>
+	        </rdf:Seq>
+        </teachers>
         <students>
             <rdf:Seq>
 	        <rdf:li>
@@ -36,12 +40,16 @@
      </Course>
      <Course rdf:about="MIT6.837">
         <name>Computer Graphics </name>
-        <teacher>
+        <teachers>
+            <rdf:Seq>
+	        <rdf:li>
             <Teacher rdf:about="jp">
                <name>Jovan Popovic</name>
                <isFrom><Location rdf:about="CSAIL"/></isFrom>
-	    </Teacher>
-        </teacher>
+		    </Teacher>
+	        </rdf:li>
+	        </rdf:Seq>
+        </teachers>
         <students>
             <rdf:Seq>
 	        <rdf:li>
