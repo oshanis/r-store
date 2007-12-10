@@ -103,36 +103,78 @@ public class RDFSBasedDBPopulator implements DBPopulator
 				//So, let's just iterate over subjects corresponding to the first primary key 
 				//and find the values that go in the other column of the primary key
 
-				String pkeyCol1 = pkeyCols.getFirst();
-				String pkeyCol2 = pkeyCols.getLast();
-				
 				String pkeyVal1 = pkeyVals.getFirst();
-				String pkeyVal2 = pkeyVals.getLast();
-				
 				String pkeyVal1LocalName = pkeyVal1.substring(pkeyVal1.indexOf('#')+1);
-				String pkeyVal2LocalName = pkeyVal2.substring(pkeyVal2.indexOf('#')+1);
-
 				
 				HashSet<String> pkeys1 = store.getQualifiedSubjectsFromType(pkeyVal1LocalName);
 
 				for (String s: pkeys1){
 					String insertStatement = " INSERT INTO "+p.table_name+ " VALUES ( '" + s + "' , '";
-					String attrVal = getOneToOneAttributeValue(m.getPredicate(), s);
-					System.out.println(m.getPredicate()+" "+ s+" "+attrVal);
+					String pkeyVal2 = getOneToOneAttributeValue(m.getPredicate(), s);
+					insertStatement += pkeyVal2 + "' , '";
+
+					//Now take care of the columns if there are any
+					HashMap<String, String> cols = m.columns;
+					Iterator<String> i = cols.keySet().iterator();
+					while (i.hasNext()){
+						String colVal = (String)i.next();
+						String colName = cols.get(colVal);
+						String attrVal = getOneToOneAttributeValue(colVal, s);
+						if (attrVal != null){
+							insertStatement += attrVal + "' , '";
+						}
+						else{
+							insertStatement += "null" + "' , '";
+						}
+					}
+					//Strip off the final ',' and add the ')'
+					insertStatement = insertStatement.substring(0, insertStatement.lastIndexOf(','));
+					insertStatement += ")";
+					dbConnection.st.execute(insertStatement);
 					
-//					String attrVal = getOneToOneAttributeValue(m.getPredicate(), s, Type.ONE_TO_ONE) != null ?
-//							getOneToOneAttributeValue(m.getPredicate(), s, Type.ONE_TO_ONE):
-//							getOneToOneAttributeValue(m.getPredicate(), s, Type.ONE_TO_MANY);
-//					if (attrVal != null){
-//						insertStatement += attrVal + "' , '";
-//					}
-//					else{
-//						insertStatement += "null" + "' , '";
-//					}
-//					System.out.println(m.table_name+"  "+ s +" "+insertStatement);
 				}
+			}
+			else if (p instanceof OneToManyTable) {
+
+				OneToManyTable o = (OneToManyTable) p;
+				LinkedList<String> pkeyCols = o.getPrimaryKeyColumns();
+				LinkedList<String> pkeyVals = o.getPrimaryKeys();
+
+				//As per the current setting there can only be 2 columns as the primary key
+				//So, let's just iterate over subjects corresponding to the first primary key 
+				//and find the values that go in the other column of the primary key
+
+				String pkeyVal1 = pkeyVals.getFirst();
+				String pkeyVal1LocalName = pkeyVal1.substring(pkeyVal1.indexOf('#')+1);
 				
-				
+				HashSet<String> pkeys1 = store.getQualifiedSubjectsFromType(pkeyVal1LocalName);
+
+				for (String s: pkeys1){
+					String insertStatement = " INSERT INTO "+p.table_name+ " VALUES ( '" + s + "' , '";
+					String pkeyVal2 = getOneToOneAttributeValue(o.getPredicate(), s);
+					insertStatement += pkeyVal2 + "' , '";
+
+					//Now take care of the columns if there are any
+					HashMap<String, String> cols = o.columns;
+					Iterator<String> i = cols.keySet().iterator();
+					while (i.hasNext()){
+						String colVal = (String)i.next();
+						String colName = cols.get(colVal);
+						String attrVal = getOneToOneAttributeValue(colVal, s);
+						if (attrVal != null){
+							insertStatement += attrVal + "' , '";
+						}
+						else{
+							insertStatement += "null" + "' , '";
+						}
+					}
+					//Strip off the final ',' and add the ')'
+					insertStatement = insertStatement.substring(0, insertStatement.lastIndexOf(','));
+					insertStatement += ")";
+					dbConnection.st.execute(insertStatement);
+					
+					System.out.println(o.table_name+"  "+ s +" "+insertStatement);
+				}
 				
 			}
 			else{
