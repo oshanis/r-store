@@ -68,6 +68,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 		this.schema = new LinkedList<PropertyTable>();
 		schemaModel= store.CreateSchema();
 		makeSchema();
+		constructSchema();
 
 	}
 

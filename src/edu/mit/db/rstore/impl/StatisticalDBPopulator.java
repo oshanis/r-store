@@ -29,6 +29,10 @@ public class StatisticalDBPopulator implements DBPopulator {
 	{
 		schemas = db_schemas;
 		store = rdfstore;
+		
+		createTables();
+		insertValues();
+
 	}
 
 	public void createTables() throws ClassNotFoundException, SQLException {
@@ -218,13 +222,9 @@ public class StatisticalDBPopulator implements DBPopulator {
 					String pkeyCol1 = pkCols.getFirst();
 					String pkeyCol2 = pkCols.getLast();
 
-					System.out.println("tableName = "+tableName);
-					
 					String insertStatement = " INSERT INTO " + tableName +
 					" ("+ pkeyCol1 + " , " + pkeyCol2 + ")" +
 					" VALUES ( '" + pkeyVal1 +"' , '"+ pkeyVal2 + "' ) ";
-
-					System.out.println(insertStatement);
 
 					int success = dbConnection.st.executeUpdate(insertStatement);
 				}
@@ -269,5 +269,22 @@ public class StatisticalDBPopulator implements DBPopulator {
 			}
 		}
 	}
+	
+	public void cleanUp() throws ClassNotFoundException, SQLException {
+		
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
+		
+		for (PropertyTable p: this.schemas){
+			
+			String tableName = p.table_name;
+			
+			if (dbConnection.tableExists(tableName)){
+				dbConnection.st.execute("DROP TABLE "+ tableName + " CASCADE ");
+			}
+		}
+		dbConnection.close();
+	}
+
 
 }

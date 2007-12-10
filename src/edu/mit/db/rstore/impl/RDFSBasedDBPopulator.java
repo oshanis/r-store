@@ -32,8 +32,6 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	private LinkedList<PropertyTable> schemas;
 	private RDFStore store;
 	
-	private HashMap<PropertyTable, LinkedList<String>> insertStatements = new HashMap<PropertyTable, LinkedList<String>>();
-	
 	public RDFSBasedDBPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore) throws ClassNotFoundException, SQLException
 	{
 		schemas = db_schemas;
@@ -78,7 +76,6 @@ public class RDFSBasedDBPopulator implements DBPopulator
 			}
 			else if (p instanceof OneToManyTable){
 				createTableStatement = ((OneToManyTable) p).getSQL();	
-				System.out.println(createTableStatement);
 			}
 			else{
 				createTableStatement = p.getSQL() ;				
@@ -315,5 +312,22 @@ public class RDFSBasedDBPopulator implements DBPopulator
 		}
 		dbConnection.close();
 	}
+
+	public void cleanUp() throws ClassNotFoundException, SQLException {
+		
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
+		
+		for (PropertyTable p: this.schemas){
+			
+			String tableName = p.table_name;
+			
+			if (dbConnection.tableExists(tableName)){
+				dbConnection.st.execute("DROP TABLE "+ tableName + " CASCADE ");
+			}
+		}
+		dbConnection.close();
+	}
+
 	
 }
