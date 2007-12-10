@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<rdf:RDF 
+xmlns:rdf= "http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xml:base=  "http://www.persons.fake/Persons#">
+
+<rdfs:Class rdf:ID="Person">
+     <rdfs:comment>Person Class</rdfs:comment>
+     <rdfs:subClassOf 
+          rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+   </rdfs:Class>
+
+<rdfs:Class rdf:ID="Department">
+     <rdfs:comment>Department Class</rdfs:comment>
+     <rdfs:subClassOf 
+          rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+   </rdfs:Class>
+
+<rdfs:Class rdf:ID="Student">
+     <rdfs:comment>Student Class</rdfs:comment>
+     <rdfs:subClassOf rdf:resource="#Person"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Teacher">
+     <rdfs:comment>Teacher Class</rdfs:comment>
+     <rdfs:subClassOf rdf:resource="#Person"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Course">
+     <rdfs:comment>Course Class</rdfs:comment>
+     <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+   </rdfs:Class>
+
+<rdfs:Class rdf:ID="Location">
+     <rdfs:comment>Location Class</rdfs:comment>
+     <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+   </rdfs:Class>
+
+<rdf:Property rdf:ID="office">
+      <rdfs:comment>The Professor's Office </rdfs:comment>
+      <rdfs:domain rdf:resource="#Teacher"/>	      
+      <rdfs:range rdf:resource="#Location"/>	      
+   </rdf:Property>
+
+<rdf:Property rdf:ID="department">
+      <rdfs:comment>The Department a student belongs to </rdfs:comment>
+      <rdfs:domain rdf:resource="#Student"/>	      
+      <rdfs:range rdf:resource="#Department"/>	      
+   </rdf:Property>
+
+
+<rdf:Property rdf:ID="teachers">
+      <rdfs:comment>List of Teachers of a course</rdfs:comment>
+      <rdfs:domain rdf:resource="#Course"/>	      
+      <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"/>
+   </rdf:Property>
+
+<rdf:Property rdf:ID="students">
+      <rdfs:comment>List of Students of a course in alphabetical order</rdfs:comment>
+      <rdfs:domain rdf:resource="#Course"/>	      
+      <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"/>
+   </rdf:Property>
+
+<rdf:Property rdf:ID="name">
+      <rdfs:comment>Name of a Person or Course</rdfs:comment>
+      <rdfs:domain rdf:resource="#Teacher"/>	      
+      <rdfs:domain rdf:resource="#Student"/>	      
+      <rdfs:domain rdf:resource="#Department"/>	      
+      <rdfs:domain rdf:resource="#Course"/>	      
+      <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Literal"/>	      
+   </rdf:Property>
+
+<rdf:Property rdf:ID="year">
+      <rdfs:comment>The year of study of a student</rdfs:comment>
+      <rdfs:domain rdf:resource="#Student"/>	      
+      <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Literal"/>	      
+   </rdf:Property>
+
+
+</rdf:RDF>

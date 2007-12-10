@@ -1,0 +1,139 @@
+<?xml version="1.0"?> 
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+   xmlns = "http://www.db.csail.mit.edu/6.830/course_schema.rdf#"
+   xml:base =  "http://www.db.csail.mit.edu/6.830/course_schema.rdf#">
+
+     <Course rdf:about="MIT6.830">
+        <name>Database Systems</name>
+        <teachers>
+            <rdf:Seq>
+	        <rdf:li>
+            <Teacher rdf:about="sm">
+               <name>Sam Madden</name>
+               <office><Location rdf:about="32-G938"/></office>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="ms">
+               <name>Mike Stonebraker</name>
+               <office><Location rdf:about="32-G9"/></office>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="at">
+               <name>Arvind Thiagarajan</name>
+               <office><Location rdf:about="32-G9"/></office>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="ym">
+               <name>Yuan Mei</name>
+               <office><Location rdf:about="32-G9"/></office>
+		    </Teacher>
+	        </rdf:li>
+	        </rdf:Seq>
+        </teachers>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:about="am">
+		      <name>Angelique Moscicki</name>
+               <department><Department rdf:about="EECS"/></department>
+               <year>Senior</year>
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:about="os">
+		      <name>Oshani Seneviratne</name>
+               <department><Department rdf:about="EECS"/></department>
+               <year>Graduate</year>
+		   </Student>
+	        </rdf:li>
+	        <rdf:li>
+	           <Student rdf:about="sh">
+		      <name>Sergio Herrero</name>
+               <department><Department rdf:about="CE"/></department>
+               <year>Graduate</year>
+		   </Student>
+	        </rdf:li>
+            </rdf:Seq>
+        </students>
+     </Course>
+	<Course rdf:about="MIT6.839">
+        <name>Advanced Computer Graphics </name>
+        <teachers>
+            <rdf:Seq>
+	        <rdf:li>
+            <Teacher rdf:about="jp">
+               <name>Jovan Popovic</name>
+               <office><Location rdf:about="CSAIL"/></office>
+		    </Teacher>
+	        </rdf:li>
+            </rdf:Seq>
+        </teachers>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:about="am">
+		   </Student>
+	        </rdf:li>
+            </rdf:Seq>
+        </students>
+     </Course>
+
+
+	<Course rdf:about="MIT6.898">
+        <name>TAMI for WWW</name>
+        <teachers>
+            <rdf:Seq>
+	        <rdf:li>
+            <Teacher rdf:about="cph">
+               <name>Chris Hanson</name>
+               <office><Location rdf:about="32-G522"/></office>
+	        </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="lk">
+               <name>Lalana Kagal</name>
+               <office><Location rdf:about="32-G532"/></office>
+	        </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="dw">
+               <name>Daniel Weitzner</name>
+               <office><Location rdf:about="32-G531"/></office>
+	        </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="ha">
+               <name>Hal Abelson</name>
+               <office><Location rdf:about="32-G324"/></office>
+	        </Teacher>
+	        </rdf:li>
+            </rdf:Seq>
+        </teachers>
+        <students>
+            <rdf:Seq>
+	        <rdf:li>
+	           <Student rdf:about="os">
+		   </Student>
+	        </rdf:li>
+	       <rdf:li>
+	           <Student rdf:about="sd">
+		      <name>Shauni Deshmukh</name>
+               <department><Department rdf:about="EECS"/></department>
+               <year>Senior</year>
+		   </Student>
+	        </rdf:li>
+	       <rdf:li>
+	           <Student rdf:about="tk">
+		      <name>Ted Koh</name>
+               <department><Department rdf:about="EECS"/></department>
+               <year>Senior</year>
+		   </Student>
+	        </rdf:li>
+
+            </rdf:Seq>
+        </students>
+     </Course>
+   </rdf:RDF>
