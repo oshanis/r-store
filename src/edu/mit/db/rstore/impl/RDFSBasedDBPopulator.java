@@ -96,7 +96,6 @@ public class RDFSBasedDBPopulator implements DBPopulator
 
 				ManyToManyTable m = (ManyToManyTable)p;
 				
-				LinkedList<String> pkeyCols = m.getPrimaryKeyColumns();
 				LinkedList<String> pkeyVals = m.getPrimaryKeys();
 
 				//As per the current setting there can only be 2 columns as the primary key
@@ -137,7 +136,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 			else if (p instanceof OneToManyTable) {
 
 				OneToManyTable o = (OneToManyTable) p;
-				LinkedList<String> pkeyCols = o.getPrimaryKeyColumns();
+
 				LinkedList<String> pkeyVals = o.getPrimaryKeys();
 
 				//As per the current setting there can only be 2 columns as the primary key
@@ -150,32 +149,32 @@ public class RDFSBasedDBPopulator implements DBPopulator
 				HashSet<String> pkeys1 = store.getQualifiedSubjectsFromType(pkeyVal1LocalName);
 
 				for (String s: pkeys1){
-					String insertStatement = " INSERT INTO "+p.table_name+ " VALUES ( '" + s + "' , '";
-					String pkeyVal2 = getOneToOneAttributeValue(o.getPredicate(), s);
-					insertStatement += pkeyVal2 + "' , '";
-
-					//Now take care of the columns if there are any
-					HashMap<String, String> cols = o.columns;
-					Iterator<String> i = cols.keySet().iterator();
-					while (i.hasNext()){
-						String colVal = (String)i.next();
-						String colName = cols.get(colVal);
-						String attrVal = getOneToOneAttributeValue(colVal, s);
-						if (attrVal != null){
-							insertStatement += attrVal + "' , '";
+					LinkedList<String> pkey2Vals = getOneToManyAttributeValues(o.getPredicate(), s);
+					for (int j=0; j<pkey2Vals.size(); j++){
+						String insertStatement = " INSERT INTO "+p.table_name+ " VALUES ( '" 
+							+ s + "' , '"+pkey2Vals.get(j) + " , ";
+						//Now take care of the columns if there are any
+						HashMap<String, String> cols = o.columns;
+						Iterator<String> i = cols.keySet().iterator();
+						while (i.hasNext()){
+							String colVal = (String)i.next();
+							String colName = cols.get(colVal);
+							String attrVal = getOneToOneAttributeValue(colVal, s);
+							if (attrVal != null){
+								insertStatement += attrVal + "' , '";
+							}
+							else{
+								insertStatement += "null" + "' , '";
+							}
 						}
-						else{
-							insertStatement += "null" + "' , '";
-						}
+						//Strip off the final ',' and add the ')'
+						insertStatement = insertStatement.substring(0, insertStatement.lastIndexOf(','));
+						insertStatement += "')";
+						dbConnection.st.execute(insertStatement);
+						
+						System.out.println(o.table_name+"  "+ s +" "+insertStatement);
 					}
-					//Strip off the final ',' and add the ')'
-					insertStatement = insertStatement.substring(0, insertStatement.lastIndexOf(','));
-					insertStatement += ")";
-					dbConnection.st.execute(insertStatement);
-					
-					System.out.println(o.table_name+"  "+ s +" "+insertStatement);
-				}
-				
+				}		
 			}
 			else{
 				String pkeyCol = p.getPrimaryKeyColumn();
@@ -213,19 +212,6 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	
 	public String getOneToOneAttributeValue(String pred, String sub){
 		
-		//Using the SPARQL template
-//		"SELECT ?variable " +
-//		"WHERE {" +
-//		"      c:MIT6.830 :students ?v ." +
-//		"	  ?v  ?x ?variable ." +
-//		"      }";
-
-//		queryString = 
-//			"SELECT ?variable " +
-//			"WHERE {" +
-//			"<" +sub + "> <" + newPred + "> "+ " ?b ." +
-//		    "?b ?x ?variable .}";
-		
 		//A temporary hack to the problem in the the fully qualified name
 		//for the predicate
     	NsIterator i = store.getRDFModel().listNameSpaces();
@@ -262,6 +248,51 @@ public class RDFSBasedDBPopulator implements DBPopulator
 
 		return null;
 	}
+
+	
+	public LinkedList<String> getOneToManyAttributeValues(String pred, String sub){
+		
+		LinkedList<String> ret = new LinkedList<String>();
+		
+		//A temporary hack to the problem in the the fully qualified name
+		//for the predicate
+    	NsIterator i = store.getRDFModel().listNameSpaces();
+    	while (i.hasNext()){
+    		String newPred = (String)i.next() + pred;
+    		String queryString = "";
+    		
+			queryString = 
+				"SELECT ?variable " +
+				"WHERE {" +
+				"<" +sub + "> <" + newPred + "> "+ " ?b ." +
+			    "?b ?x ?variable .}";
+        		
+    		Query query = QueryFactory.create(queryString);
+
+    		// Execute the query and obtain results
+    		QueryExecution qe = QueryExecutionFactory.create(query, store.getRDFModel());
+    		ResultSet results = qe.execSelect();
+
+    		Model resultModel =	ResultSetFormatter.toModel(results);
+    		
+    		
+    		StmtIterator iter = resultModel.listStatements();
+    		while (iter.hasNext()){
+    			Statement statement = iter.nextStatement();
+    			//I believe this should be the standard way the final value will be encoded
+    			String valueExpected = "http://www.w3.org/2001/sw/DataAccess/tests/result-set#value";
+    			//And we do not need Seq in the result set returned
+    			String seq = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq";
+    			if (statement.getPredicate().toString().equals(valueExpected) &&
+    				!(statement.getObject().toString().equals(seq))){
+    				ret.add(statement.getObject().toString());
+    			}
+    		}
+     		qe.close();
+    	}
+		return ret;
+	}
+
 	
 	public void dropEmptyTables() throws ClassNotFoundException, SQLException{
 
