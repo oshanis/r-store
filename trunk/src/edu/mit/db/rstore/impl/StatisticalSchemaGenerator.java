@@ -20,7 +20,6 @@ public class StatisticalSchemaGenerator implements SchemaGenerator
 		schema = new LinkedList<PropertyTable>();
 		
 		makeSchema();
-		
 		/*for(PropertyTable p : schema)
 		{
 			p.print();

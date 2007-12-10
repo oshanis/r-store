@@ -29,5 +29,12 @@ public interface DBPopulator {
 			SQLException;
 
 	public abstract void insertValues() throws SQLException, ClassNotFoundException;
+	
+	/**
+	 * Drop all the tables created in the DBMS
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	public void cleanUp() throws ClassNotFoundException, SQLException;
 
 }

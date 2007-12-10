@@ -2,8 +2,6 @@ package edu.mit.db.rstore.impl;
 
 import java.sql.*;
 
-import com.hp.hpl.jena.vocabulary.DB;
-
 /**
  * This class creates Database connection to PostgresSQL 
  * (Helper class for DBPopulator)
@@ -18,7 +16,7 @@ public class DBConnection {
 	public void connect() throws ClassNotFoundException, SQLException{
 		
 		Class.forName("org.postgresql.Driver");
-		String url = "jdbc:postgresql:rstoreDB";
+		String url = "jdbc:postgresql:r-storeDB";
 		
 		//Make sure that you have a user named postgres with the same password
 		//otherwise it will not work!
@@ -28,24 +26,6 @@ public class DBConnection {
 		conn = DriverManager.getConnection(url, username, password);
 		
 		st = conn.createStatement();
-		
-		String tableName = "base";
-		
-//		//First Check if the table exists in the Database
-//		//If it exists drop the table
-//		if (tableExists(tableName)){
-//			st.execute("DROP TABLE base");
-//		}
-//		
-//		st.execute( "CREATE TABLE base ("  +
-//         "Entry      INTEGER      NOT NULL, "    +
-//         "Customer   VARCHAR (20) NOT NULL, "    +
-//         "DOW        VARCHAR (3)  NOT NULL, "    +
-//         "Cups       INTEGER      NOT NULL, "    +
-//         "Type       VARCHAR (10) NOT NULL,"     +
-//         "PRIMARY KEY( Entry )"                  +
-//                                            ")" );
-		
 
 	}
 	
@@ -100,6 +80,11 @@ public class DBConnection {
 
 	public void close() throws SQLException{
 		conn.close();
+	}
+	
+	public void clear() throws SQLException{
+		st.execute(" DROP SCHEMA public CASCADE ");
+		st.execute(" CREATE SCHEMA public ");			
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException{
