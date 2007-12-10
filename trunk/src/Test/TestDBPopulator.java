@@ -27,20 +27,17 @@ public class TestDBPopulator {
     	InfModel infModel= myStore.CreateInferenceModel();
 
 //    	StatisticalSchemaGenerator schemaGenerator = new StatisticalSchemaGenerator(myStore);
-
 		RDFSBasedSchemaGenerator schemaGenerator = new RDFSBasedSchemaGenerator(myStore);
+
 		schemaGenerator.makeSchema();
 		schemaGenerator.constructSchema();
 
     	LinkedList<PropertyTable> schemas = schemaGenerator.getSchema();
 		
+//		DBPopulator populator = new StatisticalDBPopulator(schemas, myStore);
 		DBPopulator populator = new RDFSBasedDBPopulator(schemas, myStore);
 		
-//		DBPopulator populator = new StatisticalDBPopulator(schemas, myStore);
 
-		populator.createTables();
-		populator.insertValues();
-		
 	}
 
 }

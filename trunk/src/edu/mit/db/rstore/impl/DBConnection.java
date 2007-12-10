@@ -72,6 +72,36 @@ public class DBConnection {
 		
 	}
 
+	/*
+	 * FIXME There's a bug in this method
+	 * doesn't do what it is supposed to do!
+	 */
+	public boolean tableHasNoRows(String tableName) throws SQLException{
+		ResultSet results = null;
+		try {
+			results = st.executeQuery("SELECT * FROM " + tableName);
+	        if (results.getRow() == 0){
+		        return true;  
+	        }
+	        else{
+	        	return false;
+	        }
+	   }
+	   catch (SQLException e) {
+	        return false;  // if table does not exist, an exception will be thrown
+	   }
+	   finally {
+	        if (results != null) {
+	              results.close();
+	        }
+	   }
+		
+	}
+
+	public void close() throws SQLException{
+		conn.close();
+	}
+	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException{
 		DBConnection dbc = new DBConnection();
 		dbc.connect();

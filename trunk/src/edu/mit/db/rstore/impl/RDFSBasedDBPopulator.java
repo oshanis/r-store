@@ -34,10 +34,21 @@ public class RDFSBasedDBPopulator implements DBPopulator
 	
 	private HashMap<PropertyTable, LinkedList<String>> insertStatements = new HashMap<PropertyTable, LinkedList<String>>();
 	
-	public RDFSBasedDBPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore)
+	public RDFSBasedDBPopulator(LinkedList<PropertyTable> db_schemas, RDFStore rdfstore) throws ClassNotFoundException, SQLException
 	{
 		schemas = db_schemas;
 		store = rdfstore;
+		
+		createTables();
+		insertValues();
+//		dropEmptyTables();
+		
+	}
+	
+	enum Type{
+		ONE_TO_ONE,
+		ONE_TO_MANY,
+		MANY_TO_MANY
 	}
 	
 	/* (non-Javadoc)
@@ -82,6 +93,46 @@ public class RDFSBasedDBPopulator implements DBPopulator
 
 		for (PropertyTable p: this.schemas){
 			if (p instanceof ManyToManyTable){
+
+				ManyToManyTable m = (ManyToManyTable)p;
+				
+				LinkedList<String> pkeyCols = m.getPrimaryKeyColumns();
+				LinkedList<String> pkeyVals = m.getPrimaryKeys();
+
+				//As per the current setting there can only be 2 columns as the primary key
+				//So, let's just iterate over subjects corresponding to the first primary key 
+				//and find the values that go in the other column of the primary key
+
+				String pkeyCol1 = pkeyCols.getFirst();
+				String pkeyCol2 = pkeyCols.getLast();
+				
+				String pkeyVal1 = pkeyVals.getFirst();
+				String pkeyVal2 = pkeyVals.getLast();
+				
+				String pkeyVal1LocalName = pkeyVal1.substring(pkeyVal1.indexOf('#')+1);
+				String pkeyVal2LocalName = pkeyVal2.substring(pkeyVal2.indexOf('#')+1);
+
+				
+				HashSet<String> pkeys1 = store.getQualifiedSubjectsFromType(pkeyVal1LocalName);
+
+				for (String s: pkeys1){
+					String insertStatement = " INSERT INTO "+p.table_name+ " VALUES ( '" + s + "' , '";
+					String attrVal = getOneToOneAttributeValue(m.getPredicate(), s);
+					System.out.println(m.getPredicate()+" "+ s+" "+attrVal);
+					
+//					String attrVal = getOneToOneAttributeValue(m.getPredicate(), s, Type.ONE_TO_ONE) != null ?
+//							getOneToOneAttributeValue(m.getPredicate(), s, Type.ONE_TO_ONE):
+//							getOneToOneAttributeValue(m.getPredicate(), s, Type.ONE_TO_MANY);
+//					if (attrVal != null){
+//						insertStatement += attrVal + "' , '";
+//					}
+//					else{
+//						insertStatement += "null" + "' , '";
+//					}
+//					System.out.println(m.table_name+"  "+ s +" "+insertStatement);
+				}
+				
+				
 				
 			}
 			else{
@@ -109,7 +160,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
 					//Strip off the final ',' and add the ')'
 					insertStatement = insertStatement.substring(0, insertStatement.lastIndexOf(','));
 					insertStatement += ")";
-					System.out.println(insertStatement);
+//					System.out.println(insertStatement);
 					dbConnection.st.execute(insertStatement);
 				}
 				
@@ -127,17 +178,24 @@ public class RDFSBasedDBPopulator implements DBPopulator
 //		"	  ?v  ?x ?variable ." +
 //		"      }";
 
+//		queryString = 
+//			"SELECT ?variable " +
+//			"WHERE {" +
+//			"<" +sub + "> <" + newPred + "> "+ " ?b ." +
+//		    "?b ?x ?variable .}";
+		
 		//A temporary hack to the problem in the the fully qualified name
 		//for the predicate
     	NsIterator i = store.getRDFModel().listNameSpaces();
     	while (i.hasNext()){
     		String newPred = (String)i.next() + pred;
-
-    		String queryString = 
+    		String queryString = "";
+    		
+			queryString = 
     			"SELECT ?variable " +
     			"WHERE {" +
     			"<" +sub + "> <" + newPred + "> "+ " ?variable .}";
-    		
+        		
     		Query query = QueryFactory.create(queryString);
 
     		// Execute the query and obtain results
@@ -145,6 +203,7 @@ public class RDFSBasedDBPopulator implements DBPopulator
     		ResultSet results = qe.execSelect();
 
     		Model resultModel =	ResultSetFormatter.toModel(results);
+    		
     		
     		StmtIterator iter = resultModel.listStatements();
     		while (iter.hasNext()){
@@ -160,6 +219,22 @@ public class RDFSBasedDBPopulator implements DBPopulator
     	}
 
 		return null;
+	}
+	
+	public void dropEmptyTables() throws ClassNotFoundException, SQLException{
+
+		DBConnection dbConnection = new DBConnection();
+		dbConnection.connect();
+		
+		for (PropertyTable p: this.schemas){
+			
+			String tableName = p.table_name;
+			
+			if (dbConnection.tableExists(tableName) && dbConnection.tableHasNoRows(tableName)){
+				dbConnection.st.execute("DROP TABLE "+ tableName);
+			}
+		}
+		dbConnection.close();
 	}
 	
 }

@@ -75,6 +75,10 @@ public class ManyToManyTable extends PropertyTable
 		return pkey_names;
 	}
 	
+	public String getPredicate(){
+		return this.predicate_name;
+	}
+	
 	public void print()
 	{
 
