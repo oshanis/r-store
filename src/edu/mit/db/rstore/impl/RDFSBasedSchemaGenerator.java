@@ -186,7 +186,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					String r = domainSub.getLocalName();
 					String rType = domainSub.getLocalName();
 					String t = d+"_"+r;
-					if (tables.containsKey(d) && tables.containsKey(r)){
+					if (tables.containsKey(d)){
 						String fkeyTable = tables.get(d).table_name;
 						String fkeyCol = tables.get(d).getPrimaryKeyColumn();
 						tableNames.add(t);
