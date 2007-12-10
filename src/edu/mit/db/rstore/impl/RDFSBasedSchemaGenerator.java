@@ -181,7 +181,7 @@ public class RDFSBasedSchemaGenerator implements SchemaGenerator {
 					String t = d+"_"+r;
 					tableNames.add(t);
 					String pred = domainSub.getLocalName();
-					PropertyTable p = new ManyToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
+					PropertyTable p = new OneToManyTable("Table_" +t,dType, "Pkey_" +d, rType, "Pkey_" + r, pred );
 					tables.put(t, p);
 				}
     		}
