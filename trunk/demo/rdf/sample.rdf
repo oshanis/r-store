@@ -41,19 +41,19 @@
 	        <rdf:li>
             <Teacher rdf:about="ms">
                <name>Mike Stonebraker</name>
-               <office><Location rdf:about="32-G9"/></office>
+               <office><Location rdf:about="32-G9A"/></office>
 		    </Teacher>
 	        </rdf:li>
 	        <rdf:li>
             <Teacher rdf:about="at">
                <name>Arvind Thiagarajan</name>
-               <office><Location rdf:about="32-G9"/></office>
+               <office><Location rdf:about="32-G9B"/></office>
 		    </Teacher>
 	        </rdf:li>
 	        <rdf:li>
             <Teacher rdf:about="ym">
                <name>Yuan Mei</name>
-               <office><Location rdf:about="32-G9"/></office>
+               <office><Location rdf:about="32-G9C"/></office>
 		    </Teacher>
 	        </rdf:li>
 	        </rdf:Seq>
