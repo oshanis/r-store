@@ -8,6 +8,31 @@
         <teachers>
             <rdf:Seq>
 	        <rdf:li>
+            <Teacher rdf:about="ha">
+               <name>Hal Abelson</name>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="lk">
+               <name>Lalana Kagal</name>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="dw">
+               <name>Daniel Weitzner</name>
+ 		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="tbl">
+               <name>Tim Berners-Lee</name>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
+            <Teacher rdf:about="ch">
+               <name>Chris Hanson</name>
+		    </Teacher>
+	        </rdf:li>
+	        <rdf:li>
             <Teacher rdf:about="sm">
                <name>Sam Madden</name>
                <office><Location rdf:about="32-G938"/></office>
